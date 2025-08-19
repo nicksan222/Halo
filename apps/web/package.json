@@ -12,7 +12,7 @@
     "check": "bun run typecheck && bun run lint"
   },
   "dependencies": {
-    "react": "19.1.0",
+    "react": "19.1.1",
     "react-dom": "19.1.0",
     "next": "15.4.6",
     "@trpc/client": "^11.4.4",
