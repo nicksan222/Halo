@@ -1,0 +1,33 @@
+{
+  "name": "workspace",
+  "private": true,
+  "packageManager": "bun@1.2.20",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "lint": "biome check .",
+    "format": "biome check --write --unsafe .",
+    "auth:db:generate": "bun run --cwd packages/auth auth:generate && bun run db:generate",
+    "db:generate": "bun run --cwd packages/db db:generate",
+    "db:migrate": "bun run --cwd packages/db db:migrate",
+    "db:introspect": "bun run --cwd packages/db db:introspect",
+    "db:studio": "bun run --cwd packages/db db:studio",
+    "db:check": "bun run --cwd packages/db db:check",
+    "deps:check": "syncpack",
+    "deps:fix": "syncpack fix-mismatches",
+    "deps:list": "syncpack list",
+    "deps:lint": "syncpack lint",
+    "deps:format": "syncpack format"
+  },
+  "devDependencies": {
+    "@better-auth/cli": "latest",
+    "@biomejs/biome": "^2.2.0",
+    "node-gyp": "latest",
+    "turbo": "latest",
+    "syncpack": "latest"
+  }
+}

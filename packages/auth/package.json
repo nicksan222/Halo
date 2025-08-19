@@ -1,0 +1,31 @@
+{
+  "name": "@acme/auth",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/plugins/client.ts"
+  },
+  "scripts": {
+    "build": "bun build --target node --outdir dist src/index.ts",
+    "typecheck": "bunx tsc -p tsconfig.json --noEmit",
+    "lint": "bunx biome check .",
+    "format": "bunx biome check --write .",
+    "auth:generate": "node ../../node_modules/@better-auth/cli/dist/index.mjs generate --output ../../packages/db/src/schema/auth.ts --yes"
+  },
+  "dependencies": {
+    "better-auth": "latest",
+    "@acme/db": "0.0.0",
+    "@acme/env": "0.0.0",
+    "zod": "^4.0.17",
+    "@better-auth/stripe": "latest",
+    "stripe": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/pg": "latest",
+    "@better-auth/cli": "latest"
+  }
+}

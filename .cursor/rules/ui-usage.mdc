@@ -1,0 +1,67 @@
+---
+description: UI library guidelines
+alwaysApply: false
+---
+
+- The shared UI library lives in `packages/ui` and is published in-repo as `@acme/ui`.
+- Prefer importing components via the `@/ui` alias in app code. It maps to `@acme/ui/components`.
+- When needed, you can import subpaths directly from `@acme/ui` (components, hooks, lib, styles).
+- Always include global styles once in your app root: `import '@acme/ui/styles'`.
+- Tailwind is required; utilities like `cn` are exposed from `@acme/ui/lib/utils`.
+
+Examples:
+
+```ts
+// Components (preferred):
+import { Button } from '@/ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from '@/ui/card';
+
+// Hooks:
+import { useIsMobile } from '@acme/ui/hooks/use-mobile';
+
+// Utils:
+import { cn } from '@acme/ui/lib/utils';
+
+// Global CSS (once, e.g. in app root layout):
+import '@acme/ui/styles';
+```
+
+Notes:
+- Available component files are under `packages/ui/src/components` (e.g., `button.tsx`, `card.tsx`, `dialog.tsx`, etc.).
+- Subpath exports are configured in `@acme/ui` `package.json` (`./components/*`, `./hooks/*`, `./lib/*`, `./styles`).
+- The `components.json` alias `ui` points to `@acme/ui/components`, enabling `@/ui/<component>` in apps configured with this alias.
+
+Referenced files:
+@/packages/ui/package.json
+@/packages/ui/components.json
+- The shared UI library lives in `packages/ui` and is published in-repo as `@acme/ui`.
+- Prefer importing components via the `@/ui` alias in app code. It maps to `@acme/ui/components`.
+- When needed, you can import subpaths directly from `@acme/ui` (components, hooks, lib, styles).
+- Always include global styles once in your app root: `import '@acme/ui/styles'`.
+- Tailwind is required; utilities like `cn` are exposed from `@acme/ui/lib/utils`.
+
+Examples:
+
+```ts
+// Components (preferred):
+import { Button } from '@/ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from '@/ui/card';
+
+// Hooks:
+import { useIsMobile } from '@acme/ui/hooks/use-mobile';
+
+// Utils:
+import { cn } from '@acme/ui/lib/utils';
+
+// Global CSS (once, e.g. in app root layout):
+import '@acme/ui/styles';
+```
+
+Notes:
+- Available component files are under `packages/ui/src/components` (e.g., `button.tsx`, `card.tsx`, `dialog.tsx`, etc.).
+- Subpath exports are configured in `@acme/ui` `package.json` (`./components/*`, `./hooks/*`, `./lib/*`, `./styles`).
+- The `components.json` alias `ui` points to `@acme/ui/components`, enabling `@/ui/<component>` in apps configured with this alias.
+
+Referenced files:
+@/packages/ui/package.json
+@/packages/ui/components.json

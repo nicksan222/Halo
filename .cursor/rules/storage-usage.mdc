@@ -1,0 +1,45 @@
+---
+description: Storage Usage (s3 like)
+alwaysApply: false
+---
+- Import from `@/storage` (maps to `@acme/storage`). Server and client factories are prefix-scoped.
+- Configure `BLOB_READ_WRITE_TOKEN` in env for server operations (validated by `@acme/env`).
+- Define and reuse prefixes from `@/storage` `StoragePrefix`.
+
+Examples:
+```ts
+// Server: CRUD with a scoped storage instance
+import { createServerStorage, StoragePrefix } from '@/storage';
+
+const avatars = createServerStorage(StoragePrefix.Avatars);
+await avatars.put('user-123.png', fileOrStream, { contentType: 'image/png' });
+const info = await avatars.head('user-123.png');
+const page = await avatars.list({ limit: 20 });
+await avatars.delete('user-123.png');
+```
+```ts
+// Client: Upload through a handle upload route
+'use client';
+import { createClientStorage, StoragePrefix } from '@/storage';
+
+const covers = createClientStorage(StoragePrefix.Covers);
+await covers.upload('post-42.jpg', file, {
+  handleUploadUrl: '/api/uploads/handle',
+  clientPayload: { postId: 42 }
+});
+```
+
+Notes:
+- Server functions use `@vercel/blob` and require `BLOB_READ_WRITE_TOKEN`.
+- Client upload requires a route implementing `handleUpload` from `@vercel/blob/client` at `handleUploadUrl`.
+- Prefixes live in `packages/storage/src/prefixes.ts`. Add new ones there and import them everywhere for typesafe paths.
+- Public exports: `createServerStorage`, `createClientStorage`, `StoragePrefix` and related types.
+- If `@/storage` alias isn’t configured, use `@acme/storage` (or subpaths `/client`, `/server`).
+
+Referenced files:
+@/packages/storage/README.md
+@/packages/storage/src/index.ts
+@/packages/storage/src/server.ts
+@/packages/storage/src/client.ts
+@/packages/storage/src/prefixes.ts
+@/packages/storage/src/types.ts

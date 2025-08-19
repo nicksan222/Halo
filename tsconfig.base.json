@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "preserve",
+    "strict": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@acme/ui/*": ["packages/ui/src/*"],
+      "@acme/auth": ["packages/auth/src/index.ts"],
+      "@acme/convex": ["packages/convex/src/index.ts"],
+      "@acme/db": ["packages/db/src/index.ts"],
+      "@acme/api": ["packages/api/src/index.ts"],
+      "@acme/env": ["packages/env/src/index.ts"],
+      "@acme/tailwind-config": ["packages/tailwind-config/src/index.ts"],
+      "@acme/storage": ["packages/storage/src/index.ts"]
+    },
+    "maxNodeModuleJsDepth": 0,
+    "noImplicitReturns": false
+  }
+}
