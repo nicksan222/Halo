@@ -30,11 +30,3 @@ jobs:
 
       - name: Run formatter
         run: bun format
-
-      - name: Commit formatting changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add -A
-          git diff --staged --quiet || git commit -m "chore: auto-format code"
-          git push 
