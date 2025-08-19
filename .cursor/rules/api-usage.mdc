@@ -1,0 +1,126 @@
+---
+description: Managing API via @/api (tRPC + Zod schemas)
+alwaysApply: false
+globs:
+  - "apps/**/*.ts"
+  - "apps/**/*.tsx"
+  - "packages/**/*.ts"
+  - "packages/**/*.tsx"
+---
+
+- The API package exposes a typed tRPC router and context. Follow this pattern to add new endpoints with shared Zod validation.
+
+1) Context and helpers
+```ts
+// Create request context to pass headers/session if needed
+import { createContext } from '@/api';
+
+// tRPC helpers
+import { router } from '@/api/trpc';
+import { publicProcedure as baseProcedure, protectedProcedure } from '@/api/middlewares/protected';
+```
+
+2) Define input schemas (Zod) per action
+```ts
+// packages/api/src/procedures/todos/create/input.ts
+import { z } from 'zod';
+export const createTodoInput = z.object({
+  title: z.string().min(1, 'Title is required'),
+  description: z.string().optional()
+});
+export type CreateTodoInput = z.infer<typeof createTodoInput>;
+```
+
+3) Implement the procedure using the schema
+```ts
+// packages/api/src/procedures/todos/create/index.ts
+import { protectedProcedure } from '@/api/middlewares/protected';
+import { router } from '@/api/trpc';
+import { todos } from '@/db/schema/todos';
+import { createTodoInput } from './input';
+
+export const todoCreateRouter = router({
+  todo: protectedProcedure.input(createTodoInput).mutation(async ({ ctx, input }) => {
+    const { db, session } = ctx;
+    // ... write to DB with drizzle
+  })
+});
+```
+
+4) Compose feature routers
+```ts
+// packages/api/src/procedures/todos/index.ts
+import { router } from '@/api/trpc';
+import { todoCreateRouter } from './create';
+import { todoDeleteRouter } from './delete';
+import { todoGetRouter } from './get';
+import { todoListRouter } from './list';
+import { todoUpdateRouter } from './update';
+
+export const todosRouter = router({
+  create: todoCreateRouter,
+  get: todoGetRouter,
+  list: todoListRouter,
+  update: todoUpdateRouter,
+  delete: todoDeleteRouter
+});
+```
+
+5) App router export
+```ts
+// packages/api/src/routers/app.ts
+import { healthRouter } from '@/api/procedures/health';
+import { todosRouter } from '@/api/procedures/todos';
+import { router } from '@/api/trpc';
+
+export const appRouter = router({
+  health: healthRouter,
+  todos: todosRouter
+});
+export type AppRouter = typeof appRouter;
+```
+
+6) Frontend: reuse Zod schemas for forms
+```ts
+// Reuse API input in React Hook Form
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { createTodoInput, type CreateTodoInput } from '@/api/procedures/todos/create/input';
+
+const form = useForm<CreateTodoInput>({ resolver: zodResolver(createTodoInput) });
+```
+
+7) Server binding example
+```ts
+// Example server binding (e.g., Next.js api handler or server route)
+import { appRouter, createContext } from '@/api';
+
+// Convert framework request to headers when creating the context
+const ctx = await createContext({ headers: request.headers });
+// Then call procedures via caller or adapt to your framework specifics
+```
+
+Notes:
+- Public vs Protected: `publicProcedure` adds `db` and `auth` to context. `protectedProcedure` also enforces session and adds `session`.
+- Keep inputs in `input.ts` to enable frontend reuse; handlers in `index.ts` perform work.
+- Import tables from `@/db` and schemas from `@/db/schema/*` where needed.
+- Exports: `appRouter`, `AppRouter`, `createContext` from `@/api`.
+- If `@/api` alias isn’t configured, use `@acme/api` directly.
+
+Referenced files:
+@/packages/api/src/trpc.ts
+@/packages/api/src/context.ts
+@/packages/api/src/middlewares/public.ts
+@/packages/api/src/middlewares/protected.ts
+@/packages/api/src/routers/app.ts
+@/packages/api/src/procedures/todos/create/input.ts
+@/packages/api/src/procedures/todos/create/index.ts
+
+- If `@/api` alias isn’t configured, use `@acme/api` directly.
+
+Referenced files:
+@/packages/api/package.json
+@/packages/api/src/index.ts
+@/packages/api/src/routers/app.ts
+@/packages/api/src/procedures/todos/create/input.ts
+@/packages/api/src/procedures/todos/create/index.ts

@@ -1,0 +1,55 @@
+---
+description: Using the database (Drizzle ORM) via @/db
+alwaysApply: false
+globs:
+  - "apps/**/*.ts"
+  - "apps/**/*.tsx"
+  - "packages/**/*.ts"
+  - "packages/**/*.tsx"
+---
+
+- Prefer importing the client and tables via the `@/db` alias (maps to `@acme/db`).
+- Tables live under `@/db/schema/*`. You may also use namespace exports from `@acme/db` (e.g., `todosSchema.todos`).
+- Set `DATABASE_URL` in your environment before running commands or using the client.
+
+Examples:
+```ts
+// Direct table import (preferred):
+import { db } from '@/db';
+import { todos } from '@/db/schema/todos';
+
+await db.insert(todos).values({ id: 'id', title: 'Hello' });
+const rows = await db.select().from(todos);
+```
+```ts
+// Namespace export alternative:
+import { db, todosSchema } from '@acme/db';
+const rows = await db.select().from(todosSchema.todos);
+```
+
+Migrations & tools (run from repo root):
+```bash
+# Generate a new migration from schema changes
+bun run db:generate
+
+# Apply pending migrations
+bun run db:migrate
+
+# Drizzle Studio
+bun run db:studio
+
+# Introspect existing DB to schema
+bun run db:introspect
+
+# Validate config and migrations
+bun run db:check
+```
+
+Notes:
+- Edit or add tables in `packages/db/src/schema/*` and (optionally) export via `packages/db/src/index.ts`.
+- Drizzle config: `packages/db/drizzle.config.ts` (schema globs, output dir, dialect, credentials).
+
+Referenced files:
+@/packages/db/package.json
+@/packages/db/drizzle.config.ts
+@/packages/db/src/index.ts

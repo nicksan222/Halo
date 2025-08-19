@@ -1,0 +1,35 @@
+{
+  "name": "@acme/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "build": "bunx tsc -p tsconfig.json --noEmit",
+    "typecheck": "bunx tsc -p tsconfig.json --noEmit",
+    "lint": "bunx biome check .",
+    "format": "bunx biome check --write .",
+    "dev": "bunx drizzle-kit studio",
+    "db:generate": "bunx drizzle-kit generate",
+    "db:generate:watch": "bunx drizzle-kit generate --watch",
+    "db:migrate": "bunx drizzle-kit migrate",
+    "db:migrate:reset": "bunx drizzle-kit migrate --breakpoints:reset",
+    "db:introspect": "bunx drizzle-kit introspect",
+    "db:studio": "bunx drizzle-kit studio",
+    "db:check": "bunx drizzle-kit check"
+  },
+  "dependencies": {
+    "drizzle-orm": "latest",
+    "@neondatabase/serverless": "latest",
+    "ws": "latest",
+    "@acme/env": "0.0.0"
+  },
+  "devDependencies": {
+    "drizzle-kit": "latest",
+    "@types/ws": "latest"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "name": "@acme/tailwind-config",
+  "version": "0.1.0",
+  "description": "Centralized Tailwind CSS configuration for Acme applications",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    },
+    "./base": {
+      "import": "./src/base.ts",
+      "types": "./src/base.ts"
+    },
+    "./web": {
+      "import": "./src/web.ts",
+      "types": "./src/web.ts"
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "tailwindcss": "^4.1.11",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.1.11",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5.8.3"
+  },
+  "keywords": [
+    "tailwindcss",
+    "config",
+    "ownfit",
+    "design-system"
+  ],
+  "author": "OwnFit Team",
+  "license": "MIT"
+}

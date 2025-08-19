@@ -1,0 +1,74 @@
+---
+description: Auth related usages and best practices
+alwaysApply: false
+---
+- Prefer importing server-side auth from `@/auth` (maps to `@acme/auth`).
+- Client-side React apps can import the preconfigured client from `@/auth/client`.
+- The auth package depends on the DB package and `DATABASE_URL`. Ensure it is set.
+
+Examples:
+```ts
+// Server (API routes, middleware, tRPC):
+import { auth } from '@/auth';
+
+export const { handlers, signIn, signOut } = auth;
+```
+```ts
+// Client (React components):
+import { authClient } from '@/auth/client';
+
+const { data } = await authClient.session.get();
+```
+```ts
+// Access control (roles/permissions):
+import { accessControl, admin, vendor, customer } from '@acme/auth';
+```
+
+Notes:
+- Uses Better Auth. Refer to the official docs for configuration, plugins, and security: `https://www.better-auth.com/docs/introduction`.
+- Server config: `packages/auth/src/auth.ts` (uses Better Auth + Drizzle adapter against `@acme/db`).
+- Client config: `packages/auth/src/plugins/client.ts` (auto-detects `NEXT_PUBLIC_API_URL` or uses current origin; sends credentials).
+- Exports: `auth`, `authClient` from `@acme/auth` and `@acme/auth/client`.
+- If `@/auth` alias isn’t configured, use `@acme/auth` directly.
+
+Referenced files:
+@/packages/auth/package.json
+@/packages/auth/README.md
+@/packages/auth/src/index.ts
+@/packages/auth/src/auth.ts
+@/packages/auth/src/plugins/client.ts
+- Prefer importing server-side auth from `@/auth` (maps to `@acme/auth`).
+- Client-side React apps can import the preconfigured client from `@/auth/client`.
+- The auth package depends on the DB package and `DATABASE_URL`. Ensure it is set.
+
+Examples:
+```ts
+// Server (API routes, middleware, tRPC):
+import { auth } from '@/auth';
+
+export const { handlers, signIn, signOut } = auth;
+```
+```ts
+// Client (React components):
+import { authClient } from '@/auth/client';
+
+const { data } = await authClient.session.get();
+```
+```ts
+// Access control (roles/permissions):
+import { accessControl, admin, vendor, customer } from '@acme/auth';
+```
+
+Notes:
+- Uses Better Auth. Refer to the official docs for configuration, plugins, and security: `https://www.better-auth.com/docs/introduction`.
+- Server config: `packages/auth/src/auth.ts` (uses Better Auth + Drizzle adapter against `@acme/db`).
+- Client config: `packages/auth/src/plugins/client.ts` (auto-detects `NEXT_PUBLIC_API_URL` or uses current origin; sends credentials).
+- Exports: `auth`, `authClient` from `@acme/auth` and `@acme/auth/client`.
+- If `@/auth` alias isn’t configured, use `@acme/auth` directly.
+
+Referenced files:
+@/packages/auth/package.json
+@/packages/auth/README.md
+@/packages/auth/src/index.ts
+@/packages/auth/src/auth.ts
+@/packages/auth/src/plugins/client.ts

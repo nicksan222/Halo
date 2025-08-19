@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:17
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=acme
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d acme"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  neon-proxy:
+    image: ghcr.io/timowilhelm/local-neon-http-proxy:main
+    environment:
+      - PG_CONNECTION_STRING=postgres://postgres:postgres@postgres:5432/acme
+    ports:
+      - "4444:4444"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Note: Drizzle Studio is run directly from the host using: bun run db:studio
+  # This avoids containerization issues with Bun and dependencies
+
+volumes:
+  db_data:
