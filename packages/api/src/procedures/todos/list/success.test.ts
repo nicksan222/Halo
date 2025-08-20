@@ -7,15 +7,20 @@ describe('list todos success', () => {
   let otherUserClient: Awaited<ReturnType<import('@acme/testing').TestUser['getApiClient']>>;
 
   beforeAll(async () => {
-    builder = new TestSetupBuilder({ registerForCleanup: true })
-      .withFounder({ organization: { name: 'Test Org', slug: `test-org-${Math.random().toString(36).slice(2, 8)}` } });
-    
+    builder = new TestSetupBuilder({ registerForCleanup: true }).withFounder({
+      organization: { name: 'Test Org', slug: `test-org-${Math.random().toString(36).slice(2, 8)}` }
+    });
+
     const { founder } = await builder.create();
     client = await founder!.getApiClient();
-    
+
     // Create a second founder for the other user
-    const secondBuilder = new TestSetupBuilder({ registerForCleanup: true })
-      .withFounder({ organization: { name: 'Other Org', slug: `other-org-${Math.random().toString(36).slice(2, 8)}` } });
+    const secondBuilder = new TestSetupBuilder({ registerForCleanup: true }).withFounder({
+      organization: {
+        name: 'Other Org',
+        slug: `other-org-${Math.random().toString(36).slice(2, 8)}`
+      }
+    });
     const { founder: secondFounder } = await secondBuilder.create();
     otherUserClient = await secondFounder!.getApiClient();
 
@@ -23,11 +28,11 @@ describe('list todos success', () => {
     await client.todos.create.todo({ title: 'Todo 1', description: 'First todo' });
     await client.todos.create.todo({ title: 'Todo 2', description: 'Second todo' });
     await client.todos.create.todo({ title: 'Todo 3', description: 'Third todo' });
-    
+
     // Create a completed todo
-    const completedTodo = await client.todos.create.todo({ 
-      title: 'Completed todo', 
-      description: 'This is completed' 
+    const completedTodo = await client.todos.create.todo({
+      title: 'Completed todo',
+      description: 'This is completed'
     });
     await client.todos.update.todo({ id: completedTodo.id, completed: true });
 
@@ -45,17 +50,17 @@ describe('list todos success', () => {
 
     expect(Array.isArray(todos)).toBe(true);
     expect(todos.length).toBeGreaterThanOrEqual(4); // At least 4 todos created
-    expect(todos.every(todo => todo.userId)).toBe(true);
-    expect(todos.every(todo => todo.title)).toBe(true);
-    expect(todos.every(todo => todo.createdAt)).toBe(true);
-    expect(todos.every(todo => todo.updatedAt)).toBe(true);
+    expect(todos.every((todo) => todo.userId)).toBe(true);
+    expect(todos.every((todo) => todo.title)).toBe(true);
+    expect(todos.every((todo) => todo.createdAt)).toBe(true);
+    expect(todos.every((todo) => todo.updatedAt)).toBe(true);
   });
 
   test('lists only completed todos', async () => {
     const completedTodos = await client.todos.list.all({ completed: true });
 
     expect(Array.isArray(completedTodos)).toBe(true);
-    expect(completedTodos.every(todo => todo.completed === true)).toBe(true);
+    expect(completedTodos.every((todo) => todo.completed === true)).toBe(true);
     expect(completedTodos.length).toBeGreaterThanOrEqual(1);
   });
 
@@ -63,7 +68,7 @@ describe('list todos success', () => {
     const incompleteTodos = await client.todos.list.all({ completed: false });
 
     expect(Array.isArray(incompleteTodos)).toBe(true);
-    expect(incompleteTodos.every(todo => todo.completed === false)).toBe(true);
+    expect(incompleteTodos.every((todo) => todo.completed === false)).toBe(true);
     expect(incompleteTodos.length).toBeGreaterThanOrEqual(3);
   });
 
@@ -117,7 +122,7 @@ describe('list todos success', () => {
     await client.todos.create.todo({ title: 'Todo with null description' });
 
     const todos = await client.todos.list.all({});
-    const todoWithNullDesc = todos.find(t => t.title === 'Todo with null description');
+    const todoWithNullDesc = todos.find((t) => t.title === 'Todo with null description');
 
     expect(todoWithNullDesc).toBeDefined();
     expect(todoWithNullDesc!.description).toBe(null);
@@ -125,16 +130,16 @@ describe('list todos success', () => {
 
   test('handles todos with special characters', async () => {
     // Create a todo with special characters
-    await client.todos.create.todo({ 
+    await client.todos.create.todo({
       title: 'Special chars: !@#$%^&*()_+-=[]{}|;:,.<>?',
       description: 'Unicode: 🚀🌟🎉中文日本語한국어'
     });
 
     const todos = await client.todos.list.all({});
-    const specialTodo = todos.find(t => t.title.includes('Special chars'));
+    const specialTodo = todos.find((t) => t.title.includes('Special chars'));
 
     expect(specialTodo).toBeDefined();
     expect(specialTodo!.title).toBe('Special chars: !@#$%^&*()_+-=[]{}|;:,.<>?');
     expect(specialTodo!.description).toBe('Unicode: 🚀🌟🎉中文日本語한국어');
   });
-}); 
+});

@@ -25,7 +25,11 @@ export class TestSetupBuilder {
     this.options = options ?? {};
   }
 
-  withFounder(params: { username?: string; strategy?: AccountStrategy; organization: CreateOrganizationParams }) {
+  withFounder(params: {
+    username?: string;
+    strategy?: AccountStrategy;
+    organization: CreateOrganizationParams;
+  }) {
     const { username, strategy, organization } = params;
     this.commands.push(new CreateFounder({ username, strategy }));
     this.commands.push(new CreateOrganization(organization));

@@ -7,7 +7,9 @@ describe('update todo success', () => {
   let createdTodoId: string;
 
   beforeAll(async () => {
-    builder = new TestSetupBuilder({ registerForCleanup: true }).withFounder({ organization: { name: 'Test Org', slug: `test-org-${Math.random().toString(36).slice(2, 8)}` } });
+    builder = new TestSetupBuilder({ registerForCleanup: true }).withFounder({
+      organization: { name: 'Test Org', slug: `test-org-${Math.random().toString(36).slice(2, 8)}` }
+    });
     const { founder } = await builder.create();
     client = await founder!.getApiClient();
 
@@ -75,10 +77,12 @@ describe('update todo success', () => {
   });
 
   test('updates title to empty string (should fail validation)', async () => {
-    await expect(client.todos.update.todo({
-      id: createdTodoId,
-      title: ''
-    })).rejects.toThrow();
+    await expect(
+      client.todos.update.todo({
+        id: createdTodoId,
+        title: ''
+      })
+    ).rejects.toThrow();
   });
 
   test('updates description to empty string', async () => {
@@ -161,14 +165,14 @@ describe('update todo success', () => {
 
   test('updates updatedAt timestamp', async () => {
     const beforeUpdate = new Date();
-    
+
     const updatedTodo = await client.todos.update.todo({
       id: createdTodoId,
       title: 'Timestamp test'
     });
 
     const afterUpdate = new Date();
-    
+
     expect(updatedTodo.updatedAt).toBeInstanceOf(Date);
     expect(updatedTodo.updatedAt.getTime()).toBeGreaterThanOrEqual(beforeUpdate.getTime());
     expect(updatedTodo.updatedAt.getTime()).toBeLessThanOrEqual(afterUpdate.getTime());
@@ -197,4 +201,4 @@ describe('update todo success', () => {
     expect(updated2.id).toBe(todo2.id);
     expect(updated2.title).toBe('Second updated');
   });
-}); 
+});

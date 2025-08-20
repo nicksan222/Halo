@@ -6,7 +6,9 @@ describe('create todo failure', () => {
   let client: Awaited<ReturnType<import('@acme/testing').TestUser['getApiClient']>>;
 
   beforeAll(async () => {
-    builder = new TestSetupBuilder({ registerForCleanup: true }).withFounder({ organization: { name: 'Test Org', slug: `test-org-${Math.random().toString(36).slice(2, 8)}` } });
+    builder = new TestSetupBuilder({ registerForCleanup: true }).withFounder({
+      organization: { name: 'Test Org', slug: `test-org-${Math.random().toString(36).slice(2, 8)}` }
+    });
     const { founder } = await builder.create();
     client = await founder!.getApiClient();
   });
@@ -96,7 +98,10 @@ describe('create todo failure', () => {
   });
 
   test('succeeds with special characters in title', async () => {
-    const input = { title: 'Special chars: !@#$%^&*()_+-=[]{}|;:,.<>?', description: 'Special chars test' };
+    const input = {
+      title: 'Special chars: !@#$%^&*()_+-=[]{}|;:,.<>?',
+      description: 'Special chars test'
+    };
 
     const todo = await client.todos.create.todo(input);
     expect(todo.title).toBe(input.title);
@@ -110,4 +115,4 @@ describe('create todo failure', () => {
     expect(todo.title).toBe(input.title);
     expect(todo.description).toBe(input.description);
   });
-}); 
+});

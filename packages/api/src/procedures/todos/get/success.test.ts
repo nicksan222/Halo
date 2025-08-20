@@ -7,7 +7,9 @@ describe('get todo success', () => {
   let createdTodoId: string;
 
   beforeAll(async () => {
-    builder = new TestSetupBuilder({ registerForCleanup: true }).withFounder({ organization: { name: 'Test Org', slug: `test-org-${Math.random().toString(36).slice(2, 8)}` } });
+    builder = new TestSetupBuilder({ registerForCleanup: true }).withFounder({
+      organization: { name: 'Test Org', slug: `test-org-${Math.random().toString(36).slice(2, 8)}` }
+    });
     const { founder } = await builder.create();
     client = await founder!.getApiClient();
 
@@ -107,4 +109,4 @@ describe('get todo success', () => {
     // Ensure they are different todos
     expect(retrieved1.id).not.toBe(retrieved2.id);
   });
-}); 
+});

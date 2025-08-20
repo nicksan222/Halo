@@ -8,15 +8,20 @@ describe('delete todo failure', () => {
   let createdTodoId: string;
 
   beforeAll(async () => {
-    builder = new TestSetupBuilder({ registerForCleanup: true })
-      .withFounder({ organization: { name: 'Test Org', slug: `test-org-${Math.random().toString(36).slice(2, 8)}` } });
-    
+    builder = new TestSetupBuilder({ registerForCleanup: true }).withFounder({
+      organization: { name: 'Test Org', slug: `test-org-${Math.random().toString(36).slice(2, 8)}` }
+    });
+
     const { founder } = await builder.create();
     client = await founder!.getApiClient();
-    
+
     // Create a second founder for the other user
-    const secondBuilder = new TestSetupBuilder({ registerForCleanup: true })
-      .withFounder({ organization: { name: 'Other Org', slug: `other-org-${Math.random().toString(36).slice(2, 8)}` } });
+    const secondBuilder = new TestSetupBuilder({ registerForCleanup: true }).withFounder({
+      organization: {
+        name: 'Other Org',
+        slug: `other-org-${Math.random().toString(36).slice(2, 8)}`
+      }
+    });
     const { founder: secondFounder } = await secondBuilder.create();
     otherUserClient = await secondFounder!.getApiClient();
 
@@ -59,19 +64,19 @@ describe('delete todo failure', () => {
 
   test('returns null for non-existent ID', async () => {
     const nonExistentId = '00000000-0000-0000-0000-000000000000';
-    
+
     const result = await client.todos.delete.todo({ id: nonExistentId });
     expect(result).toBeNull();
   });
 
   test('returns null for malformed UUID', async () => {
     const malformedId = 'not-a-valid-uuid';
-    
+
     const result = await client.todos.delete.todo({ id: malformedId });
     expect(result).toBeNull();
   });
 
-  test('returns null when trying to delete another user\'s todo', async () => {
+  test("returns null when trying to delete another user's todo", async () => {
     // Try to delete the todo created by the founder from the member's client
     const result = await otherUserClient.todos.delete.todo({ id: createdTodoId });
     expect(result).toBeNull();
@@ -79,21 +84,21 @@ describe('delete todo failure', () => {
 
   test('returns null for very long ID', async () => {
     const longId = 'A'.repeat(1000);
-    
+
     const result = await client.todos.delete.todo({ id: longId });
     expect(result).toBeNull();
   });
 
   test('returns null for special characters in ID', async () => {
     const specialId = '!@#$%^&*()_+-=[]{}|;:,.<>?';
-    
+
     const result = await client.todos.delete.todo({ id: specialId });
     expect(result).toBeNull();
   });
 
   test('returns null for unicode characters in ID', async () => {
     const unicodeId = '🚀🌟🎉中文日本語한국어';
-    
+
     const result = await client.todos.delete.todo({ id: unicodeId });
     expect(result).toBeNull();
   });
@@ -142,4 +147,4 @@ describe('delete todo failure', () => {
     } as any);
     expect(result).toBeDefined();
   });
-}); 
+});

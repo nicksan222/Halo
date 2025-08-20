@@ -6,7 +6,9 @@ describe('list todos failure', () => {
   let client: Awaited<ReturnType<import('@acme/testing').TestUser['getApiClient']>>;
 
   beforeAll(async () => {
-    builder = new TestSetupBuilder({ registerForCleanup: true }).withFounder({ organization: { name: 'Test Org', slug: `test-org-${Math.random().toString(36).slice(2, 8)}` } });
+    builder = new TestSetupBuilder({ registerForCleanup: true }).withFounder({
+      organization: { name: 'Test Org', slug: `test-org-${Math.random().toString(36).slice(2, 8)}` }
+    });
     const { founder } = await builder.create();
     client = await founder!.getApiClient();
   });
@@ -138,4 +140,4 @@ describe('list todos failure', () => {
   test('fails with undefined input', async () => {
     await expect(client.todos.list.all(undefined as any)).rejects.toThrow();
   });
-}); 
+});

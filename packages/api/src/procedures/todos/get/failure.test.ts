@@ -9,15 +9,29 @@ describe('get todo failure', () => {
 
   beforeAll(async () => {
     builder = new TestSetupBuilder({ registerForCleanup: true })
-      .withFounder({ organization: { name: 'Test Org', slug: `test-org-${Math.random().toString(36).slice(2, 8)}` } })
-      .withFounder({ organization: { name: 'Second Org', slug: `second-org-${Math.random().toString(36).slice(2, 8)}` } });
-    
+      .withFounder({
+        organization: {
+          name: 'Test Org',
+          slug: `test-org-${Math.random().toString(36).slice(2, 8)}`
+        }
+      })
+      .withFounder({
+        organization: {
+          name: 'Second Org',
+          slug: `second-org-${Math.random().toString(36).slice(2, 8)}`
+        }
+      });
+
     const { founder } = await builder.create();
     client = await founder!.getApiClient();
-    
+
     // Create a second founder for the other user
-    const secondBuilder = new TestSetupBuilder({ registerForCleanup: true })
-      .withFounder({ organization: { name: 'Other Org', slug: `other-org-${Math.random().toString(36).slice(2, 8)}` } });
+    const secondBuilder = new TestSetupBuilder({ registerForCleanup: true }).withFounder({
+      organization: {
+        name: 'Other Org',
+        slug: `other-org-${Math.random().toString(36).slice(2, 8)}`
+      }
+    });
     const { founder: secondFounder } = await secondBuilder.create();
     otherUserClient = await secondFounder!.getApiClient();
 
@@ -59,36 +73,38 @@ describe('get todo failure', () => {
 
   test('fails with non-existent ID', async () => {
     const nonExistentId = '00000000-0000-0000-0000-000000000000';
-    
+
     await expect(client.todos.get.byId({ id: nonExistentId })).rejects.toThrow('Todo not found');
   });
 
   test('fails with malformed UUID', async () => {
     const malformedId = 'not-a-valid-uuid';
-    
+
     await expect(client.todos.get.byId({ id: malformedId })).rejects.toThrow('Todo not found');
   });
 
-  test('fails when accessing another user\'s todo', async () => {
+  test("fails when accessing another user's todo", async () => {
     // Try to access the todo created by the founder from the member's client
-    await expect(otherUserClient.todos.get.byId({ id: createdTodoId })).rejects.toThrow('Todo not found');
+    await expect(otherUserClient.todos.get.byId({ id: createdTodoId })).rejects.toThrow(
+      'Todo not found'
+    );
   });
 
   test('fails with very long ID', async () => {
     const longId = 'A'.repeat(1000);
-    
+
     await expect(client.todos.get.byId({ id: longId })).rejects.toThrow('Todo not found');
   });
 
   test('fails with special characters in ID', async () => {
     const specialId = '!@#$%^&*()_+-=[]{}|;:,.<>?';
-    
+
     await expect(client.todos.get.byId({ id: specialId })).rejects.toThrow('Todo not found');
   });
 
   test('fails with unicode characters in ID', async () => {
     const unicodeId = '🚀🌟🎉中文日本語한국어';
-    
+
     await expect(client.todos.get.byId({ id: unicodeId })).rejects.toThrow('Todo not found');
   });
 
@@ -105,4 +121,4 @@ describe('get todo failure', () => {
     // Try to get it
     await expect(client.todos.get.byId({ id: todoToDelete.id })).rejects.toThrow('Todo not found');
   });
-}); 
+});

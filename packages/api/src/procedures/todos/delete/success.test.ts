@@ -6,7 +6,9 @@ describe('delete todo success', () => {
   let client: Awaited<ReturnType<import('@acme/testing').TestUser['getApiClient']>>;
 
   beforeAll(async () => {
-    builder = new TestSetupBuilder({ registerForCleanup: true }).withFounder({ organization: { name: 'Test Org', slug: `test-org-${Math.random().toString(36).slice(2, 8)}` } });
+    builder = new TestSetupBuilder({ registerForCleanup: true }).withFounder({
+      organization: { name: 'Test Org', slug: `test-org-${Math.random().toString(36).slice(2, 8)}` }
+    });
     const { founder } = await builder.create();
     client = await founder!.getApiClient();
   });
@@ -123,10 +125,12 @@ describe('delete todo success', () => {
     await expect(client.todos.get.byId({ id: todo.id })).rejects.toThrow('Todo not found');
 
     // Verify it can no longer be updated
-    await expect(client.todos.update.todo({
-      id: todo.id,
-      title: 'Updated after deletion'
-    })).rejects.toThrow('Todo not found');
+    await expect(
+      client.todos.update.todo({
+        id: todo.id,
+        title: 'Updated after deletion'
+      })
+    ).rejects.toThrow('Todo not found');
 
     // Verify it can no longer be deleted (should return null)
     const secondDelete = await client.todos.delete.todo({ id: todo.id });
@@ -142,14 +146,14 @@ describe('delete todo success', () => {
 
     // Verify it exists in list
     const todosBefore = await client.todos.list.all({});
-    expect(todosBefore.find(t => t.id === todo.id)).toBeDefined();
+    expect(todosBefore.find((t) => t.id === todo.id)).toBeDefined();
 
     // Delete it
     await client.todos.delete.todo({ id: todo.id });
 
     // Verify it no longer exists in list
     const todosAfter = await client.todos.list.all({});
-    expect(todosAfter.find(t => t.id === todo.id)).toBeUndefined();
+    expect(todosAfter.find((t) => t.id === todo.id)).toBeUndefined();
   });
 
   test('deletes todo with very long title and description', async () => {
@@ -172,17 +176,17 @@ describe('delete todo success', () => {
 
   test('deletes todo and returns null for non-existent todo', async () => {
     const nonExistentId = '00000000-0000-0000-0000-000000000000';
-    
+
     const result = await client.todos.delete.todo({ id: nonExistentId });
-    
+
     expect(result).toBeNull();
   });
 
   test('deletes todo with malformed UUID (should return null)', async () => {
     const malformedId = 'not-a-valid-uuid';
-    
+
     const result = await client.todos.delete.todo({ id: malformedId });
-    
+
     expect(result).toBeNull();
   });
-}); 
+});
