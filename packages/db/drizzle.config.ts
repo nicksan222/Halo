@@ -3,24 +3,25 @@ import { defineConfig } from 'drizzle-kit';
 import { neonConfig } from '@neondatabase/serverless';
 import ws from 'ws';
 
-// Configure Neon for local/CI when using a local proxy (e.g., localhost:4444 or db.localtest.me)
+// Configure Neon for local/CI when using a local proxy (db.localtest.me or localhost via port 4444)
 try {
 	const dbUrl = new URL(env.DATABASE_URL);
-	const isLocalHost = dbUrl.hostname === 'localhost' || dbUrl.hostname === '127.0.0.1' || dbUrl.hostname === 'db.localtest.me';
-	const hasExplicitPort = Boolean(dbUrl.port);
-	const port = dbUrl.port || '';
+	const host = dbUrl.hostname;
 
 	// Always set ws constructor in Node environments
 	neonConfig.webSocketConstructor = ws;
 
-	if (isLocalHost || port === '4444') {
-		const hostWithPort = `${dbUrl.hostname}${hasExplicitPort ? `:${dbUrl.port}` : ''}`;
-		// Use insecure WS for local proxies and ensure the proxy keeps the port
+	// Map db.localtest.me and localhost to the local Neon HTTP proxy (port 4444)
+	if (host === 'db.localtest.me' || host === 'localhost' || host === '127.0.0.1') {
 		neonConfig.useSecureWebSocket = false;
-		neonConfig.wsProxy = () => `${hostWithPort}/v2`;
-		// Route HTTP queries through the local proxy as well
-		neonConfig.fetchEndpoint = `http://${hostWithPort}/sql`;
-		// Prefer HTTP for pool queries when available to avoid WS port stripping issues
+		neonConfig.fetchEndpoint = (h) => {
+			const isLocal = h === 'db.localtest.me' || h === 'localhost' || h === '127.0.0.1';
+			return isLocal ? `http://${h}:4444/sql` : `https://${h}:443/sql`;
+		};
+		neonConfig.wsProxy = (h) => {
+			const isLocal = h === 'db.localtest.me' || h === 'localhost' || h === '127.0.0.1';
+			return isLocal ? `${h}:4444/v2` : `${h}/v2`;
+		};
 		((neonConfig as unknown) as Record<string, unknown>)["poolQueryViaFetch"] = true;
 	}
 } catch {

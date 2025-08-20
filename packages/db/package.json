@@ -16,7 +16,7 @@
     "dev": "bunx drizzle-kit studio",
     "db:generate": "bunx drizzle-kit generate",
     "db:generate:watch": "bunx drizzle-kit generate --watch",
-    "db:migrate": "bunx drizzle-kit migrate",
+    "db:migrate": "bun run scripts/migrate.ts",
     "db:migrate:reset": "bunx drizzle-kit migrate --breakpoints:reset",
     "db:introspect": "bunx drizzle-kit introspect",
     "db:studio": "bunx drizzle-kit studio",
