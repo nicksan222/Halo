@@ -1,4 +1,4 @@
-import { cleanEnv, port, str, url } from 'envalid';
+import { bool, cleanEnv, num, port, str, url } from 'envalid';
 
 // Define and validate environment variables used across the monorepo
 export const env = cleanEnv(process.env, {
@@ -25,7 +25,28 @@ export const env = cleanEnv(process.env, {
   }),
 
   // Web app public config
-  NEXT_PUBLIC_API_URL: url({ default: 'http://localhost:3001', desc: 'Public base URL for API' })
+  NEXT_PUBLIC_API_URL: url({ default: 'http://localhost:3001', desc: 'Public base URL for API' }),
+
+  // Email (Provider selector)
+  EMAIL_PROVIDER: str({ choices: ['resend', 'smtp', 'ses', 'mailpit'], default: 'resend' }),
+
+  // Email (Resend)
+  RESEND_API_KEY: str({ desc: 'Resend API key', default: '' }),
+  RESEND_FROM_EMAIL: str({ desc: 'Default From email for Resend', default: '' }),
+
+  // Email (SMTP)
+  SMTP_HOST: str({ default: '' }),
+  SMTP_PORT: num({ default: 587 }),
+  SMTP_SECURE: bool({ default: false }),
+  SMTP_USER: str({ default: '' }),
+  SMTP_PASSWORD: str({ default: '' }),
+  SMTP_FROM: str({ default: '' }),
+
+  // Email (SES)
+  AWS_REGION: str({ default: 'us-east-1' }),
+  AWS_ACCESS_KEY_ID: str({ default: '' }),
+  AWS_SECRET_ACCESS_KEY: str({ default: '' }),
+  SES_FROM: str({ default: '' })
 });
 
 export type Env = typeof env;

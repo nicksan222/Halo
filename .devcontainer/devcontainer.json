@@ -20,9 +20,14 @@
     "PYTHON": "/usr/bin/python3",
     "STRIPE_SECRET_KEY": "",
     "STRIPE_WEBHOOK_SECRET": "",
-    "DATABASE_URL": "postgres://postgres:postgres@db.localtest.me:5432/acme"
+    "DATABASE_URL": "postgres://postgres:postgres@db.localtest.me:5432/acme",
+    "EMAIL_PROVIDER": "mailpit",
+    "SMTP_HOST": "localhost",
+    "SMTP_PORT": "1025",
+    "SMTP_SECURE": "false",
+    "SMTP_FROM": "dev@local.test"
   },
-  "forwardPorts": [5432],
+  "forwardPorts": [5432, 8025, 1025],
   "customizations": {
     "vscode": {
       "extensions": [

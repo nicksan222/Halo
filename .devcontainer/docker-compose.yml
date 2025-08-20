@@ -25,6 +25,12 @@ services:
       postgres:
         condition: service_healthy
 
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025" # Web UI
+      - "1025:1025" # SMTP
+
   # Note: Drizzle Studio is run directly from the host using: bun run db:studio
   # This avoids containerization issues with Bun and dependencies
 
