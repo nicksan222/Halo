@@ -11,4 +11,4 @@ export function createMailpitStrategy(config: MailpitConfig): EmailStrategy {
     password: config.password,
     from: config.from
   });
-} 
+}

@@ -1,8 +1,8 @@
 import { env } from '@acme/env';
+import { createMailpitStrategy } from './providers/mailpit';
 import { createResendStrategy } from './providers/resend';
 import { createSesStrategy } from './providers/ses';
 import { createSmtpStrategy } from './providers/smtp';
-import { createMailpitStrategy } from './providers/mailpit';
 import type { EmailClientConfig, EmailStrategy, SendEmailInput, SendEmailResult } from './types';
 
 function configFromEnv(): EmailClientConfig {
