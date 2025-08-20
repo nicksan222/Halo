@@ -4,116 +4,77 @@
  */
 
 import { env } from '@acme/env';
-import {
-  del as blobDelete,
-  head as blobHead,
-  list as blobList,
-  put as blobPut,
-  type HeadBlobResult,
-  type ListBlobResultBlob,
-  type ListCommandOptions,
-  type PutBlobResult,
-  type PutCommandOptions
-} from '@vercel/blob';
 import type { StoragePrefixValue } from './prefixes';
+import { createS3Strategy } from './providers/s3';
+import { createVercelBlobStrategy } from './providers/vercel-blob';
 import type {
-  PrefixedPath,
   ServerPutOptions,
+  StorageClientConfig,
   StorageFileMetadata,
   StorageListOptions,
-  StorageListResult
+  StorageListResult,
+  StorageStrategy
 } from './types';
-
-function mapPutResultToMetadata<P extends string>(result: PutBlobResult): StorageFileMetadata<P> {
-  return {
-    pathname: result.pathname as PrefixedPath<P>,
-    url: result.url,
-    downloadUrl: result.downloadUrl,
-    contentType: result.contentType
-  };
-}
-
-function mapListBlobToMetadata<P extends string>(blob: ListBlobResultBlob): StorageFileMetadata<P> {
-  return {
-    pathname: blob.pathname as PrefixedPath<P>,
-    url: blob.url,
-    downloadUrl: blob.downloadUrl,
-    size: blob.size,
-    uploadedAt: blob.uploadedAt
-  };
-}
-
-function mapHeadResultToMetadata<P extends string>(result: HeadBlobResult): StorageFileMetadata<P> {
-  return {
-    pathname: result.pathname as PrefixedPath<P>,
-    url: result.url,
-    downloadUrl: result.downloadUrl,
-    size: result.size,
-    uploadedAt: result.uploadedAt,
-    contentType: result.contentType
-  };
-}
-
-type PutBodyInput = Parameters<typeof blobPut>[1];
 
 function ensureTrailingSlash(prefix: string): string {
   return prefix.endsWith('/') ? prefix : `${prefix}/`;
 }
 
-/**
- * Creates a server storage instance scoped to a specific prefix.
- * The returned methods auto-prepend the prefix and reflect it in their types.
- */
-export function createServerStorage<P extends StoragePrefixValue>(prefix: P) {
-  const normalized = ensureTrailingSlash(prefix);
+function configFromEnv(): StorageClientConfig {
+  const provider = (env.STORAGE_PROVIDER as StorageClientConfig['provider']) || 'vercel-blob';
+  if (provider === 's3') {
+    return {
+      provider: 's3',
+      region: env.S3_REGION,
+      bucket: env.S3_BUCKET,
+      accessKeyId: env.S3_ACCESS_KEY_ID || undefined,
+      secretAccessKey: env.S3_SECRET_ACCESS_KEY || undefined,
+      endpoint: env.S3_ENDPOINT || undefined,
+      forcePathStyle: env.S3_FORCE_PATH_STYLE,
+      publicUrlBase: env.S3_PUBLIC_URL || undefined
+    };
+  }
   return {
-    /** Upload content to `${prefix}${pathname}`. */
-    put: async (
+    provider: 'vercel-blob',
+    token: env.BLOB_READ_WRITE_TOKEN || undefined
+  };
+}
+
+function buildStrategy(config: StorageClientConfig): StorageStrategy {
+  switch (config.provider) {
+    case 's3':
+      return createS3Strategy(config);
+    default:
+      return createVercelBlobStrategy(config);
+  }
+}
+
+export function createStorageClient<P extends StoragePrefixValue>(
+  prefix: P,
+  explicitConfig?: StorageClientConfig
+) {
+  const cfg = explicitConfig ?? configFromEnv();
+  const strategy = buildStrategy(cfg);
+  const normalized = ensureTrailingSlash(prefix);
+
+  return {
+    put(
       pathname: string,
-      data: PutBodyInput,
+      data: Parameters<StorageStrategy['put']>[1],
       options: ServerPutOptions = {}
-    ): Promise<StorageFileMetadata<P>> => {
-      const putOptions: PutCommandOptions = {
-        access: 'public',
-        addRandomSuffix: options.addRandomSuffix,
-        cacheControlMaxAge: options.cacheControlMaxAge,
-        contentType: options.contentType,
-        allowOverwrite: options.allowOverwrite,
-        multipart: options.multipart,
-        token: env.BLOB_READ_WRITE_TOKEN || undefined
-      };
-      const result = await blobPut(`${normalized}${pathname}`, data, putOptions);
-      return mapPutResultToMetadata<P>(result);
+    ): Promise<StorageFileMetadata<P>> {
+      return strategy.put(`${normalized}${pathname}`, data, options) as Promise<
+        StorageFileMetadata<P>
+      >;
     },
-
-    /** Get metadata for `${prefix}${pathname}`. */
-    head: async (pathname: string): Promise<StorageFileMetadata<P> | null> => {
-      const info = await blobHead(`${normalized}${pathname}`, {
-        token: env.BLOB_READ_WRITE_TOKEN || undefined
-      });
-      return info ? mapHeadResultToMetadata<P>(info) : null;
+    head(pathname: string): Promise<StorageFileMetadata<P> | null> {
+      return strategy.head(`${normalized}${pathname}`) as Promise<StorageFileMetadata<P> | null>;
     },
-
-    /** List blobs under the given `prefix`. */
-    list: async (options: StorageListOptions = {}): Promise<StorageListResult<P>> => {
-      const listOptions: ListCommandOptions = {
-        prefix: normalized,
-        limit: options.limit,
-        cursor: options.cursor,
-        token: env.BLOB_READ_WRITE_TOKEN || undefined
-      };
-      const { blobs, cursor } = await blobList(listOptions);
-      return {
-        blobs: blobs.map((b) => mapListBlobToMetadata<P>(b)),
-        next: cursor ?? null
-      };
+    list(options: StorageListOptions = {}): Promise<StorageListResult<P>> {
+      return strategy.list(normalized, options) as Promise<StorageListResult<P>>;
     },
-
-    /** Delete `${prefix}${pathname}`. */
-    delete: async (pathname: string): Promise<void> => {
-      await blobDelete(`${normalized}${pathname}`, {
-        token: env.BLOB_READ_WRITE_TOKEN || undefined
-      });
+    delete(pathname: string): Promise<void> {
+      return strategy.delete(`${normalized}${pathname}`);
     }
   };
 }

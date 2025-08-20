@@ -3,6 +3,8 @@
  * These are intentionally aligned with the SDK while staying provider-agnostic.
  */
 
+export type StorageProvider = 'vercel-blob' | 's3';
+
 /**
  * A path that is guaranteed to start with the given prefix P.
  */
@@ -24,6 +26,14 @@ export interface ServerPutOptions {
   /** Enable multipart upload for large files. */
   multipart?: boolean;
 }
+
+export type ServerPutBody =
+  | Buffer
+  | Uint8Array
+  | string
+  | NodeJS.ReadableStream
+  | Blob
+  | ArrayBuffer;
 
 /**
  * Options for client-side upload operations.
@@ -78,4 +88,33 @@ export interface StorageListOptions {
 export interface StorageListResult<P extends string = string> {
   blobs: StorageFileMetadata<P>[];
   next?: string | null;
+}
+
+export type VercelBlobConfig = {
+  provider: 'vercel-blob';
+  token?: string;
+};
+
+export type S3Config = {
+  provider: 's3';
+  region: string;
+  bucket: string;
+  accessKeyId?: string;
+  secretAccessKey?: string;
+  endpoint?: string;
+  forcePathStyle?: boolean;
+  publicUrlBase?: string;
+};
+
+export type StorageClientConfig = VercelBlobConfig | S3Config;
+
+export interface StorageStrategy {
+  put(
+    pathname: string,
+    data: ServerPutBody,
+    options: ServerPutOptions
+  ): Promise<StorageFileMetadata>;
+  head(pathname: string): Promise<StorageFileMetadata | null>;
+  list(prefix: string, options: StorageListOptions): Promise<StorageListResult>;
+  delete(pathname: string): Promise<void>;
 }

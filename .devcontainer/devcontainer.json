@@ -25,9 +25,17 @@
     "SMTP_HOST": "localhost",
     "SMTP_PORT": "1025",
     "SMTP_SECURE": "false",
-    "SMTP_FROM": "dev@local.test"
+    "SMTP_FROM": "dev@local.test",
+    "STORAGE_PROVIDER": "s3",
+    "S3_REGION": "us-east-1",
+    "S3_BUCKET": "acme",
+    "S3_ACCESS_KEY_ID": "minioadmin",
+    "S3_SECRET_ACCESS_KEY": "minioadmin",
+    "S3_ENDPOINT": "http://localhost:9000",
+    "S3_FORCE_PATH_STYLE": "true",
+    "S3_PUBLIC_URL": "http://localhost:9000/acme"
   },
-  "forwardPorts": [5432, 8025, 1025],
+  "forwardPorts": [5432, 8025, 1025, 9000, 9001],
   "customizations": {
     "vscode": {
       "extensions": [

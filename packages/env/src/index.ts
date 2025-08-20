@@ -18,11 +18,23 @@ export const env = cleanEnv(process.env, {
   PORT: port({ default: 3001, desc: 'API server port' }),
   CORS_ORIGIN: url({ default: 'http://localhost:3000', desc: 'Allowed CORS origin for API' }),
 
+  // Storage (Provider selector)
+  STORAGE_PROVIDER: str({ choices: ['vercel-blob', 's3'], default: 'vercel-blob' }),
+
   // Storage (Vercel Blob)
   BLOB_READ_WRITE_TOKEN: str({
     desc: 'Vercel Blob read-write token. Required for server-side blob operations in non-Vercel envs.',
     default: ''
   }),
+
+  // Storage (S3/MinIO)
+  S3_REGION: str({ default: 'us-east-1' }),
+  S3_BUCKET: str({ default: '' }),
+  S3_ACCESS_KEY_ID: str({ default: '' }),
+  S3_SECRET_ACCESS_KEY: str({ default: '' }),
+  S3_ENDPOINT: str({ default: '' }),
+  S3_FORCE_PATH_STYLE: bool({ default: false }),
+  S3_PUBLIC_URL: str({ default: '' }),
 
   // Web app public config
   NEXT_PUBLIC_API_URL: url({ default: 'http://localhost:3001', desc: 'Public base URL for API' }),

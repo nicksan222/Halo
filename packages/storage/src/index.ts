@@ -1,24 +1,20 @@
-/** Public types */
-
 /**
- * Factory to create a client-side storage instance scoped to a given prefix.
+ * Strategy-based storage client supporting 'vercel-blob' and 's3'.
+ *
+ * Usage:
+ * import { createStorageClient, StoragePrefix } from '@acme/storage';
+ * const avatars = createStorageClient(StoragePrefix.Avatars);
+ * await avatars.put('user-1.png', data);
  */
-export { createClientStorage } from './client';
+
 export type { StoragePrefixKey, StoragePrefixValue } from './prefixes';
-/**
- * Allowed storage prefixes. Update in one place to keep pathing consistent and typesafe.
- */
 export { StoragePrefix } from './prefixes';
-
-/**
- * Factory to create a server-side storage instance scoped to a given prefix.
- */
-export { createServerStorage } from './server';
+export { createStorageClient } from './server';
 export type {
-  ClientUploadOptions,
-  PrefixedPath,
   ServerPutOptions,
+  StorageClientConfig,
   StorageFileMetadata,
   StorageListOptions,
-  StorageListResult
+  StorageListResult,
+  StorageProvider
 } from './types';

@@ -31,8 +31,34 @@ services:
       - "8025:8025" # Web UI
       - "1025:1025" # SMTP
 
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    ports:
+      - "9000:9000" # S3 API
+      - "9001:9001" # Console UI
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  minio-setup:
+    image: minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: /bin/sh
+    command: -c "mc alias set local http://minio:9000 minioadmin minioadmin && mc mb -p local/acme || true && mc anonymous set download local/acme || true"
+
   # Note: Drizzle Studio is run directly from the host using: bun run db:studio
   # This avoids containerization issues with Bun and dependencies
 
 volumes:
   db_data:
+  minio_data:

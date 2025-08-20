@@ -13,7 +13,7 @@ echo "📚 Installing project dependencies..."
 bun install
 
 # Start PostgreSQL using Docker Compose
-echo "🐘 Starting PostgreSQL container..."
+echo "🐘 Starting services (PostgreSQL, Mailpit, MinIO)..."
 cd "$(dirname "$0")"
 docker compose up -d
 
@@ -44,6 +44,8 @@ echo ""
 echo "📊 Service Status:"
 echo "   🐘 PostgreSQL: localhost:5432"
 echo "   🔗 Neon Proxy: localhost:4444"
+echo "   ✉️  Mailpit UI: http://localhost:8025 (SMTP: 1025)"
+echo "   🗄️  MinIO S3 API: http://localhost:9000 (Console: http://localhost:9001)"
 echo ""
 echo "🛑 To stop services, run: docker compose down"
 echo "" 
