@@ -22,12 +22,12 @@
  */
 import { env } from '@acme/env';
 import { neon, neonConfig } from '@neondatabase/serverless';
-import ws from 'ws';
 import { drizzle as drizzleNeon } from 'drizzle-orm/neon-http';
 import { migrate as migrateNeon } from 'drizzle-orm/neon-http/migrator';
-import postgres from 'postgres';
 import { drizzle as drizzlePg } from 'drizzle-orm/postgres-js';
 import { migrate as migratePg } from 'drizzle-orm/postgres-js/migrator';
+import postgres from 'postgres';
+import ws from 'ws';
 
 /**
  * Apply migrations using Postgres.js against the local Docker Postgres.
@@ -83,7 +83,7 @@ async function migrateRemote(connectionString: string): Promise<void> {
         const isLocal = h === 'db.localtest.me' || h === 'localhost' || h === '127.0.0.1';
         return isLocal ? `${h}:4444/v2` : `${h}/v2`;
       };
-      (neonConfig as unknown as Record<string, unknown>)["poolQueryViaFetch"] = true;
+      (neonConfig as unknown as Record<string, unknown>).poolQueryViaFetch = true;
     }
   } catch {
     // Ignore URL parsing issues; env validation would have failed earlier in most cases
@@ -116,9 +116,11 @@ async function main(): Promise<void> {
   await migrateRemote(connectionString);
 }
 
-main().then(() => {
-  console.log('✅ Migration completed');
-}).catch((error) => {
-  console.error('❌ Error during migration:', error);
-  process.exit(1);
-}); 
+main()
+  .then(() => {
+    console.log('✅ Migration completed');
+  })
+  .catch((error) => {
+    console.error('❌ Error during migration:', error);
+    process.exit(1);
+  });

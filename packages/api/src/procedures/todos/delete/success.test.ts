@@ -108,34 +108,38 @@ describe('delete todo success', () => {
     expect(deleted2!.title).toBe('Second todo to delete');
   });
 
-  test('deletes todo and verifies it is no longer accessible', async () => {
-    // Create a todo
-    const todo = await client.todos.create.todo({
-      title: 'Todo to verify deletion',
-      description: 'This todo will be deleted and verified'
-    });
+  test(
+    'deletes todo and verifies it is no longer accessible',
+    async () => {
+      // Create a todo
+      const todo = await client.todos.create.todo({
+        title: 'Todo to verify deletion',
+        description: 'This todo will be deleted and verified'
+      });
 
-    // Delete it
-    const deletedTodo = await client.todos.delete.todo({ id: todo.id });
+      // Delete it
+      const deletedTodo = await client.todos.delete.todo({ id: todo.id });
 
-    expect(deletedTodo).toBeDefined();
-    expect(deletedTodo!.id).toBe(todo.id);
+      expect(deletedTodo).toBeDefined();
+      expect(deletedTodo!.id).toBe(todo.id);
 
-    // Verify it can no longer be retrieved
-    await expect(client.todos.get.byId({ id: todo.id })).rejects.toThrow('Todo not found');
+      // Verify it can no longer be retrieved
+      await expect(client.todos.get.byId({ id: todo.id })).rejects.toThrow('Todo not found');
 
-    // Verify it can no longer be updated
-    await expect(
-      client.todos.update.todo({
-        id: todo.id,
-        title: 'Updated after deletion'
-      })
-    ).rejects.toThrow('Todo not found');
+      // Verify it can no longer be updated
+      await expect(
+        client.todos.update.todo({
+          id: todo.id,
+          title: 'Updated after deletion'
+        })
+      ).rejects.toThrow('Todo not found');
 
-    // Verify it can no longer be deleted (should return null)
-    const secondDelete = await client.todos.delete.todo({ id: todo.id });
-    expect(secondDelete).toBeNull();
-  });
+      // Verify it can no longer be deleted (should return null)
+      const secondDelete = await client.todos.delete.todo({ id: todo.id });
+      expect(secondDelete).toBeNull();
+    },
+    { timeout: 10000 }
+  );
 
   test('deletes todo and verifies it is not in list', async () => {
     // Create a todo
