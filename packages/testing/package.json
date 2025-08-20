@@ -16,8 +16,8 @@
     "check": "bun run typecheck && bun run lint"
   },
   "dependencies": {
-    "@acme/auth": "workspace:*",
-    "@acme/api": "workspace:*",
-    "@acme/db": "workspace:*"
+    "@acme/auth": "0.0.0",
+    "@acme/api": "0.0.0",
+    "@acme/db": "0.0.0"
   }
 }

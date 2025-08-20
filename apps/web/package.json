@@ -20,8 +20,8 @@
     "@tanstack/react-query": "^5.62.6",
     "react-hook-form": "^7.62.0",
     "zod": "^4.0.17",
-    "@acme/tailwind-config": "workspace:*",
-    "@acme/ui": "workspace:*",
+    "@acme/tailwind-config": "0.1.0",
+    "@acme/ui": "0.0.0",
     "lucide-react": "^0.540.0"
   },
   "devDependencies": {

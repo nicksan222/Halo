@@ -1,19 +1,6 @@
-"use client"
+'use client';
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react"
-
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@acme/ui/components/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from '@acme/ui/components/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,14 +8,15 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@acme/ui/components/dropdown-menu"
+  DropdownMenuTrigger
+} from '@acme/ui/components/dropdown-menu';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
-} from "@acme/ui/components/sidebar"
+  useSidebar
+} from '@acme/ui/components/sidebar';
+import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from 'lucide-react';
 
 export function NavUser({
   user,
@@ -37,33 +25,33 @@ export function NavUser({
   onBilling,
   onNotifications,
   onLogout,
-  features = {},
+  features = {}
 }: {
   user: {
-    name: string
-    email: string
-    avatar: string
-  }
-  onUpgrade?: () => void
-  onAccount?: () => void
-  onBilling?: () => void
-  onNotifications?: () => void
-  onLogout?: () => void
+    name: string;
+    email: string;
+    avatar: string;
+  };
+  onUpgrade?: () => void;
+  onAccount?: () => void;
+  onBilling?: () => void;
+  onNotifications?: () => void;
+  onLogout?: () => void;
   features?: {
-    showUpgrade?: boolean
-    showAccount?: boolean
-    showBilling?: boolean
-    showNotifications?: boolean
-  }
+    showUpgrade?: boolean;
+    showAccount?: boolean;
+    showBilling?: boolean;
+    showNotifications?: boolean;
+  };
 }) {
-  const { isMobile } = useSidebar()
+  const { isMobile } = useSidebar();
 
   const {
     showUpgrade = true,
     showAccount = true,
     showBilling = true,
-    showNotifications = true,
-  } = features
+    showNotifications = true
+  } = features;
 
   return (
     <SidebarMenu>
@@ -77,7 +65,11 @@ export function NavUser({
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={user.avatar} alt={user.name} />
                 <AvatarFallback className="rounded-lg">
-                  {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  {user.name
+                    .split(' ')
+                    .map((n) => n[0])
+                    .join('')
+                    .toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -89,7 +81,7 @@ export function NavUser({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
+            side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={4}
           >
@@ -98,7 +90,11 @@ export function NavUser({
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user.avatar} alt={user.name} />
                   <AvatarFallback className="rounded-lg">
-                    {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    {user.name
+                      .split(' ')
+                      .map((n) => n[0])
+                      .join('')
+                      .toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -150,5 +146,5 @@ export function NavUser({
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
-} 
+  );
+}

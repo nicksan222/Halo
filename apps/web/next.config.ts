@@ -29,14 +29,7 @@ const nextConfig: NextConfig = {
    * Disable source maps in development to prevent source map errors.
    * This fixes the "payload is not an Object" error in development.
    */
-  productionBrowserSourceMaps: false,
-
-  /**
-   * Turbopack configuration to disable source maps in development
-   */
-  experimental: {
-    turbo: {}
-  }
+  productionBrowserSourceMaps: false
 };
 
 export default nextConfig;
