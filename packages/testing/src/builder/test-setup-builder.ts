@@ -1,3 +1,5 @@
+import type { TestUser } from '../auth/member';
+import type { TestOrganization } from '../auth/organization';
 import type { AccountStrategy } from '../auth/strategy';
 import { CreateFounder } from './commands/create-founder';
 import { CreateMember, type CreateMemberParams } from './commands/create-member';
@@ -8,9 +10,16 @@ export interface BuilderOptions {
   registerForCleanup?: boolean;
 }
 
+export interface CreatedResources {
+  founder?: TestUser;
+  organization?: TestOrganization;
+  members: TestUser[];
+}
+
 export class TestSetupBuilder {
   private readonly commands: BuilderCommand[] = [];
   private readonly options: BuilderOptions;
+  private createdResources: CreatedResources | null = null;
 
   constructor(options?: BuilderOptions) {
     this.options = options ?? {};
@@ -47,10 +56,56 @@ export class TestSetupBuilder {
       await cmd.execute(ctx);
     }
 
-    return {
+    this.createdResources = {
       founder: ctx.founder,
       organization: ctx.organization,
       members: ctx.members
-    } as const;
+    };
+
+    return this.createdResources;
+  }
+
+  /**
+   * Cleans up all resources created by this builder.
+   * Deletes members first, then organization, then founder.
+   */
+  async cleanup() {
+    if (!this.createdResources) {
+      return;
+    }
+
+    const { founder, organization, members } = this.createdResources;
+
+    // Clean up members first
+    if (members.length > 0) {
+      await Promise.allSettled(
+        members.map(async (member) => {
+          if (organization) {
+            await organization.removeMember(member.getEmail());
+          }
+          await member.delete();
+        })
+      );
+    }
+
+    // Clean up organization
+    if (organization) {
+      await organization.delete();
+    }
+
+    // Clean up founder
+    if (founder) {
+      await founder.delete();
+    }
+
+    // Clear the created resources
+    this.createdResources = null;
+  }
+
+  /**
+   * Gets the currently created resources (if any).
+   */
+  getCreatedResources(): CreatedResources | null {
+    return this.createdResources;
   }
 }
