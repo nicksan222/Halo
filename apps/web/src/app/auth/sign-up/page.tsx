@@ -1,6 +1,7 @@
 'use client';
 
-import { authClient } from '@acme/auth';
+import { authClient } from '@acme/auth/client';
+import { translate } from '@acme/localization';
 import { Button } from '@acme/ui/components/button';
 import {
   Card,
@@ -25,6 +26,8 @@ import { useRouter } from 'next/navigation';
 import { useId, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { lang } from '@/app/(app)/lang';
+import { useLocale } from '@/providers/i18n-provider';
 
 const signUp = authClient.signUp;
 
@@ -41,6 +44,8 @@ export default function SignUp() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const locale = useLocale();
+  const t = translate(lang, locale);
 
   const imageId = useId();
 
@@ -69,7 +74,7 @@ export default function SignUp() {
 
   async function onSubmit(values: SignUpFormValues) {
     if (values.password !== values.passwordConfirmation) {
-      toast.error("Passwords don't match");
+      toast.error(t.signUp.passwordsDoNotMatch);
       return;
     }
 
@@ -100,8 +105,8 @@ export default function SignUp() {
     <>
       <Card className="z-50 w-full">
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Create your account</CardTitle>
-          <CardDescription>Enter your information to get started</CardDescription>
+          <CardTitle className="text-xl">{t.signUp.title}</CardTitle>
+          <CardDescription>{t.signUp.subtitle}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -110,12 +115,12 @@ export default function SignUp() {
                 <FormField
                   control={form.control}
                   name="firstName"
-                  rules={{ required: 'First name is required' }}
+                  rules={{ required: t.signUp.firstNameRequired }}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>First name</FormLabel>
+                      <FormLabel>{t.signUp.firstName}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Max" {...field} />
+                        <Input placeholder={t.signUp.firstNamePlaceholder} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -124,12 +129,12 @@ export default function SignUp() {
                 <FormField
                   control={form.control}
                   name="lastName"
-                  rules={{ required: 'Last name is required' }}
+                  rules={{ required: t.signUp.lastNameRequired }}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Last name</FormLabel>
+                      <FormLabel>{t.signUp.lastName}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Robinson" {...field} />
+                        <Input placeholder={t.signUp.lastNamePlaceholder} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -141,17 +146,17 @@ export default function SignUp() {
                 control={form.control}
                 name="email"
                 rules={{
-                  required: 'Email is required',
+                  required: t.signUp.emailRequired,
                   pattern: {
                     value: /[^\s@]+@[^\s@]+\.[^\s@]+/,
-                    message: 'Enter a valid email address'
+                    message: t.signUp.emailInvalid
                   }
                 }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>{t.signUp.email}</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="m@example.com" {...field} />
+                      <Input type="email" placeholder={t.signUp.emailPlaceholder} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -162,16 +167,16 @@ export default function SignUp() {
                 control={form.control}
                 name="password"
                 rules={{
-                  required: 'Password is required',
-                  minLength: { value: 6, message: 'Minimum 6 characters' }
+                  required: t.signUp.passwordRequired,
+                  minLength: { value: 6, message: t.signUp.passwordMinLength }
                 }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>{t.signUp.password}</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Password"
+                        placeholder={t.signUp.passwordPlaceholder}
                         autoComplete="new-password"
                         {...field}
                       />
@@ -185,17 +190,17 @@ export default function SignUp() {
                 control={form.control}
                 name="passwordConfirmation"
                 rules={{
-                  required: 'Please confirm your password',
+                  required: t.signUp.confirmPasswordRequired,
                   validate: (value) =>
-                    value === form.getValues('password') || 'Passwords do not match'
+                    value === form.getValues('password') || t.signUp.passwordsDoNotMatch
                 }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
+                    <FormLabel>{t.signUp.confirmPassword}</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Confirm Password"
+                        placeholder={t.signUp.confirmPasswordPlaceholder}
                         autoComplete="new-password"
                         {...field}
                       />
@@ -207,8 +212,8 @@ export default function SignUp() {
 
               <div className="grid gap-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Profile Image</span>
-                  <span className="text-muted-foreground text-xs">Optional</span>
+                  <span className="text-sm font-medium">{t.signUp.profileImage}</span>
+                  <span className="text-muted-foreground text-xs">{t.signUp.optional}</span>
                 </div>
                 <div className="flex items-end gap-4">
                   {imagePreview && (
@@ -243,12 +248,12 @@ export default function SignUp() {
               </div>
 
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? <Loader2 size={16} className="animate-spin" /> : 'Create an account'}
+                {loading ? <Loader2 size={16} className="animate-spin" /> : t.signUp.createAccount}
               </Button>
               <div className="text-center text-sm">
-                Already have an account?{' '}
+                {t.signUp.alreadyHaveAccount}{' '}
                 <Link href="/auth/sign-in" className="underline underline-offset-4">
-                  Sign in
+                  {t.signUp.signIn}
                 </Link>
               </div>
             </form>
@@ -256,8 +261,8 @@ export default function SignUp() {
         </CardContent>
       </Card>
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4 mt-4">
-        By creating an account, you agree to our <a href="/terms">Terms of Service</a> and{' '}
-        <a href="/privacy">Privacy Policy</a>.
+        {t.signUp.termsText} <a href="/terms">{t.signUp.termsLink}</a> and{' '}
+        <a href="/privacy">{t.signUp.privacyLink}</a>.
       </div>
     </>
   );

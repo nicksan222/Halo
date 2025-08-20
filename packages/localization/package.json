@@ -1,0 +1,38 @@
+{
+  "name": "@acme/localization",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "files": [
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    },
+    "./next-client": {
+      "import": "./src/next/next-client.ts",
+      "types": "./src/next/next-client.ts"
+    },
+    "./next-server": {
+      "import": "./src/next/next-server.ts",
+      "types": "./src/next/next-server.ts"
+    }
+  },
+  "scripts": {
+    "build": "bunx tsc -p tsconfig.json --noEmit",
+    "typecheck": "bunx tsc -p tsconfig.json --noEmit",
+    "lint": "bunx biome check .",
+    "format": "bunx biome check --write .",
+    "check": "bun run typecheck && bun run lint"
+  },
+  "dependencies": {
+    "zod": "^4.0.17"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  }
+}

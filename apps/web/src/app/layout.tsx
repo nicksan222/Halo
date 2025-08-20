@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import '@acme/ui/styles';
 import { Toaster } from '@acme/ui/components/sonner';
+import { HtmlLang } from '@/components/layout/html-lang';
 import { Providers } from '@/providers';
 
 const fontSans = Inter({
@@ -23,6 +24,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${fontSans.variable} antialiased min-h-screen bg-background`}>
         <Providers>
+          <HtmlLang />
           {children}
           <Toaster position="top-right" richColors />
         </Providers>

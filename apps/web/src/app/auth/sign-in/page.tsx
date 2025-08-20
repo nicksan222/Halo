@@ -1,6 +1,7 @@
 'use client';
 
-import { authClient } from '@acme/auth';
+import { authClient } from '@acme/auth/client';
+import { translate } from '@acme/localization';
 import { Button } from '@acme/ui/components/button';
 import {
   Card,
@@ -25,6 +26,8 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { useLocale } from '@/providers/i18n-provider';
+import { lang } from './lang';
 
 const signIn = authClient.signIn;
 
@@ -36,6 +39,8 @@ type SignInFormValues = {
 
 export default function SignIn() {
   const [loading, setLoading] = useState(false);
+  const locale = useLocale();
+  const t = translate(lang, locale);
 
   const form = useForm<SignInFormValues>({
     mode: 'onTouched',
@@ -59,8 +64,8 @@ export default function SignIn() {
     <>
       <Card className="w-full">
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome back</CardTitle>
-          <CardDescription>Login with your Apple or Google account</CardDescription>
+          <CardTitle className="text-xl">{t.title}</CardTitle>
+          <CardDescription>{t.subtitle}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -83,7 +88,7 @@ export default function SignIn() {
                       fill="currentColor"
                     />
                   </svg>
-                  Login with Apple
+                  {t.appleLogin}
                 </Button>
                 <Button
                   variant="outline"
@@ -102,13 +107,13 @@ export default function SignIn() {
                       fill="currentColor"
                     />
                   </svg>
-                  Login with Google
+                  {t.googleLogin}
                 </Button>
               </div>
 
               <div className="flex items-center gap-2">
                 <Separator className="flex-1" />
-                <span className="text-sm text-muted-foreground">Or continue with</span>
+                <span className="text-sm text-muted-foreground">{t.orContinueWith}</span>
                 <Separator className="flex-1" />
               </div>
 
@@ -117,19 +122,19 @@ export default function SignIn() {
                   control={form.control}
                   name="email"
                   rules={{
-                    required: 'Email is required',
+                    required: t.emailRequired,
                     pattern: {
                       value: /[^\s@]+@[^\s@]+\.[^\s@]+/,
-                      message: 'Enter a valid email address'
+                      message: t.emailInvalid
                     }
                   }}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>{t.email}</FormLabel>
                       <FormControl>
                         <Input
                           type="email"
-                          placeholder="m@example.com"
+                          placeholder={t.emailPlaceholder}
                           disabled={loading}
                           {...field}
                         />
@@ -143,24 +148,24 @@ export default function SignIn() {
                   control={form.control}
                   name="password"
                   rules={{
-                    required: 'Password is required',
-                    minLength: { value: 6, message: 'Minimum 6 characters' }
+                    required: t.passwordRequired,
+                    minLength: { value: 6, message: t.passwordMinLength }
                   }}
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex items-center">
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel>{t.password}</FormLabel>
                         <Link
                           href="#"
                           className="ml-auto text-sm underline-offset-4 hover:underline"
                         >
-                          Forgot your password?
+                          {t.forgotPassword}
                         </Link>
                       </div>
                       <FormControl>
                         <Input
                           type="password"
-                          placeholder="password"
+                          placeholder={t.passwordPlaceholder}
                           autoComplete="current-password"
                           disabled={loading}
                           {...field}
@@ -180,19 +185,19 @@ export default function SignIn() {
                         <FormControl>
                           <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                         </FormControl>
-                        <FormLabel>Remember me</FormLabel>
+                        <FormLabel>{t.rememberMe}</FormLabel>
                       </div>
                     </FormItem>
                   )}
                 />
 
                 <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? <Loader2 size={16} className="animate-spin" /> : 'Login'}
+                  {loading ? <Loader2 size={16} className="animate-spin" /> : t.login}
                 </Button>
                 <div className="text-center text-sm">
-                  Don&apos;t have an account?{' '}
+                  {t.noAccount}{' '}
                   <Link href="/auth/sign-up" className="underline underline-offset-4">
-                    Sign up
+                    {t.signUp}
                   </Link>
                 </div>
               </div>
@@ -201,8 +206,8 @@ export default function SignIn() {
         </CardContent>
       </Card>
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4 mt-4">
-        By clicking continue, you agree to our <a href="/terms-of-service">Terms of Service</a> and{' '}
-        <a href="/privacy-policy">Privacy Policy</a>.
+        {t.termsText} <a href="/terms-of-service">{t.termsLink}</a> and{' '}
+        <a href="/privacy-policy">{t.privacyLink}</a>.
       </div>
     </>
   );

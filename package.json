@@ -23,7 +23,8 @@
     "deps:fix": "syncpack fix-mismatches",
     "deps:list": "syncpack list",
     "deps:lint": "syncpack lint",
-    "deps:format": "syncpack format"
+    "deps:format": "syncpack format",
+    "seed": "bun run --cwd packages/seeder reset && bun run db:migrate && bun run --cwd packages/seeder seed:raw"
   },
   "devDependencies": {
     "@better-auth/cli": "latest",

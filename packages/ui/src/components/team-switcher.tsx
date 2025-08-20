@@ -28,13 +28,19 @@ export function TeamSwitcher({
     name: string;
     logo: React.ElementType | string;
     plan: string;
+    id: string;
   }[];
   activeTeam: {
     name: string;
     logo: React.ElementType | string;
     plan: string;
   };
-  onTeamChange: (team: { name: string; logo: React.ElementType | string; plan: string }) => void;
+  onTeamChange: (team: {
+    name: string;
+    logo: React.ElementType | string;
+    plan: string;
+    id: string;
+  }) => void;
   onAddTeam: () => void;
 }) {
   const { isMobile } = useSidebar();

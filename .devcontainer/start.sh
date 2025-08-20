@@ -32,11 +32,20 @@ if ! docker compose exec -T postgres psql -U postgres -tAc "SELECT 1 FROM pg_dat
   docker compose exec -T postgres psql -U postgres -c "CREATE DATABASE acme"
 fi
 
+# Reset database (drop and recreate public schema)
+echo "🧹 Resetting database (drop and recreate public schema)..."
+docker compose exec -T postgres psql -U postgres -d acme -v ON_ERROR_STOP=1 -c "DROP SCHEMA IF EXISTS public CASCADE; DROP SCHEMA IF EXISTS drizzle CASCADE; CREATE SCHEMA public; GRANT ALL ON SCHEMA public TO postgres; GRANT ALL ON SCHEMA public TO public;"
+
 # Run database migrations
 echo "🔄 Running database migrations..."
 cd "$WORKSPACE_ROOT"
 bun run db:migrate
 echo "✅ Migrations completed!"
+
+# Seed database
+echo "🌱 Seeding database..."
+bun run seed
+echo "✅ Seeding completed!"
 
 echo ""
 echo "🎉 Development environment is ready!"

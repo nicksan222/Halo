@@ -1,5 +1,8 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
+import { translate } from '@acme/localization';
 import { Alert, AlertDescription, AlertTitle } from '@acme/ui/components/alert';
 import { Button } from '@acme/ui/components/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@acme/ui/components/card';
@@ -19,7 +22,9 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { lang } from '@/app/(app)/lang';
 import { PageHeader } from '@/components';
+import { useLocale } from '@/providers/i18n-provider';
 import { api } from '@/trpc/react';
 
 interface EditTodoFormValues {
@@ -32,6 +37,8 @@ export default function TodoDetailPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const utils = api.useUtils();
+  const locale = useLocale();
+  const t = translate(lang, locale);
 
   const query = api.todos.get.byId.useQuery({ id: params.id });
   const updateMutation = api.todos.update.todo.useMutation({
@@ -67,16 +74,16 @@ export default function TodoDetailPage() {
     }
   }, [query.data, form]);
 
-  if (query.isLoading) return <div>Loading…</div>;
+  if (query.isLoading) return <div>{t.editTodo.loading}</div>;
   if (query.error)
     return (
       <div className="space-y-4">
         <Alert variant="destructive">
-          <AlertTitle>Failed to load todo</AlertTitle>
+          <AlertTitle>{t.editTodo.failedToLoad}</AlertTitle>
           <AlertDescription>{query.error.message}</AlertDescription>
         </Alert>
         <Button asChild>
-          <Link href="/todos">Back</Link>
+          <Link href="/todos">{t.editTodo.back}</Link>
         </Button>
       </div>
     );
@@ -92,10 +99,10 @@ export default function TodoDetailPage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-4">
-      <PageHeader title="Edit todo" backHref="/todos" />
+      <PageHeader title={t.editTodo.title} backHref="/todos" />
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Details</CardTitle>
+          <CardTitle>{t.editTodo.details}</CardTitle>
           <Button
             variant="destructive"
             onClick={() => deleteMutation.mutate({ id: params.id })}
@@ -114,10 +121,10 @@ export default function TodoDetailPage() {
               <FormField
                 control={form.control}
                 name="title"
-                rules={{ required: 'Title is required' }}
+                rules={{ required: t.editTodo.titleRequired }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Title</FormLabel>
+                    <FormLabel>{t.editTodo.titleLabel}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -130,7 +137,7 @@ export default function TodoDetailPage() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>{t.editTodo.descriptionLabel}</FormLabel>
                     <FormControl>
                       <Textarea {...field} value={field.value ?? ''} />
                     </FormControl>
@@ -146,7 +153,7 @@ export default function TodoDetailPage() {
                       <FormControl>
                         <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                       </FormControl>
-                      <FormLabel>Completed</FormLabel>
+                      <FormLabel>{t.editTodo.completedLabel}</FormLabel>
                     </div>
                   </FormItem>
                 )}
@@ -156,11 +163,11 @@ export default function TodoDetailPage() {
                   {updateMutation.isPending ? (
                     <Loader2 size={16} className="animate-spin" />
                   ) : (
-                    'Save'
+                    t.editTodo.save
                   )}
                 </Button>
                 <Button type="button" variant="secondary" asChild className="ml-2">
-                  <Link href="/todos">Cancel</Link>
+                  <Link href="/todos">{t.editTodo.cancel}</Link>
                 </Button>
               </CardFooter>
             </form>

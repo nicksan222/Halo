@@ -1,0 +1,26 @@
+{
+  "name": "@acme/seeder",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "files": [
+    "src",
+    "scripts"
+  ],
+  "scripts": {
+    "reset": "bash scripts/reset-db.sh",
+    "seed:raw": "bun src/index.ts",
+    "seed": "bun run reset && bun run seed:raw",
+    "typecheck": "bunx tsc -p tsconfig.json --noEmit",
+    "lint": "bunx biome check .",
+    "format": "bunx biome check --write .",
+    "check": "bun run typecheck && bun run lint"
+  },
+  "dependencies": {
+    "@acme/testing": "0.0.0",
+    "@acme/db": "0.0.0",
+    "@acme/auth": "0.0.0"
+  }
+}

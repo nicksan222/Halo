@@ -29,7 +29,7 @@ export class TestUser {
 
     const user = await auth.api.createUser({
       body: {
-        email: `${username}@test.com`,
+        email: `${username}@acme.com`,
         password,
         name: username,
         role: strategy.getRole()

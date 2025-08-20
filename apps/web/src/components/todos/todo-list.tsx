@@ -1,5 +1,6 @@
 'use client';
 
+import { translate } from '@acme/localization';
 import { Alert, AlertDescription, AlertTitle } from '@acme/ui/components/alert';
 import { Badge } from '@acme/ui/components/badge';
 import { Button } from '@acme/ui/components/button';
@@ -7,9 +8,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@acme/ui/components/ca
 import { Checkbox } from '@acme/ui/components/checkbox';
 import { Skeleton } from '@acme/ui/components/skeleton';
 import Link from 'next/link';
+import { lang } from '@/app/(app)/lang';
+import { useLocale } from '@/providers/i18n-provider';
 import { api } from '@/trpc/react';
 
 export function TodoList() {
+  const locale = useLocale();
+  const t = translate(lang, locale);
   const query = api.todos.list.all.useQuery({});
   const data = (query.data ?? []) as NonNullable<typeof query.data>;
 
@@ -36,7 +41,7 @@ export function TodoList() {
   if (query.error)
     return (
       <Alert variant="destructive">
-        <AlertTitle>Failed to load todos</AlertTitle>
+        <AlertTitle>{t.todos.failedToLoad}</AlertTitle>
         <AlertDescription>{query.error.message}</AlertDescription>
       </Alert>
     );
@@ -45,13 +50,13 @@ export function TodoList() {
     return (
       <Card className="border-dashed">
         <CardHeader>
-          <CardTitle className="text-lg">No todos yet</CardTitle>
+          <CardTitle className="text-lg">{t.todos.noTodosYet}</CardTitle>
         </CardHeader>
         <CardContent className="text-muted-foreground text-sm">
           <div className="flex items-center justify-between">
-            <span>Get started by creating your first todo.</span>
+            <span>{t.todos.getStarted}</span>
             <Button asChild size="sm">
-              <Link href="/todos/new">Create a todo</Link>
+              <Link href="/todos/new">{t.todos.createTodo}</Link>
             </Button>
           </div>
         </CardContent>
@@ -71,14 +76,14 @@ export function TodoList() {
             </CardTitle>
             <div className="flex items-center gap-3">
               <Badge variant={todo.completed ? 'default' : 'secondary'}>
-                {todo.completed ? 'Completed' : 'Pending'}
+                {todo.completed ? t.todos.completed : t.todos.pending}
               </Badge>
               <Checkbox checked={todo.completed} disabled />
             </div>
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground text-sm line-clamp-2">
-              {todo.description ?? 'No description'}
+              {todo.description ?? t.todos.noDescription}
             </p>
           </CardContent>
         </Card>

@@ -1,0 +1,86 @@
+---
+description: How to localize pages
+alwaysApply: false
+---
+- The localization utilities live in `packages/localization` and are published as `@acme/localization`.
+- Root export exposes `defineLang` to validate translation objects.
+- Framework-specific locale access is provided per subpath and must follow the same return shape `{ locale, setLocale }`.
+- Supported locales are currently `en` and `it`. Use `SupportedLocales` and `zWithTranslation` for schema validation when needed.
+
+Imports:
+
+```ts
+// Root
+import { defineLang } from '@acme/localization';
+
+// Next.js Client Components
+import { useLocale } from '@acme/localization/next-client';
+
+// Next.js Server (Route Handlers or Server Components)
+import { useLocale } from '@acme/localization/next-server';
+```
+
+Define translations:
+
+```ts
+import { defineLang } from '@acme/localization';
+
+export const translations = defineLang({
+	common: {
+		ok: { en: 'OK', it: 'OK' },
+		cancel: { en: 'Cancel', it: 'Annulla' }
+	}
+});
+```
+
+Use in Next.js Client:
+
+```tsx
+'use client';
+import { useLocale } from '@acme/localization/next-client';
+
+export function LocaleSwitcher() {
+	const { locale, setLocale } = useLocale({ cookieName: 'locale', defaultLocale: 'en' });
+	return (
+		<select value={locale} onChange={(e) => setLocale(e.target.value as any)}>
+			<option value="en">English</option>
+			<option value="it">Italiano</option>
+		</select>
+	);
+}
+```
+
+Use in Next.js Server:
+
+```ts
+import { cookies, headers } from 'next/headers';
+import { useLocale } from '@acme/localization/next-server';
+
+export function GET() {
+	const { locale, setLocale } = useLocale(
+		{
+			headers: headers(),
+			cookies: {
+				get: (name) => cookies().get(name)?.value,
+				set: (name, value) => cookies().set(name, value)
+			}
+		},
+		{ cookieName: 'locale', defaultLocale: 'en' }
+	);
+	return new Response(`Locale is ${locale}`);
+}
+```
+
+Guidelines:
+- Always read/set locale via the framework-specific `useLocale` to keep behavior consistent.
+- Persist user selection in cookies (default name `locale`), or pass a custom `cookieName` if needed.
+- For forms or CMS schemas, use `zWithTranslation(SupportedLocales)` to enforce per-locale strings.
+- Do not add new locales without updating `SupportedLocales` and revisiting any hard-coded fallbacks.
+- Create as close as the page a lang.ts where you define the defineLang utility.
+
+Referenced files:
+@/packages/localization/src/locales.ts
+@/packages/localization/src/define.ts
+@/packages/localization/src/next/next-client.ts
+@/packages/localization/src/next/next-server.ts
+@/packages/localization/package.json- The localization utilities live in `packages/localization` and are published as `@acme/localization`.

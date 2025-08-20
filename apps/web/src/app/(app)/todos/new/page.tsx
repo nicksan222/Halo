@@ -1,5 +1,8 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
+import { translate } from '@acme/localization';
 import { Button } from '@acme/ui/components/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@acme/ui/components/card';
 import {
@@ -16,7 +19,9 @@ import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { PageHeader } from '@/components';
+import { useLocale } from '@/providers/i18n-provider';
 import { api } from '@/trpc/react';
+import { lang } from './lang';
 
 interface NewTodoFormValues {
   title: string;
@@ -26,6 +31,9 @@ interface NewTodoFormValues {
 export default function NewTodoPage() {
   const router = useRouter();
   const utils = api.useUtils();
+  const locale = useLocale();
+  const t = translate(lang, locale);
+
   const form = useForm<NewTodoFormValues>({
     defaultValues: { title: '', description: '' }
   });
@@ -43,10 +51,10 @@ export default function NewTodoPage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-4">
-      <PageHeader title="Create todo" backHref="/todos" />
+      <PageHeader title={t.title} backHref="/todos" />
       <Card>
         <CardHeader>
-          <CardTitle>New Todo</CardTitle>
+          <CardTitle>{t.cardTitle}</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -54,12 +62,12 @@ export default function NewTodoPage() {
               <FormField
                 control={form.control}
                 name="title"
-                rules={{ required: 'Title is required' }}
+                rules={{ required: t.titleRequired }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Title</FormLabel>
+                    <FormLabel>{t.titleLabel}</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g. Ship MVP" {...field} />
+                      <Input placeholder={t.titlePlaceholder} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -70,16 +78,16 @@ export default function NewTodoPage() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>{t.descriptionLabel}</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Optional details" {...field} />
+                      <Textarea placeholder={t.descriptionPlaceholder} {...field} />
                     </FormControl>
                   </FormItem>
                 )}
               />
               <CardFooter className="px-0">
                 <Button type="submit" disabled={mutation.isPending}>
-                  {mutation.isPending ? <Loader2 size={16} className="animate-spin" /> : 'Create'}
+                  {mutation.isPending ? <Loader2 size={16} className="animate-spin" /> : t.create}
                 </Button>
               </CardFooter>
             </form>

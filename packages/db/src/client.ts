@@ -1,22 +1,50 @@
+import { existsSync } from 'node:fs';
 import { env } from '@acme/env';
 import { neon, neonConfig } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
+import type { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import { drizzle as drizzleNeon } from 'drizzle-orm/neon-http';
+import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import { drizzle as drizzlePg } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 import ws from 'ws';
 
 const connectionString = env.DATABASE_URL;
 
-// Configure Neon for local development via Neon Proxy
-if (env.NODE_ENV === 'development' || env.NODE_ENV === 'test') {
-  neonConfig.fetchEndpoint = (host) => {
-    const [protocol, port] = host === 'db.localtest.me' ? ['http', 4444] : ['https', 443];
-    return `${protocol}://${host}:${port}/sql`;
-  };
-  const connectionStringUrl = new URL(connectionString);
-  neonConfig.useSecureWebSocket = connectionStringUrl.hostname !== 'db.localtest.me';
-  neonConfig.wsProxy = (host) => (host === 'db.localtest.me' ? `${host}:4444/v2` : `${host}/v2`);
+function isLocalHost(host: string): boolean {
+  const hostOnly = host.split(':')[0];
+  return hostOnly === 'db.localtest.me' || hostOnly === 'localhost' || hostOnly === '127.0.0.1';
 }
 
-neonConfig.webSocketConstructor = ws;
+function buildLocalPostgresConnectionString(dbUrl: URL): string {
+  const username = decodeURIComponent(dbUrl.username || 'postgres');
+  const password = decodeURIComponent(dbUrl.password || 'postgres');
+  const database = dbUrl.pathname.replace(/^\//, '') || 'acme';
+  const runningInContainer = existsSync('/.dockerenv');
+  const host = runningInContainer ? 'host.docker.internal' : 'localhost';
+  return `postgres://${username}:${password}@${host}:5432/${database}`;
+}
 
-const sql = neon(connectionString);
-export const db = drizzle({ client: sql });
+const dbUrl = new URL(connectionString);
+let db: NeonHttpDatabase<any> | PostgresJsDatabase<any>;
+
+if (isLocalHost(dbUrl.hostname)) {
+  const localConn = buildLocalPostgresConnectionString(dbUrl);
+  const client = postgres(localConn, { max: 1 });
+  db = drizzlePg(client);
+} else {
+  neonConfig.webSocketConstructor = ws;
+  neonConfig.fetchEndpoint = (host) => {
+    const hostOnly = host.split(':')[0];
+    return isLocalHost(host) ? `http://${hostOnly}:4444/sql` : `https://${host}:443/sql`;
+  };
+  neonConfig.wsProxy = (host) => {
+    const hostOnly = host.split(':')[0];
+    return isLocalHost(host) ? `${hostOnly}:4444/v2` : `${host}/v2`;
+  };
+  (neonConfig as unknown as Record<string, unknown>).poolQueryViaFetch = true;
+
+  const sql = neon(connectionString);
+  db = drizzleNeon({ client: sql });
+}
+
+export { db };

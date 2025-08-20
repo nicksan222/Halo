@@ -1,5 +1,8 @@
+import { translate } from '@acme/localization';
 import { Button } from '@acme/ui/components/button';
 import Link from 'next/link';
+import { lang } from '@/app/(app)/lang';
+import { useLocale } from '@/providers/i18n-provider';
 
 interface PageHeaderProps {
   title: string;
@@ -9,9 +12,13 @@ interface PageHeaderProps {
     label: string;
   };
   backHref?: string;
+  backLabel?: string;
 }
 
-export function PageHeader({ title, description, action, backHref }: PageHeaderProps) {
+export function PageHeader({ title, description, action, backHref, backLabel }: PageHeaderProps) {
+  const locale = useLocale();
+  const t = translate(lang, locale);
+  const defaultBackLabel = backLabel ?? t.common.back;
   return (
     <div className="flex justify-between items-center">
       <div>
@@ -21,7 +28,7 @@ export function PageHeader({ title, description, action, backHref }: PageHeaderP
       <div className="flex items-center gap-2">
         {backHref && (
           <Button asChild variant="secondary">
-            <Link href={backHref}>Back</Link>
+            <Link href={backHref}>{defaultBackLabel}</Link>
           </Button>
         )}
         {action && (
