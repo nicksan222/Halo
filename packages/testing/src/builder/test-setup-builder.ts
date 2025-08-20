@@ -81,21 +81,37 @@ export class TestSetupBuilder {
       await Promise.allSettled(
         members.map(async (member) => {
           if (organization) {
-            await organization.removeMember(member.getEmail());
+            try {
+              await organization.removeMember(member.getEmail());
+            } catch (err: any) {
+              if (!(err?.statusCode === 401 || err?.status === 'UNAUTHORIZED')) throw err;
+            }
           }
-          await member.delete();
+          try {
+            await member.delete();
+          } catch (err: any) {
+            if (!(err?.statusCode === 401 || err?.status === 'UNAUTHORIZED')) throw err;
+          }
         })
       );
     }
 
     // Clean up organization
     if (organization) {
-      await organization.delete();
+      try {
+        await organization.delete();
+      } catch (err: any) {
+        if (!(err?.statusCode === 401 || err?.status === 'UNAUTHORIZED')) throw err;
+      }
     }
 
     // Clean up founder
     if (founder) {
-      await founder.delete();
+      try {
+        await founder.delete();
+      } catch (err: any) {
+        if (!(err?.statusCode === 401 || err?.status === 'UNAUTHORIZED')) throw err;
+      }
     }
 
     // Clear the created resources

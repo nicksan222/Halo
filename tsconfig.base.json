@@ -15,7 +15,8 @@
       "@acme/api": ["packages/api/src/index.ts"],
       "@acme/env": ["packages/env/src/index.ts"],
       "@acme/tailwind-config": ["packages/tailwind-config/src/index.ts"],
-      "@acme/storage": ["packages/storage/src/index.ts"]
+      "@acme/storage": ["packages/storage/src/index.ts"],
+      "@acme/testing": ["packages/testing/src/index.ts"]
     },
     "maxNodeModuleJsDepth": 0,
     "noImplicitReturns": false

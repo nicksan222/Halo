@@ -54,19 +54,32 @@ export class TestUser {
   async getSessionHeaders() {
     const email = this.user.email!;
 
-    const signIn = await auth.api.signInEmail({
+    const signInResponse = await auth.api.signInEmail({
       body: {
         email,
         password: this.strategy.getPassword(),
         rememberMe: true
-      }
+      },
+      asResponse: true
     });
 
     const headers = new Headers();
-    const sessionToken = signIn.token;
-    if (sessionToken) {
-      headers.set('cookie', `better-auth.session_token=${sessionToken}`);
+
+    // Extract the signed session cookie from Set-Cookie
+    const setCookieHeader = signInResponse.headers.get('set-cookie') ?? '';
+    const cookieMatch = setCookieHeader.match(
+      /(?:^|,\s*)(?:(__Secure-)?better-auth\.session_token)=([^;]+)/
+    );
+
+    if (cookieMatch) {
+      const cookieName = cookieMatch[1]
+        ? `${cookieMatch[1]}better-auth.session_token`
+        : 'better-auth.session_token';
+      const cookieValue = cookieMatch[2];
+      const cookiePair = `${cookieName}=${cookieValue}`;
+      headers.set('cookie', cookiePair);
     }
+
     return headers;
   }
 
@@ -74,16 +87,23 @@ export class TestUser {
    * Deletes the underlying test account.
    */
   async delete() {
-    await auth.api.deleteUser({
-      params: {
-        id: this.user.id
-      },
-      body: {
-        callbackURL: undefined,
-        password: undefined,
-        token: undefined
-      }
-    });
+    try {
+      const headers = await this.getSessionHeaders();
+      await auth.api.deleteUser({
+        params: {
+          id: this.user.id
+        },
+        body: {
+          callbackURL: undefined,
+          password: undefined,
+          token: undefined
+        },
+        headers
+      });
+    } catch {
+      // Ignore cleanup errors (e.g., disabled delete, 401/404)
+      return;
+    }
   }
 
   /**
