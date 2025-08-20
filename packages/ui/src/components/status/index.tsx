@@ -1,6 +1,6 @@
-import type { ComponentProps, HTMLAttributes } from 'react';
 import { Badge } from '@acme/ui/components/badge';
 import { cn } from '@acme/ui/lib/utils';
+import type { ComponentProps, HTMLAttributes } from 'react';
 
 export type StatusProps = ComponentProps<typeof Badge> & {
   status: 'online' | 'offline' | 'maintenance' | 'degraded';
@@ -16,10 +16,7 @@ export const Status = ({ className, status, ...props }: StatusProps) => (
 
 export type StatusIndicatorProps = HTMLAttributes<HTMLSpanElement>;
 
-export const StatusIndicator = ({
-  className,
-  ...props
-}: StatusIndicatorProps) => (
+export const StatusIndicator = ({ className, ...props }: StatusIndicatorProps) => (
   <span className="relative flex h-2 w-2" {...props}>
     <span
       className={cn(
@@ -44,11 +41,7 @@ export const StatusIndicator = ({
 
 export type StatusLabelProps = HTMLAttributes<HTMLSpanElement>;
 
-export const StatusLabel = ({
-  className,
-  children,
-  ...props
-}: StatusLabelProps) => (
+export const StatusLabel = ({ className, children, ...props }: StatusLabelProps) => (
   <span className={cn('text-muted-foreground', className)} {...props}>
     {children ?? (
       <>

@@ -1,5 +1,17 @@
 'use client';
 
+import { Badge } from '@acme/ui/components/badge';
+import { Button } from '@acme/ui/components/button';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from '@acme/ui/components/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@acme/ui/components/popover';
+import { cn } from '@acme/ui/lib/utils';
 import { XIcon } from 'lucide-react';
 import {
   type ComponentProps,
@@ -9,24 +21,8 @@ import {
   useContext,
   useEffect,
   useRef,
-  useState,
+  useState
 } from 'react';
-import { Badge } from '@acme/ui/components/badge';
-import { Button } from '@acme/ui/components/button';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@acme/ui/components/command';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@acme/ui/components/popover';
-import { cn } from '@acme/ui/lib/utils';
 
 type TagsContextType = {
   value?: string;
@@ -41,9 +37,9 @@ const TagsContext = createContext<TagsContextType>({
   value: undefined,
   setValue: undefined,
   open: false,
-  onOpenChange: () => { },
+  onOpenChange: () => {},
   width: undefined,
-  setWidth: undefined,
+  setWidth: undefined
 });
 
 const useTagsContext = () => {
@@ -71,7 +67,7 @@ export const Tags = ({
   open: controlledOpen,
   onOpenChange: controlledOnOpenChange,
   children,
-  className,
+  className
 }: TagsProps) => {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
   const [width, setWidth] = useState<number>();
@@ -97,9 +93,7 @@ export const Tags = ({
   }, []);
 
   return (
-    <TagsContext.Provider
-      value={{ value, setValue, open, onOpenChange, width, setWidth }}
-    >
+    <TagsContext.Provider value={{ value, setValue, open, onOpenChange, width, setWidth }}>
       <Popover onOpenChange={onOpenChange} open={open}>
         <div className={cn('relative w-full', className)} ref={ref}>
           {children}
@@ -111,24 +105,17 @@ export const Tags = ({
 
 export type TagsTriggerProps = ComponentProps<typeof Button>;
 
-export const TagsTrigger = ({
-  className,
-  children,
-  ...props
-}: TagsTriggerProps) => (
+export const TagsTrigger = ({ className, children, ...props }: TagsTriggerProps) => (
   <PopoverTrigger asChild>
     <Button
       className={cn('h-auto w-full justify-between p-2', className)}
-      // biome-ignore lint/a11y/useSemanticElements: "Required"
       role="combobox"
       variant="outline"
       {...props}
     >
       <div className="flex flex-wrap items-center gap-1">
         {children}
-        <span className="px-2 py-px text-muted-foreground">
-          Select a tag...
-        </span>
+        <span className="px-2 py-px text-muted-foreground">Select a tag...</span>
       </div>
     </Button>
   </PopoverTrigger>
@@ -142,7 +129,7 @@ export const TagsValue = ({
   onRemove,
   ...props
 }: TagsValueProps & { onRemove?: () => void }) => {
-  const handleRemove: MouseEventHandler<HTMLDivElement> = (event) => {
+  const handleRemove: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.preventDefault();
     event.stopPropagation();
     onRemove?.();
@@ -152,14 +139,13 @@ export const TagsValue = ({
     <Badge className={cn('flex items-center gap-2', className)} {...props}>
       {children}
       {onRemove && (
-        // biome-ignore lint/a11y/noStaticElementInteractions: "This is a clickable badge"
-        // biome-ignore lint/a11y/useKeyWithClickEvents: "This is a clickable badge"
-        <div
+        <button
           className="size-auto cursor-pointer hover:text-muted-foreground"
+          type="button"
           onClick={handleRemove}
         >
           <XIcon size={12} />
-        </div>
+        </button>
       )}
     </Badge>
   );
@@ -167,19 +153,11 @@ export const TagsValue = ({
 
 export type TagsContentProps = ComponentProps<typeof PopoverContent>;
 
-export const TagsContent = ({
-  className,
-  children,
-  ...props
-}: TagsContentProps) => {
+export const TagsContent = ({ className, children, ...props }: TagsContentProps) => {
   const { width } = useTagsContext();
 
   return (
-    <PopoverContent
-      className={cn('p-0', className)}
-      style={{ width }}
-      {...props}
-    >
+    <PopoverContent className={cn('p-0', className)} style={{ width }} {...props}>
       <Command>{children}</Command>
     </PopoverContent>
   );
@@ -199,11 +177,7 @@ export const TagsList = ({ className, ...props }: TagsListProps) => (
 
 export type TagsEmptyProps = ComponentProps<typeof CommandEmpty>;
 
-export const TagsEmpty = ({
-  children,
-  className,
-  ...props
-}: TagsEmptyProps) => (
+export const TagsEmpty = ({ children, className, ...props }: TagsEmptyProps) => (
   <CommandEmpty {...props}>{children ?? 'No tags found.'}</CommandEmpty>
 );
 

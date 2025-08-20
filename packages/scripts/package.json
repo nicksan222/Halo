@@ -4,6 +4,12 @@
   "private": true,
   "type": "module",
   "main": "index.js",
+  "scripts": {
+    "build": "echo 'Scripts package - no build needed'",
+    "typecheck": "echo 'Scripts package - no typecheck needed'",
+    "lint": "echo 'Scripts package - no lint needed'",
+    "format": "echo 'Scripts package - no format needed'"
+  },
   "devDependencies": {
     "@turbo/gen": "latest"
   }

@@ -1,12 +1,8 @@
+import { cn } from '@acme/ui/lib/utils';
 import { type ComponentProps, Fragment, type ReactNode } from 'react';
 import type { Key } from 'ts-key-enum';
-import { cn } from '@acme/ui/lib/utils';
 
-const DefaultKbdSeparator = ({
-  className,
-  children = '+',
-  ...props
-}: ComponentProps<'span'>) => (
+const DefaultKbdSeparator = ({ className, children = '+', ...props }: ComponentProps<'span'>) => (
   <span className={cn('text-muted-foreground/50', className)} {...props}>
     {children}
   </span>
@@ -31,7 +27,7 @@ export const Kbd = ({
   >
     {Array.isArray(children)
       ? children.map((child, index) => (
-          <Fragment key={index}>
+          <Fragment key={`kbd-${index}-${child?.key || index}`}>
             {child}
             {index < children.length - 1 && separator}
           </Fragment>
@@ -44,6 +40,4 @@ export type KbdKeyProps = Omit<ComponentProps<'kbd'>, 'aria-label'> & {
   'aria-label'?: keyof typeof Key | (string & {});
 };
 
-export const KbdKey = ({ className, ...props }: KbdKeyProps) => (
-  <kbd {...props} />
-);
+export const KbdKey = ({ className, ...props }: KbdKeyProps) => <kbd {...props} />;

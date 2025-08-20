@@ -1,11 +1,14 @@
 'use client';
 
+import { Card } from '@acme/ui/components/card';
+import { ScrollArea, ScrollBar } from '@acme/ui/components/scroll-area';
+import { cn } from '@acme/ui/lib/utils';
 import type {
   Announcements,
   DndContextProps,
   DragEndEvent,
   DragOverEvent,
-  DragStartEvent,
+  DragStartEvent
 } from '@dnd-kit/core';
 import {
   closestCenter,
@@ -16,22 +19,13 @@ import {
   TouchSensor,
   useDroppable,
   useSensor,
-  useSensors,
+  useSensors
 } from '@dnd-kit/core';
 import { arrayMove, SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import {
-  createContext,
-  type HTMLAttributes,
-  type ReactNode,
-  useContext,
-  useState,
-} from 'react';
+import { createContext, type HTMLAttributes, type ReactNode, useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 import tunnel from 'tunnel-rat';
-import { Card } from '@acme/ui/components/card';
-import { ScrollArea, ScrollBar } from '@acme/ui/components/scroll-area';
-import { cn } from '@acme/ui/lib/utils';
 
 const t = tunnel();
 
@@ -50,7 +44,7 @@ type KanbanColumnProps = {
 
 type KanbanContextProps<
   T extends KanbanItemProps = KanbanItemProps,
-  C extends KanbanColumnProps = KanbanColumnProps,
+  C extends KanbanColumnProps = KanbanColumnProps
 > = {
   columns: C[];
   data: T[];
@@ -60,7 +54,7 @@ type KanbanContextProps<
 const KanbanContext = createContext<KanbanContextProps>({
   columns: [],
   data: [],
-  activeCardId: null,
+  activeCardId: null
 });
 
 export type KanbanBoardProps = {
@@ -71,7 +65,7 @@ export type KanbanBoardProps = {
 
 export const KanbanBoard = ({ id, children, className }: KanbanBoardProps) => {
   const { isOver, setNodeRef } = useDroppable({
-    id,
+    id
   });
 
   return (
@@ -97,23 +91,16 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
   id,
   name,
   children,
-  className,
+  className
 }: KanbanCardProps<T>) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transition,
-    transform,
-    isDragging,
-  } = useSortable({
-    id,
+  const { attributes, listeners, setNodeRef, transition, transform, isDragging } = useSortable({
+    id
   });
   const { activeCardId } = useContext(KanbanContext) as KanbanContextProps;
 
   const style = {
     transition,
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Transform.toString(transform)
   };
 
   return (
@@ -146,11 +133,13 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
   );
 };
 
-export type KanbanCardsProps<T extends KanbanItemProps = KanbanItemProps> =
-  Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'id'> & {
-    children: (item: T) => ReactNode;
-    id: string;
-  };
+export type KanbanCardsProps<T extends KanbanItemProps = KanbanItemProps> = Omit<
+  HTMLAttributes<HTMLDivElement>,
+  'children' | 'id'
+> & {
+  children: (item: T) => ReactNode;
+  id: string;
+};
 
 export const KanbanCards = <T extends KanbanItemProps = KanbanItemProps>({
   children,
@@ -164,10 +153,7 @@ export const KanbanCards = <T extends KanbanItemProps = KanbanItemProps>({
   return (
     <ScrollArea className="overflow-hidden">
       <SortableContext items={items}>
-        <div
-          className={cn('flex flex-grow flex-col gap-2 p-2', className)}
-          {...props}
-        >
+        <div className={cn('flex flex-grow flex-col gap-2 p-2', className)} {...props}>
           {filteredData.map(children)}
         </div>
       </SortableContext>
@@ -184,7 +170,7 @@ export const KanbanHeader = ({ className, ...props }: KanbanHeaderProps) => (
 
 export type KanbanProviderProps<
   T extends KanbanItemProps = KanbanItemProps,
-  C extends KanbanColumnProps = KanbanColumnProps,
+  C extends KanbanColumnProps = KanbanColumnProps
 > = Omit<DndContextProps, 'children'> & {
   children: (column: C) => ReactNode;
   className?: string;
@@ -198,7 +184,7 @@ export type KanbanProviderProps<
 
 export const KanbanProvider = <
   T extends KanbanItemProps = KanbanItemProps,
-  C extends KanbanColumnProps = KanbanColumnProps,
+  C extends KanbanColumnProps = KanbanColumnProps
 >({
   children,
   onDragStart,
@@ -236,15 +222,13 @@ export const KanbanProvider = <
     const activeItem = data.find((item) => item.id === active.id);
     const overItem = data.find((item) => item.id === over.id);
 
-    if (!(activeItem)) {
+    if (!activeItem) {
       return;
     }
 
     const activeColumn = activeItem.column;
     const overColumn =
-      overItem?.column ||
-      columns.find(col => col.id === over.id)?.id ||
-      columns[0]?.id;
+      overItem?.column || columns.find((col) => col.id === over.id)?.id || columns[0]?.id;
 
     if (activeColumn !== overColumn) {
       let newData = [...data];
@@ -303,7 +287,7 @@ export const KanbanProvider = <
       const { name } = data.find((item) => item.id === active.id) ?? {};
 
       return `Cancelled dragging the card "${name}"`;
-    },
+    }
   };
 
   return (
@@ -317,12 +301,7 @@ export const KanbanProvider = <
         sensors={sensors}
         {...props}
       >
-        <div
-          className={cn(
-            'grid size-full auto-cols-fr grid-flow-col gap-4',
-            className
-          )}
-        >
+        <div className={cn('grid size-full auto-cols-fr grid-flow-col gap-4', className)}>
           {columns.map((column) => children(column))}
         </div>
         {typeof window !== 'undefined' &&

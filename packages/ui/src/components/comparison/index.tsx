@@ -1,13 +1,8 @@
 'use client';
 
+import { cn } from '@acme/ui/lib/utils';
 import { GripVerticalIcon } from 'lucide-react';
-import {
-  type MotionValue,
-  motion,
-  useMotionValue,
-  useSpring,
-  useTransform,
-} from 'motion/react';
+import { type MotionValue, motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import {
   type ComponentProps,
   createContext,
@@ -16,9 +11,8 @@ import {
   type ReactNode,
   type TouchEventHandler,
   useContext,
-  useState,
+  useState
 } from 'react';
-import { cn } from '@acme/ui/lib/utils';
 
 type ImageComparisonContextType = {
   sliderPosition: number;
@@ -27,17 +21,13 @@ type ImageComparisonContextType = {
   mode: 'hover' | 'drag';
 };
 
-const ImageComparisonContext = createContext<
-  ImageComparisonContextType | undefined
->(undefined);
+const ImageComparisonContext = createContext<ImageComparisonContextType | undefined>(undefined);
 
 const useImageComparisonContext = () => {
   const context = useContext(ImageComparisonContext);
 
   if (!context) {
-    throw new Error(
-      'useImageComparisonContext must be used within a ImageComparison'
-    );
+    throw new Error('useImageComparisonContext must be used within a ImageComparison');
   }
 
   return context;
@@ -60,7 +50,7 @@ export const Comparison = ({
   const motionValue = useMotionValue(50);
   const motionSliderPosition = useSpring(motionValue, {
     bounce: 0,
-    duration: 0,
+    duration: 0
   });
   const [sliderPosition, setSliderPosition] = useState(50);
 
@@ -119,10 +109,7 @@ export const Comparison = ({
         aria-valuemax={100}
         aria-valuemin={0}
         aria-valuenow={sliderPosition}
-        className={cn(
-          'relative isolate w-full select-none overflow-hidden',
-          className
-        )}
+        className={cn('relative isolate w-full select-none overflow-hidden', className)}
         onMouseDown={handleDragStart}
         onMouseLeave={handleDragEnd}
         onMouseMove={handleMouseDrag}
@@ -142,16 +129,9 @@ export type ComparisonItemProps = ComponentProps<typeof motion.div> & {
   position: 'left' | 'right';
 };
 
-export const ComparisonItem = ({
-  className,
-  position,
-  ...props
-}: ComparisonItemProps) => {
+export const ComparisonItem = ({ className, position, ...props }: ComparisonItemProps) => {
   const { motionSliderPosition } = useImageComparisonContext();
-  const leftClipPath = useTransform(
-    motionSliderPosition,
-    (value) => `inset(0 0 0 ${value}%)`
-  );
+  const leftClipPath = useTransform(motionSliderPosition, (value) => `inset(0 0 0 ${value}%)`);
   const rightClipPath = useTransform(
     motionSliderPosition,
     (value) => `inset(0 ${100 - value}% 0 0)`
@@ -163,7 +143,7 @@ export const ComparisonItem = ({
       className={cn('absolute inset-0 h-full w-full object-cover', className)}
       role="img"
       style={{
-        clipPath: position === 'left' ? leftClipPath : rightClipPath,
+        clipPath: position === 'left' ? leftClipPath : rightClipPath
       }}
       {...props}
     />
@@ -174,11 +154,7 @@ export type ComparisonHandleProps = ComponentProps<typeof motion.div> & {
   children?: ReactNode;
 };
 
-export const ComparisonHandle = ({
-  className,
-  children,
-  ...props
-}: ComparisonHandleProps) => {
+export const ComparisonHandle = ({ className, children, ...props }: ComparisonHandleProps) => {
   const { motionSliderPosition, mode } = useImageComparisonContext();
   const left = useTransform(motionSliderPosition, (value) => `${value}%`);
 

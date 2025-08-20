@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useEventCallback } from './use-event-callback';
 import { useEventListener } from './use-event-listener';
 
@@ -20,23 +20,23 @@ const IS_SERVER = typeof window === 'undefined';
 export function useSessionStorage<T>(
   key: string,
   initialValue: T | (() => T),
-  options: UseSessionStorageOptions<T> = {},
+  options: UseSessionStorageOptions<T> = {}
 ): [T, Dispatch<SetStateAction<T>>, () => void] {
   const { initializeWithValue = true } = options;
 
   const serializer = useCallback<(value: T) => string>(
-    value => {
+    (value) => {
       if (options.serializer) {
         return options.serializer(value);
       }
 
       return JSON.stringify(value);
     },
-    [options],
+    [options]
   );
 
   const deserializer = useCallback<(value: string) => T>(
-    value => {
+    (value) => {
       if (options.deserializer) {
         return options.deserializer(value);
       }
@@ -44,8 +44,7 @@ export function useSessionStorage<T>(
         return undefined as unknown as T;
       }
 
-      const defaultValue =
-        initialValue instanceof Function ? initialValue() : initialValue;
+      const defaultValue = initialValue instanceof Function ? initialValue() : initialValue;
 
       let parsed: unknown;
       try {
@@ -57,12 +56,11 @@ export function useSessionStorage<T>(
 
       return parsed as T;
     },
-    [options, initialValue],
+    [options, initialValue]
   );
 
   const readValue = useCallback((): T => {
-    const initialValueToUse =
-      initialValue instanceof Function ? initialValue() : initialValue;
+    const initialValueToUse = initialValue instanceof Function ? initialValue() : initialValue;
 
     if (IS_SERVER) {
       return initialValueToUse;
@@ -85,10 +83,10 @@ export function useSessionStorage<T>(
     return initialValue instanceof Function ? initialValue() : initialValue;
   });
 
-  const setValue: Dispatch<SetStateAction<T>> = useEventCallback(value => {
+  const setValue: Dispatch<SetStateAction<T>> = useEventCallback((value) => {
     if (IS_SERVER) {
       console.warn(
-        `Tried setting sessionStorage key "${key}" even though environment is not a client`,
+        `Tried setting sessionStorage key "${key}" even though environment is not a client`
       );
     }
 
@@ -108,12 +106,11 @@ export function useSessionStorage<T>(
   const removeValue = useEventCallback(() => {
     if (IS_SERVER) {
       console.warn(
-        `Tried removing sessionStorage key "${key}" even though environment is not a client`,
+        `Tried removing sessionStorage key "${key}" even though environment is not a client`
       );
     }
 
-    const defaultValue =
-      initialValue instanceof Function ? initialValue() : initialValue;
+    const defaultValue = initialValue instanceof Function ? initialValue() : initialValue;
 
     window.sessionStorage.removeItem(key);
 
@@ -133,7 +130,7 @@ export function useSessionStorage<T>(
       }
       setStoredValue(readValue());
     },
-    [key, readValue],
+    [key, readValue]
   );
 
   useEventListener('storage', handleStorageChange);

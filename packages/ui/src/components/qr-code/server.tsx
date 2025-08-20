@@ -1,6 +1,6 @@
+import { cn } from '@acme/ui/lib/utils';
 import QR from 'qrcode';
 import type { HTMLAttributes } from 'react';
-import { cn } from '@acme/ui/lib/utils';
 
 export type QRCodeProps = HTMLAttributes<HTMLDivElement> & {
   data: string;
@@ -21,10 +21,10 @@ export const QRCode = async ({
     type: 'svg',
     color: {
       dark: foreground,
-      light: background,
+      light: background
     },
     width: 200,
-    errorCorrectionLevel: robustness,
+    errorCorrectionLevel: robustness
   });
 
   if (!svg) {

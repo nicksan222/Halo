@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import * as React from "react";
+import * as React from 'react';
 
 export function useTimeout(callback: () => void, delay: number | null): void {
   const savedCallback = React.useRef(callback);
@@ -10,7 +10,7 @@ export function useTimeout(callback: () => void, delay: number | null): void {
   }, [callback]);
 
   React.useEffect(() => {
-    if (delay === null || typeof delay !== "number") return;
+    if (delay === null || typeof delay !== 'number') return;
 
     const tick = () => savedCallback.current();
 

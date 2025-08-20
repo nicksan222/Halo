@@ -3,14 +3,10 @@ import {
   transformerNotationErrorLevel,
   transformerNotationFocus,
   transformerNotationHighlight,
-  transformerNotationWordHighlight,
+  transformerNotationWordHighlight
 } from '@shikijs/transformers';
 import type { HTMLAttributes } from 'react';
-import {
-  type BundledLanguage,
-  type CodeOptionsMultipleThemes,
-  codeToHtml,
-} from 'shiki';
+import { type BundledLanguage, type CodeOptionsMultipleThemes, codeToHtml } from 'shiki';
 
 export type CodeBlockContentProps = HTMLAttributes<HTMLDivElement> & {
   themes?: CodeOptionsMultipleThemes['themes'];
@@ -31,25 +27,25 @@ export const CodeBlockContent = async ({
         lang: language ?? 'typescript',
         themes: themes ?? {
           light: 'vitesse-light',
-          dark: 'vitesse-dark',
+          dark: 'vitesse-dark'
         },
         transformers: [
           transformerNotationDiff({
-            matchAlgorithm: 'v3',
+            matchAlgorithm: 'v3'
           }),
           transformerNotationHighlight({
-            matchAlgorithm: 'v3',
+            matchAlgorithm: 'v3'
           }),
           transformerNotationWordHighlight({
-            matchAlgorithm: 'v3',
+            matchAlgorithm: 'v3'
           }),
           transformerNotationFocus({
-            matchAlgorithm: 'v3',
+            matchAlgorithm: 'v3'
           }),
           transformerNotationErrorLevel({
-            matchAlgorithm: 'v3',
-          }),
-        ],
+            matchAlgorithm: 'v3'
+          })
+        ]
       })
     : children;
 

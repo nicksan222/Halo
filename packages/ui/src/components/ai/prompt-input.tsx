@@ -6,17 +6,13 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from '@acme/ui/components/select';
 import { Textarea } from '@acme/ui/components/textarea';
 import { cn } from '@acme/ui/lib/utils';
 import type { ChatStatus } from 'ai';
 import { Loader2Icon, SendIcon, SquareIcon, XIcon } from 'lucide-react';
-import type {
-  ComponentProps,
-  HTMLAttributes,
-  KeyboardEventHandler,
-} from 'react';
+import type { ComponentProps, HTMLAttributes, KeyboardEventHandler } from 'react';
 import { Children } from 'react';
 
 export type PromptInputProps = HTMLAttributes<HTMLFormElement>;
@@ -81,28 +77,15 @@ export const PromptInputTextarea = ({
 
 export type PromptInputToolbarProps = HTMLAttributes<HTMLDivElement>;
 
-export const PromptInputToolbar = ({
-  className,
-  ...props
-}: PromptInputToolbarProps) => (
-  <div
-    className={cn('flex items-center justify-between p-1', className)}
-    {...props}
-  />
+export const PromptInputToolbar = ({ className, ...props }: PromptInputToolbarProps) => (
+  <div className={cn('flex items-center justify-between p-1', className)} {...props} />
 );
 
 export type PromptInputToolsProps = HTMLAttributes<HTMLDivElement>;
 
-export const PromptInputTools = ({
-  className,
-  ...props
-}: PromptInputToolsProps) => (
+export const PromptInputTools = ({ className, ...props }: PromptInputToolsProps) => (
   <div
-    className={cn(
-      'flex items-center gap-1',
-      '[&_button:first-child]:rounded-bl-xl',
-      className
-    )}
+    className={cn('flex items-center gap-1', '[&_button:first-child]:rounded-bl-xl', className)}
     {...props}
   />
 );
@@ -115,8 +98,7 @@ export const PromptInputButton = ({
   size,
   ...props
 }: PromptInputButtonProps) => {
-  const newSize =
-    (size ?? Children.count(props.children) > 1) ? 'default' : 'icon';
+  const newSize = (size ?? Children.count(props.children) > 1) ? 'default' : 'icon';
 
   return (
     <Button
@@ -171,13 +153,9 @@ export const PromptInputSubmit = ({
 
 export type PromptInputModelSelectProps = ComponentProps<typeof Select>;
 
-export const PromptInputModelSelect = (props: PromptInputModelSelectProps) => (
-  <Select {...props} />
-);
+export const PromptInputModelSelect = (props: PromptInputModelSelectProps) => <Select {...props} />;
 
-export type PromptInputModelSelectTriggerProps = ComponentProps<
-  typeof SelectTrigger
->;
+export type PromptInputModelSelectTriggerProps = ComponentProps<typeof SelectTrigger>;
 
 export const PromptInputModelSelectTrigger = ({
   className,
@@ -193,33 +171,23 @@ export const PromptInputModelSelectTrigger = ({
   />
 );
 
-export type PromptInputModelSelectContentProps = ComponentProps<
-  typeof SelectContent
->;
+export type PromptInputModelSelectContentProps = ComponentProps<typeof SelectContent>;
 
 export const PromptInputModelSelectContent = ({
   className,
   ...props
-}: PromptInputModelSelectContentProps) => (
-  <SelectContent className={cn(className)} {...props} />
-);
+}: PromptInputModelSelectContentProps) => <SelectContent className={cn(className)} {...props} />;
 
 export type PromptInputModelSelectItemProps = ComponentProps<typeof SelectItem>;
 
 export const PromptInputModelSelectItem = ({
   className,
   ...props
-}: PromptInputModelSelectItemProps) => (
-  <SelectItem className={cn(className)} {...props} />
-);
+}: PromptInputModelSelectItemProps) => <SelectItem className={cn(className)} {...props} />;
 
-export type PromptInputModelSelectValueProps = ComponentProps<
-  typeof SelectValue
->;
+export type PromptInputModelSelectValueProps = ComponentProps<typeof SelectValue>;
 
 export const PromptInputModelSelectValue = ({
   className,
   ...props
-}: PromptInputModelSelectValueProps) => (
-  <SelectValue className={cn(className)} {...props} />
-);
+}: PromptInputModelSelectValueProps) => <SelectValue className={cn(className)} {...props} />;

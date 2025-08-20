@@ -1,5 +1,7 @@
 'use client';
 
+import { Button } from '@acme/ui/components/button';
+import { cn } from '@acme/ui/lib/utils';
 import { useControllableState } from '@radix-ui/react-use-controllable-state';
 import { addDays, format, isSameDay, isToday } from 'date-fns';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
@@ -11,10 +13,8 @@ import {
   type HTMLAttributes,
   type MouseEventHandler,
   type ReactNode,
-  useContext,
+  useContext
 } from 'react';
-import { Button } from '@acme/ui/components/button';
-import { cn } from '@acme/ui/lib/utils';
 
 // Context for sharing state between components
 type MiniCalendarContextType = {
@@ -76,18 +76,16 @@ export const MiniCalendar = ({
   children,
   ...props
 }: MiniCalendarProps) => {
-  const [selectedDate, setSelectedDate] = useControllableState<
-    Date | undefined
-  >({
+  const [selectedDate, setSelectedDate] = useControllableState<Date | undefined>({
     prop: value,
     defaultProp: defaultValue,
-    onChange: onValueChange,
+    onChange: onValueChange
   });
 
   const [currentStartDate, setCurrentStartDate] = useControllableState({
     prop: startDate,
     defaultProp: defaultStartDate,
-    onChange: onStartDateChange,
+    onChange: onStartDateChange
   });
 
   const handleDateSelect = (date: Date) => {
@@ -107,16 +105,13 @@ export const MiniCalendar = ({
     onDateSelect: handleDateSelect,
     startDate: currentStartDate || new Date(),
     onNavigate: handleNavigate,
-    days,
+    days
   };
 
   return (
     <MiniCalendarContext.Provider value={contextValue}>
       <div
-        className={cn(
-          'flex items-center gap-2 rounded-lg border bg-background p-2',
-          className
-        )}
+        className={cn('flex items-center gap-2 rounded-lg border bg-background p-2', className)}
         {...props}
       >
         {children}
@@ -125,11 +120,10 @@ export const MiniCalendar = ({
   );
 };
 
-export type MiniCalendarNavigationProps =
-  ButtonHTMLAttributes<HTMLButtonElement> & {
-    direction: 'prev' | 'next';
-    asChild?: boolean;
-  };
+export type MiniCalendarNavigationProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  direction: 'prev' | 'next';
+  asChild?: boolean;
+};
 
 export const MiniCalendarNavigation = ({
   direction,
@@ -167,18 +161,11 @@ export const MiniCalendarNavigation = ({
   );
 };
 
-export type MiniCalendarDaysProps = Omit<
-  HTMLAttributes<HTMLDivElement>,
-  'children'
-> & {
+export type MiniCalendarDaysProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
   children: (date: Date) => ReactNode;
 };
 
-export const MiniCalendarDays = ({
-  className,
-  children,
-  ...props
-}: MiniCalendarDaysProps) => {
+export const MiniCalendarDays = ({ className, children, ...props }: MiniCalendarDaysProps) => {
   const { startDate, days: dayCount } = useMiniCalendar();
   const days = getDays(startDate, dayCount);
 
@@ -193,11 +180,7 @@ export type MiniCalendarDayProps = ComponentProps<typeof Button> & {
   date: Date;
 };
 
-export const MiniCalendarDay = ({
-  date,
-  className,
-  ...props
-}: MiniCalendarDayProps) => {
+export const MiniCalendarDay = ({ date, className, ...props }: MiniCalendarDayProps) => {
   const { selectedDate, onDateSelect } = useMiniCalendar();
   const { month, day } = formatDate(date);
   const isSelected = selectedDate && isSameDay(date, selectedDate);

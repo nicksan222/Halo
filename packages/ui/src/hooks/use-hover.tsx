@@ -1,12 +1,10 @@
-"use client";
+'use client';
 
-import { useState } from 'react';
 import type { RefObject } from 'react';
+import { useState } from 'react';
 import { useEventListener } from './use-event-listener';
 
-export function useHover<T extends HTMLElement = HTMLElement>(
-  elementRef: RefObject<T>,
-): boolean {
+export function useHover<T extends HTMLElement = HTMLElement>(elementRef: RefObject<T>): boolean {
   const [value, setValue] = useState<boolean>(false);
 
   const handleMouseEnter = () => {

@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
 import type { RefObject } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useIsMounted } from './use-is-mounted';
 
 type Size = {
@@ -15,11 +15,11 @@ type UseResizeObserverOptions<T extends HTMLElement = HTMLElement> = {
 
 const initialSize: Size = {
   width: undefined,
-  height: undefined,
+  height: undefined
 };
 
 export function useResizeObserver<T extends HTMLElement = HTMLElement>(
-  options: UseResizeObserverOptions<T>,
+  options: UseResizeObserverOptions<T>
 ): Size {
   const { ref, box = 'content-box' } = options;
   const [{ width, height }, setSize] = useState<Size>(initialSize);
@@ -45,8 +45,7 @@ export function useResizeObserver<T extends HTMLElement = HTMLElement>(
       const newHeight = extractSize(entry, boxProp, 'blockSize');
 
       const hasChanged =
-        previousSize.current.width !== newWidth ||
-        previousSize.current.height !== newHeight;
+        previousSize.current.width !== newWidth || previousSize.current.height !== newHeight;
 
       if (hasChanged) {
         const newSize: Size = { width: newWidth, height: newHeight };
@@ -81,7 +80,7 @@ type BoxSizesKey = keyof Pick<
 function extractSize(
   entry: ResizeObserverEntry,
   box: BoxSizesKey,
-  sizeType: keyof ResizeObserverSize,
+  sizeType: keyof ResizeObserverSize
 ): number | undefined {
   if (!entry[box]) {
     if (box === 'contentBoxSize') {

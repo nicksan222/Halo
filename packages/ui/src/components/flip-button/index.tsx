@@ -1,14 +1,7 @@
 'use client';
 
-import * as React from 'react';
-import {
-  type HTMLMotionProps,
-  type Transition,
-  type Variant,
-  motion,
-} from 'motion/react';
-
 import { cn } from '@acme/ui/lib/utils';
+import { type HTMLMotionProps, motion, type Transition, type Variant } from 'motion/react';
 
 type FlipDirection = 'top' | 'bottom' | 'left' | 'right';
 
@@ -21,8 +14,7 @@ type FlipButtonProps = HTMLMotionProps<'button'> & {
   from?: FlipDirection;
 };
 
-const DEFAULT_SPAN_CLASS_NAME =
-  'absolute inset-0 flex items-center justify-center rounded-lg';
+const DEFAULT_SPAN_CLASS_NAME = 'absolute inset-0 flex items-center justify-center rounded-lg';
 
 function FlipButton({
   frontText,
@@ -43,22 +35,22 @@ function FlipButton({
   const buildVariant = (
     opacity: number,
     rotation: number,
-    offset: string | null = null,
+    offset: string | null = null
   ): Variant => ({
     opacity,
     [rotateAxis]: rotation,
     ...(isVertical && offset !== null ? { y: offset } : {}),
-    ...(!isVertical && offset !== null ? { x: offset } : {}),
+    ...(!isVertical && offset !== null ? { x: offset } : {})
   });
 
   const frontVariants = {
     initial: buildVariant(1, 0, '0%'),
-    hover: buildVariant(0, 90, frontOffset),
+    hover: buildVariant(0, 90, frontOffset)
   };
 
   const backVariants = {
     initial: buildVariant(0, 90, backOffset),
-    hover: buildVariant(1, 0, '0%'),
+    hover: buildVariant(1, 0, '0%')
   };
 
   return (
@@ -69,7 +61,7 @@ function FlipButton({
       whileTap={{ scale: 0.95 }}
       className={cn(
         'relative inline-block h-10 px-4 py-2 text-sm font-medium cursor-pointer perspective-[1000px] focus:outline-none',
-        className,
+        className
       )}
       {...props}
     >
@@ -80,7 +72,7 @@ function FlipButton({
         className={cn(
           DEFAULT_SPAN_CLASS_NAME,
           'bg-muted text-black dark:text-white',
-          frontClassName,
+          frontClassName
         )}
       >
         {frontText}
@@ -89,11 +81,7 @@ function FlipButton({
         data-slot="flip-button-back"
         variants={backVariants}
         transition={transition}
-        className={cn(
-          DEFAULT_SPAN_CLASS_NAME,
-          'bg-primary text-primary-foreground',
-          backClassName,
-        )}
+        className={cn(DEFAULT_SPAN_CLASS_NAME, 'bg-primary text-primary-foreground', backClassName)}
       >
         {backText}
       </motion.span>

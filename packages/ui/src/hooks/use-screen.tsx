@@ -12,9 +12,7 @@ const IS_SERVER = typeof window === 'undefined';
 
 export function useScreen(options: UseScreenOptions<false>): Screen | undefined;
 export function useScreen(options?: Partial<UseScreenOptions<true>>): Screen;
-export function useScreen(
-  options: Partial<UseScreenOptions<boolean>> = {},
-): Screen | undefined {
+export function useScreen(options: Partial<UseScreenOptions<boolean>> = {}): Screen | undefined {
   let { initializeWithValue = true } = options;
   if (IS_SERVER) {
     initializeWithValue = false;
@@ -35,8 +33,8 @@ export function useScreen(
   });
 
   const debouncedSetScreen = useDebounceCallback(
-    setScreen,
-    options.debounceDelay,
+    (...args: unknown[]) => setScreen(args[0] as Screen),
+    options.debounceDelay
   );
 
   function handleSize() {
@@ -44,15 +42,8 @@ export function useScreen(
     const setSize = options.debounceDelay ? debouncedSetScreen : setScreen;
 
     if (newScreen) {
-      const {
-        width,
-        height,
-        availHeight,
-        availWidth,
-        colorDepth,
-        orientation,
-        pixelDepth,
-      } = newScreen;
+      const { width, height, availHeight, availWidth, colorDepth, orientation, pixelDepth } =
+        newScreen;
 
       setSize({
         width,
@@ -61,7 +52,7 @@ export function useScreen(
         availWidth,
         colorDepth,
         orientation,
-        pixelDepth,
+        pixelDepth
       });
     }
   }

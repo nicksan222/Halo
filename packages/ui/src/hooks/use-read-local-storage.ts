@@ -1,106 +1,103 @@
-"use client"
+'use client';
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from 'react';
 
-import { useEventListener } from "./use-event-listener"
+import { useEventListener } from './use-event-listener';
 
-const IS_SERVER = typeof window === "undefined"
+const IS_SERVER = typeof window === 'undefined';
 
 type Options<T, InitializeWithValue extends boolean | undefined> = {
-  deserializer?: (value: string) => T
-  initializeWithValue: InitializeWithValue
-}
+  deserializer?: (value: string) => T;
+  initializeWithValue: InitializeWithValue;
+};
 
 // SSR version
 export function useReadLocalStorage<T>(
   key: string,
-  options: Options<T, false>,
-): T | null | undefined
+  options: Options<T, false>
+): T | null | undefined;
 // CSR version
+export function useReadLocalStorage<T>(key: string, options?: Partial<Options<T, true>>): T | null;
 export function useReadLocalStorage<T>(
   key: string,
-  options?: Partial<Options<T, true>>,
-): T | null
-export function useReadLocalStorage<T>(
-  key: string,
-  options: Partial<Options<T, boolean>> = {},
+  options: Partial<Options<T, boolean>> = {}
 ): T | null | undefined {
-  let { initializeWithValue = true } = options
+  let { initializeWithValue = true } = options;
   if (IS_SERVER) {
-    initializeWithValue = false
+    initializeWithValue = false;
   }
 
   const deserializer = useCallback<(value: string) => T | null>(
     (value) => {
       if (options.deserializer) {
-        return options.deserializer(value)
+        return options.deserializer(value);
       }
       // Support 'undefined' as a value
-      if (value === "undefined") {
-        return undefined as unknown as T
+      if (value === 'undefined') {
+        return undefined as unknown as T;
       }
 
-      let parsed: unknown
+      let parsed: unknown;
       try {
-        parsed = JSON.parse(value)
+        parsed = JSON.parse(value);
       } catch (error) {
-        console.error("Error parsing JSON:", error)
-        return null
+        console.error('Error parsing JSON:', error);
+        return null;
       }
 
-      return parsed as T
+      return parsed as T;
     },
-    [options],
-  )
+    [options]
+  );
 
   // Get from local storage then
   // parse stored json or return initialValue
   const readValue = useCallback((): T | null => {
     // Prevent build error "window is undefined" but keep keep working
     if (IS_SERVER) {
-      return null
+      return null;
     }
 
     try {
-      const raw = window.localStorage.getItem(key)
-      return raw ? deserializer(raw) : null
+      const raw = window.localStorage.getItem(key);
+      return raw ? deserializer(raw) : null;
     } catch (error) {
-      console.warn(`Error reading localStorage key "${key}":`, error)
-      return null
+      console.warn(`Error reading localStorage key "${key}":`, error);
+      return null;
     }
-  }, [key, deserializer])
+  }, [key, deserializer]);
 
   const [storedValue, setStoredValue] = useState(() => {
     if (initializeWithValue) {
-      return readValue()
+      return readValue();
     }
-    return undefined
-  })
+    return undefined;
+  });
 
   // Listen if localStorage changes
   useEffect(() => {
-    setStoredValue(readValue())
+    setStoredValue(readValue());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key])
+  }, [key]);
 
   const handleStorageChange = useCallback(
     (event: StorageEvent | CustomEvent) => {
       if ((event as StorageEvent).key && (event as StorageEvent).key !== key) {
-        return
+        return;
       }
-      setStoredValue(readValue())
+      setStoredValue(readValue());
     },
-    [key, readValue],
-  )
+    [key, readValue]
+  );
 
   // this only works for other documents, not the current one
-  useEventListener("storage", handleStorageChange)
+  useEventListener('storage', handleStorageChange);
 
   // this is a custom event, triggered in writeValueToLocalStorage
   // See: useLocalStorage()
-  useEventListener("local-storage", handleStorageChange)
+  useEventListener('local-storage', handleStorageChange);
 
-  return storedValue
+  return storedValue;
 }
 
-export type { Options }
+export type { Options };

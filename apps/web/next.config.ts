@@ -35,19 +35,7 @@ const nextConfig: NextConfig = {
    * Turbopack configuration to disable source maps in development
    */
   experimental: {
-    turbo: {
-      rules: {
-        '*.js': {
-          sourceMaps: false
-        },
-        '*.ts': {
-          sourceMaps: false
-        },
-        '*.tsx': {
-          sourceMaps: false
-        }
-      }
-    }
+    turbo: {}
   }
 };
 

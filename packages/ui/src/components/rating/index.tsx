@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@acme/ui/lib/utils';
 import { useControllableState } from '@radix-ui/react-use-controllable-state';
 import { type LucideProps, StarIcon } from 'lucide-react';
 import type { KeyboardEvent, MouseEvent, ReactElement, ReactNode } from 'react';
@@ -11,9 +12,8 @@ import {
   useContext,
   useEffect,
   useRef,
-  useState,
+  useState
 } from 'react';
-import { cn } from '@acme/ui/lib/utils';
 
 type RatingContextValue = {
   value: number;
@@ -48,7 +48,7 @@ export const RatingButton = ({
   index: providedIndex,
   size = 20,
   className,
-  icon = <StarIcon />,
+  icon = <StarIcon />
 }: RatingButtonProps) => {
   const {
     value,
@@ -58,7 +58,7 @@ export const RatingButton = ({
     handleValueChange,
     handleKeyDown,
     setHoverValue,
-    setFocusedStar,
+    setFocusedStar
   } = useRating();
 
   const index = providedIndex ?? 0;
@@ -114,7 +114,7 @@ export const RatingButton = ({
           isActive && 'fill-current',
           !readOnly && 'cursor-pointer'
         ),
-        'aria-hidden': 'true',
+        'aria-hidden': 'true'
       })}
     </button>
   );
@@ -149,14 +149,11 @@ export const Rating = ({
   const [value, onValueChange] = useControllableState({
     defaultProp: defaultValue,
     prop: controlledValue,
-    onChange: controlledOnValueChange,
+    onChange: controlledOnValueChange
   });
 
   const handleValueChange = useCallback(
-    (
-      event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>,
-      newValue: number
-    ) => {
+    (event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>, newValue: number) => {
       if (!readOnly) {
         onChange?.(event, newValue);
         onValueChange?.(newValue);
@@ -215,7 +212,7 @@ export const Rating = ({
     handleValueChange,
     handleKeyDown,
     setHoverValue,
-    setFocusedStar,
+    setFocusedStar
   };
 
   return (
@@ -234,7 +231,7 @@ export const Rating = ({
           }
 
           return cloneElement(child as ReactElement<RatingButtonProps>, {
-            index,
+            index
           });
         })}
       </div>

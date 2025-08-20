@@ -1,12 +1,11 @@
 'use client';
 
-import * as React from 'react';
-import { useInView, type UseInViewOptions } from 'motion/react';
-import { useTheme } from 'next-themes';
-
-import { cn } from '@acme/ui/lib/utils';
 import { Button } from '@acme/ui/components/button';
-import { Copy, Check } from 'lucide-react';
+import { cn } from '@acme/ui/lib/utils';
+import { Check, Copy } from 'lucide-react';
+import { type UseInViewOptions, useInView } from 'motion/react';
+import { useTheme } from 'next-themes';
+import * as React from 'react';
 
 type CopyButtonProps = {
   content: string;
@@ -21,7 +20,7 @@ function CopyButton({
   size = 'default',
   variant = 'default',
   className,
-  onCopy,
+  onCopy
 }: CopyButtonProps) {
   const [copied, setCopied] = React.useState(false);
 
@@ -43,11 +42,7 @@ function CopyButton({
       onClick={handleCopy}
       className={cn('h-8 w-8 p-0', className)}
     >
-      {copied ? (
-        <Check className="h-3 w-3" />
-      ) : (
-        <Copy className="h-3 w-3" />
-      )}
+      {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
     </Button>
   );
 }
@@ -80,7 +75,7 @@ function CodeEditor({
   lang,
   themes = {
     light: 'github-light',
-    dark: 'github-dark',
+    dark: 'github-dark'
   },
   duration = 5,
   delay = 0,
@@ -108,7 +103,7 @@ function CodeEditor({
 
   const inViewResult = useInView(editorRef, {
     once: inViewOnce,
-    margin: inViewMargin,
+    margin: inViewMargin
   });
   const isInView = !inView || inViewResult;
 
@@ -123,9 +118,9 @@ function CodeEditor({
           lang,
           themes: {
             light: themes.light,
-            dark: themes.dark,
+            dark: themes.dark
           },
-          defaultColor: resolvedTheme === 'dark' ? 'dark' : 'light',
+          defaultColor: resolvedTheme === 'dark' ? 'dark' : 'light'
         });
 
         setHighlightedCode(highlighted);
@@ -135,16 +130,7 @@ function CodeEditor({
     };
 
     loadHighlightedCode();
-  }, [
-    lang,
-    themes,
-    writing,
-    isInView,
-    duration,
-    delay,
-    visibleCode,
-    resolvedTheme,
-  ]);
+  }, [lang, themes, writing, isInView, duration, delay, visibleCode, resolvedTheme]);
 
   React.useEffect(() => {
     if (!writing) {
@@ -171,7 +157,7 @@ function CodeEditor({
           });
           editorRef.current?.scrollTo({
             top: editorRef.current?.scrollHeight,
-            behavior: 'smooth',
+            behavior: 'smooth'
           });
         } else {
           clearInterval(intervalId);
@@ -192,7 +178,7 @@ function CodeEditor({
       data-slot="code-editor"
       className={cn(
         'relative bg-muted/50 w-[600px] h-[400px] border border-border overflow-hidden flex flex-col rounded-xl',
-        className,
+        className
       )}
       {...props}
     >
@@ -210,19 +196,19 @@ function CodeEditor({
             <div
               className={cn(
                 'flex flex-row items-center gap-2',
-                dots &&
-                  'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2',
+                dots && 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'
               )}
             >
               {icon ? (
-                <div
-                  className="text-muted-foreground [&_svg]:size-3.5"
-                  dangerouslySetInnerHTML={
-                    typeof icon === 'string' ? { __html: icon } : undefined
-                  }
-                >
-                  {typeof icon !== 'string' ? icon : null}
-                </div>
+                typeof icon === 'string' ? (
+                  <div
+                    className="text-muted-foreground [&_svg]:size-3.5"
+                    // biome-ignore lint/security/noDangerouslySetInnerHtml: "Icon is controlled content"
+                    dangerouslySetInnerHTML={{ __html: icon }}
+                  />
+                ) : (
+                  <div className="text-muted-foreground [&_svg]:size-3.5">{icon}</div>
+                )
               ) : null}
               <figcaption className="flex-1 truncate text-muted-foreground text-[13px]">
                 {title}
@@ -260,8 +246,9 @@ function CodeEditor({
             '[&>pre,_&_code]:!bg-transparent [&>pre,_&_code]:[background:transparent_!important] [&>pre,_&_code]:border-none [&_code]:!text-[13px]',
             cursor &&
               !isDone &&
-              "[&_.line:last-of-type::after]:content-['|'] [&_.line:last-of-type::after]:animate-pulse [&_.line:last-of-type::after]:inline-block [&_.line:last-of-type::after]:w-[1ch] [&_.line:last-of-type::after]:-translate-px",
+              "[&_.line:last-of-type::after]:content-['|'] [&_.line:last-of-type::after]:animate-pulse [&_.line:last-of-type::after]:inline-block [&_.line:last-of-type::after]:w-[1ch] [&_.line:last-of-type::after]:-translate-px"
           )}
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: "Syntax highlighting requires HTML"
           dangerouslySetInnerHTML={{ __html: highlightedCode }}
         />
       </div>

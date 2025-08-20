@@ -11,23 +11,16 @@ type UseScriptOptions = {
 const cachedScriptStatuses = new Map<string, UseScriptStatus | undefined>();
 
 function getScriptNode(src: string) {
-  const node: HTMLScriptElement | null = document.querySelector(
-    `script[src="${src}"]`,
-  );
-  const status = node?.getAttribute('data-status') as
-    | UseScriptStatus
-    | undefined;
+  const node: HTMLScriptElement | null = document.querySelector(`script[src="${src}"]`);
+  const status = node?.getAttribute('data-status') as UseScriptStatus | undefined;
 
   return {
     node,
-    status,
+    status
   };
 }
 
-export function useScript(
-  src: string | null,
-  options?: UseScriptOptions,
-): UseScriptStatus {
+export function useScript(src: string | null, options?: UseScriptOptions): UseScriptStatus {
   const [status, setStatus] = useState<UseScriptStatus>(() => {
     if (!src || options?.shouldPreventLoad) {
       return 'idle';
@@ -65,8 +58,7 @@ export function useScript(
       document.body.appendChild(scriptNode);
 
       const setAttributeFromEvent = (event: Event) => {
-        const scriptStatus: UseScriptStatus =
-          event.type === 'load' ? 'ready' : 'error';
+        const scriptStatus: UseScriptStatus = event.type === 'load' ? 'ready' : 'error';
 
         scriptNode?.setAttribute('data-status', scriptStatus);
       };

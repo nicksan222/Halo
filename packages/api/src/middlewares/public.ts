@@ -1,6 +1,7 @@
 import { auth } from '@acme/auth';
 import { db } from '@acme/db';
 import { t } from '../trpc';
+
 /**
  * Public tRPC procedure.
  *
@@ -10,7 +11,7 @@ import { t } from '../trpc';
  * Context after this middleware:
  * - `ctx.db`: Drizzle database client
  */
-export const baseProcedure = t.procedure.use(async ({ ctx, next }) => {
+const baseProcedure = t.procedure.use(async ({ ctx, next }) => {
   return next({
     ctx: {
       ...ctx,
@@ -20,7 +21,4 @@ export const baseProcedure = t.procedure.use(async ({ ctx, next }) => {
   });
 });
 
-/**
- * Alias for backward compatibility. Prefer `baseProcedure`.
- */
 export const publicProcedure = baseProcedure;

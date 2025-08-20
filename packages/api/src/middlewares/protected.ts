@@ -13,13 +13,13 @@ import { publicProcedure } from './public';
  * - `ctx.headers`: Request headers passed from the server context
  * - `ctx.user`: Authenticated user (non-null)
  */
-export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
+const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
   const { headers = {} } = ctx;
 
   const normalizedHeaders =
-    typeof (globalThis as any).Headers !== 'undefined' && headers instanceof Headers
+    typeof Headers !== 'undefined' && headers instanceof Headers
       ? headers
-      : new Headers((headers ?? {}) as Record<string, string>);
+      : new Headers(headers ?? {});
 
   const session = await auth.api.getSession({
     headers: normalizedHeaders
@@ -37,3 +37,5 @@ export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
     }
   });
 });
+
+export { protectedProcedure };

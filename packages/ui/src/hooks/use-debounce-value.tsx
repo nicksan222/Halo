@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useRef, useState } from "react";
-import { useDebounceCallback } from "./use-debounce-callback";
-import type { DebouncedState } from "./use-debounce-callback";
+import { useRef, useState } from 'react';
+import type { DebouncedState } from './use-debounce-callback';
+import { useDebounceCallback } from './use-debounce-callback';
 
 type UseDebounceValueOptions<T> = {
   leading?: boolean;
@@ -22,15 +22,14 @@ export function useDebounceValue<T>(
   initialValue: T | (() => T),
   delay: number,
   options?: UseDebounceValueOptions<T>
-): [T, DebouncedState<(value: T) => void>] {
+): [T, DebouncedState<(...args: unknown[]) => void>] {
   const eq = options?.equalityFn ?? ((left: T, right: T) => left === right);
-  const unwrappedInitialValue =
-    initialValue instanceof Function ? initialValue() : initialValue;
+  const unwrappedInitialValue = initialValue instanceof Function ? initialValue() : initialValue;
   const [debouncedValue, setDebouncedValue] = useState<T>(unwrappedInitialValue);
   const previousValueRef = useRef<T | undefined>(unwrappedInitialValue);
 
   const updateDebouncedValue = useDebounceCallback(
-    setDebouncedValue,
+    (...args: unknown[]) => setDebouncedValue(args[0] as T),
     delay,
     options
   );

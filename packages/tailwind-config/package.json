@@ -20,7 +20,7 @@
   },
   "scripts": {
     "lint": "biome check .",
-    "type-check": "tsc --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
     "tailwindcss": "^4.1.11",

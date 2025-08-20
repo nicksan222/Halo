@@ -1,104 +1,97 @@
-"use client"
+'use client';
 
-import { useRef, useState, useCallback } from "react"
+import { useCallback, useRef, useState } from 'react';
 
-import { useIsomorphicLayoutEffect } from "./use-isomorphic-layout-effect"
+import { useIsomorphicLayoutEffect } from './use-isomorphic-layout-effect';
 
 type UseScrollLockOptions = {
-  autoLock?: boolean
-  lockTarget?: HTMLElement | string
-  widthReflow?: boolean
-}
+  autoLock?: boolean;
+  lockTarget?: HTMLElement | string;
+  widthReflow?: boolean;
+};
 
 type UseScrollLockReturn = {
-  isLocked: boolean
-  lock: () => void
-  unlock: () => void
-}
+  isLocked: boolean;
+  lock: () => void;
+  unlock: () => void;
+};
 
 type OriginalStyle = {
-  overflow: CSSStyleDeclaration["overflow"]
-  paddingRight: CSSStyleDeclaration["paddingRight"]
-}
+  overflow: CSSStyleDeclaration['overflow'];
+  paddingRight: CSSStyleDeclaration['paddingRight'];
+};
 
-const IS_SERVER = typeof window === "undefined"
+const IS_SERVER = typeof window === 'undefined';
 
-export function useScrollLock(
-  options: UseScrollLockOptions = {},
-): UseScrollLockReturn {
-  const { autoLock = true, lockTarget, widthReflow = true } = options
-  const [isLocked, setIsLocked] = useState(false)
-  const target = useRef<HTMLElement | null>(null)
-  const originalStyle = useRef<OriginalStyle | null>(null)
+export function useScrollLock(options: UseScrollLockOptions = {}): UseScrollLockReturn {
+  const { autoLock = true, lockTarget, widthReflow = true } = options;
+  const [isLocked, setIsLocked] = useState(false);
+  const target = useRef<HTMLElement | null>(null);
+  const originalStyle = useRef<OriginalStyle | null>(null);
 
   const lock = useCallback(() => {
     if (target.current) {
-      const { overflow, paddingRight } = target.current.style
+      const { overflow, paddingRight } = target.current.style;
 
       // Save the original styles
-      originalStyle.current = { overflow, paddingRight }
+      originalStyle.current = { overflow, paddingRight };
 
       // Prevent width reflow
       if (widthReflow) {
         // Use window inner width if body is the target as global scrollbar isn't part of the document
         const offsetWidth =
-          target.current === document.body
-            ? window.innerWidth
-            : target.current.offsetWidth
+          target.current === document.body ? window.innerWidth : target.current.offsetWidth;
         // Get current computed padding right in pixels
         const currentPaddingRight =
-          parseInt(window.getComputedStyle(target.current).paddingRight, 10) ||
-          0
+          parseInt(window.getComputedStyle(target.current).paddingRight, 10) || 0;
 
-        const scrollbarWidth = offsetWidth - target.current.scrollWidth
-        target.current.style.paddingRight = `${scrollbarWidth + currentPaddingRight}px`
+        const scrollbarWidth = offsetWidth - target.current.scrollWidth;
+        target.current.style.paddingRight = `${scrollbarWidth + currentPaddingRight}px`;
       }
 
       // Lock the scroll
-      target.current.style.overflow = "hidden"
+      target.current.style.overflow = 'hidden';
 
-      setIsLocked(true)
+      setIsLocked(true);
     }
-  }, [widthReflow])
+  }, [widthReflow]);
 
   const unlock = useCallback(() => {
     if (target.current && originalStyle.current) {
-      target.current.style.overflow = originalStyle.current.overflow
+      target.current.style.overflow = originalStyle.current.overflow;
 
       // Only reset padding right if we changed it
       if (widthReflow) {
-        target.current.style.paddingRight = originalStyle.current.paddingRight
+        target.current.style.paddingRight = originalStyle.current.paddingRight;
       }
     }
 
-    setIsLocked(false)
-  }, [widthReflow])
+    setIsLocked(false);
+  }, [widthReflow]);
 
   useIsomorphicLayoutEffect(() => {
-    if (IS_SERVER) return
+    if (IS_SERVER) return;
 
     // Re-find the target element each time
     if (lockTarget) {
       target.current =
-        typeof lockTarget === "string"
-          ? document.querySelector(lockTarget)
-          : lockTarget
+        typeof lockTarget === 'string' ? document.querySelector(lockTarget) : lockTarget;
     }
 
     if (!target.current) {
-      target.current = document.body
+      target.current = document.body;
     }
 
     if (autoLock) {
-      lock()
+      lock();
     }
 
     return () => {
-      unlock()
-    }
-  }, [autoLock, lockTarget, widthReflow, lock, unlock])
+      unlock();
+    };
+  }, [autoLock, lockTarget, widthReflow, lock, unlock]);
 
-  return { isLocked, lock, unlock }
+  return { isLocked, lock, unlock };
 }
 
-export type { UseScrollLockOptions, UseScrollLockReturn }
+export type { UseScrollLockOptions, UseScrollLockReturn };

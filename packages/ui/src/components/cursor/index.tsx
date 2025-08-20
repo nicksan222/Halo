@@ -1,13 +1,10 @@
-import { Children, type HTMLAttributes, type SVGProps } from 'react';
 import { cn } from '@acme/ui/lib/utils';
+import { Children, type HTMLAttributes, type SVGProps } from 'react';
 
 export type CursorProps = HTMLAttributes<HTMLSpanElement>;
 
 export const Cursor = ({ className, children, ...props }: CursorProps) => (
-  <span
-    className={cn('pointer-events-none relative select-none', className)}
-    {...props}
-  >
+  <span className={cn('pointer-events-none relative select-none', className)} {...props}>
     {children}
   </span>
 );
@@ -35,11 +32,7 @@ export const CursorPointer = ({ className, ...props }: CursorPointerProps) => (
 
 export type CursorBodyProps = HTMLAttributes<HTMLSpanElement>;
 
-export const CursorBody = ({
-  children,
-  className,
-  ...props
-}: CursorBodyProps) => (
+export const CursorBody = ({ children, className, ...props }: CursorBodyProps) => (
   <span
     className={cn(
       'relative ml-3.5 flex flex-col whitespace-nowrap rounded-xl py-1 pr-3 pl-2.5 text-xs',

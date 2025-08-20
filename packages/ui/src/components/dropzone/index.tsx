@@ -1,12 +1,12 @@
 'use client';
 
+import { Button } from '@acme/ui/components/button';
+import { cn } from '@acme/ui/lib/utils';
 import { UploadIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { createContext, useContext } from 'react';
 import type { DropEvent, DropzoneOptions, FileRejection } from 'react-dropzone';
 import { useDropzone } from 'react-dropzone';
-import { Button } from '@acme/ui/components/button';
-import { cn } from '@acme/ui/lib/utils';
 
 type DropzoneContextType = {
   src?: File[];
@@ -29,18 +29,12 @@ const renderBytes = (bytes: number) => {
   return `${size.toFixed(2)}${units[unitIndex]}`;
 };
 
-const DropzoneContext = createContext<DropzoneContextType | undefined>(
-  undefined
-);
+const DropzoneContext = createContext<DropzoneContextType | undefined>(undefined);
 
 export type DropzoneProps = Omit<DropzoneOptions, 'onDrop'> & {
   src?: File[];
   className?: string;
-  onDrop?: (
-    acceptedFiles: File[],
-    fileRejections: FileRejection[],
-    event: DropEvent
-  ) => void;
+  onDrop?: (acceptedFiles: File[], fileRejections: FileRejection[], event: DropEvent) => void;
   children?: ReactNode;
 };
 
@@ -73,7 +67,7 @@ export const Dropzone = ({
 
       onDrop?.(acceptedFiles, fileRejections, event);
     },
-    ...props,
+    ...props
   });
 
   return (
@@ -116,10 +110,7 @@ export type DropzoneContentProps = {
 
 const maxLabelItems = 3;
 
-export const DropzoneContent = ({
-  children,
-  className,
-}: DropzoneContentProps) => {
+export const DropzoneContent = ({ children, className }: DropzoneContentProps) => {
   const { src } = useDropzoneContext();
 
   if (!src) {
@@ -154,10 +145,7 @@ export type DropzoneEmptyStateProps = {
   className?: string;
 };
 
-export const DropzoneEmptyState = ({
-  children,
-  className,
-}: DropzoneEmptyStateProps) => {
+export const DropzoneEmptyState = ({ children, className }: DropzoneEmptyStateProps) => {
   const { src, accept, maxSize, minSize, maxFiles } = useDropzoneContext();
 
   if (src) {
@@ -194,9 +182,7 @@ export const DropzoneEmptyState = ({
       <p className="w-full truncate text-wrap text-muted-foreground text-xs">
         Drag and drop or click to upload
       </p>
-      {caption && (
-        <p className="text-wrap text-muted-foreground text-xs">{caption}.</p>
-      )}
+      {caption && <p className="text-wrap text-muted-foreground text-xs">{caption}.</p>}
     </div>
   );
 };

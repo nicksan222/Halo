@@ -33,12 +33,7 @@ export type BranchProps = HTMLAttributes<HTMLDivElement> & {
   onBranchChange?: (branchIndex: number) => void;
 };
 
-export const Branch = ({
-  defaultBranch = 0,
-  onBranchChange,
-  className,
-  ...props
-}: BranchProps) => {
+export const Branch = ({ defaultBranch = 0, onBranchChange, className, ...props }: BranchProps) => {
   const [currentBranch, setCurrentBranch] = useState(defaultBranch);
   const [branches, setBranches] = useState<ReactElement[]>([]);
 
@@ -48,14 +43,12 @@ export const Branch = ({
   };
 
   const goToPrevious = () => {
-    const newBranch =
-      currentBranch > 0 ? currentBranch - 1 : branches.length - 1;
+    const newBranch = currentBranch > 0 ? currentBranch - 1 : branches.length - 1;
     handleBranchChange(newBranch);
   };
 
   const goToNext = () => {
-    const newBranch =
-      currentBranch < branches.length - 1 ? currentBranch + 1 : 0;
+    const newBranch = currentBranch < branches.length - 1 ? currentBranch + 1 : 0;
     handleBranchChange(newBranch);
   };
 
@@ -65,15 +58,12 @@ export const Branch = ({
     goToPrevious,
     goToNext,
     branches,
-    setBranches,
+    setBranches
   };
 
   return (
     <BranchContext.Provider value={contextValue}>
-      <div
-        className={cn('grid w-full gap-2 [&>div]:pb-0', className)}
-        {...props}
-      />
+      <div className={cn('grid w-full gap-2 [&>div]:pb-0', className)} {...props} />
     </BranchContext.Provider>
   );
 };
@@ -109,11 +99,7 @@ export type BranchSelectorProps = HTMLAttributes<HTMLDivElement> & {
   from: UIMessage['role'];
 };
 
-export const BranchSelector = ({
-  className,
-  from,
-  ...props
-}: BranchSelectorProps) => {
+export const BranchSelector = ({ className, from, ...props }: BranchSelectorProps) => {
   const { totalBranches } = useBranch();
 
   // Don't render if there's only one branch
@@ -135,11 +121,7 @@ export const BranchSelector = ({
 
 export type BranchPreviousProps = ComponentProps<typeof Button>;
 
-export const BranchPrevious = ({
-  className,
-  children,
-  ...props
-}: BranchPreviousProps) => {
+export const BranchPrevious = ({ className, children, ...props }: BranchPreviousProps) => {
   const { goToPrevious, totalBranches } = useBranch();
 
   return (
@@ -165,11 +147,7 @@ export const BranchPrevious = ({
 
 export type BranchNextProps = ComponentProps<typeof Button>;
 
-export const BranchNext = ({
-  className,
-  children,
-  ...props
-}: BranchNextProps) => {
+export const BranchNext = ({ className, children, ...props }: BranchNextProps) => {
   const { goToNext, totalBranches } = useBranch();
 
   return (
@@ -200,10 +178,7 @@ export const BranchPage = ({ className, ...props }: BranchPageProps) => {
 
   return (
     <span
-      className={cn(
-        'font-medium text-muted-foreground text-xs tabular-nums',
-        className
-      )}
+      className={cn('font-medium text-muted-foreground text-xs tabular-nums', className)}
       {...props}
     >
       {currentBranch + 1} of {totalBranches}

@@ -1,5 +1,7 @@
 'use client';
 
+import { Button } from '@acme/ui/components/button';
+import { cn } from '@acme/ui/lib/utils';
 import { useControllableState } from '@radix-ui/react-use-controllable-state';
 import { type LucideIcon, XIcon } from 'lucide-react';
 import {
@@ -7,10 +9,8 @@ import {
   createContext,
   type HTMLAttributes,
   type MouseEventHandler,
-  useContext,
+  useContext
 } from 'react';
-import { Button } from '@acme/ui/components/button';
-import { cn } from '@acme/ui/lib/utils';
 
 type BannerContextProps = {
   show: boolean;
@@ -19,7 +19,7 @@ type BannerContextProps = {
 
 export const BannerContext = createContext<BannerContextProps>({
   show: true,
-  setShow: () => {},
+  setShow: () => {}
 });
 
 export type BannerProps = HTMLAttributes<HTMLDivElement> & {
@@ -41,7 +41,7 @@ export const Banner = ({
   const [show, setShow] = useControllableState({
     defaultProp: defaultVisible,
     prop: visible,
-    onChange: onClose,
+    onChange: onClose
   });
 
   if (!show) {
@@ -68,11 +68,7 @@ export type BannerIconProps = HTMLAttributes<HTMLDivElement> & {
   icon: LucideIcon;
 };
 
-export const BannerIcon = ({
-  icon: Icon,
-  className,
-  ...props
-}: BannerIconProps) => (
+export const BannerIcon = ({ icon: Icon, className, ...props }: BannerIconProps) => (
   <div
     className={cn(
       'rounded-full border border-background/20 bg-background/10 p-1 shadow-sm',

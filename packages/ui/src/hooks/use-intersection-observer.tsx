@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useEffect, useRef, useState } from 'react';
 
@@ -19,7 +19,7 @@ type UseIntersectionObserverOptions = {
 type IntersectionReturn = [
   (node?: Element | null) => void,
   boolean,
-  IntersectionObserverEntry | undefined,
+  IntersectionObserverEntry | undefined
 ] & {
   ref: (node?: Element | null) => void;
   isIntersecting: boolean;
@@ -32,13 +32,13 @@ export function useIntersectionObserver({
   rootMargin = '0%',
   freezeOnceVisible = false,
   initialIsIntersecting = false,
-  onChange,
+  onChange
 }: UseIntersectionObserverOptions = {}): IntersectionReturn {
   const [ref, setRef] = useState<Element | null>(null);
 
   const [state, setState] = useState<State>(() => ({
     isIntersecting: initialIsIntersecting,
-    entry: undefined,
+    entry: undefined
   }));
 
   const callbackRef = useRef<UseIntersectionObserverOptions['onChange']>(undefined);
@@ -65,10 +65,10 @@ export function useIntersectionObserver({
           ? observer.thresholds
           : [observer.thresholds];
 
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
           const isIntersecting =
             entry.isIntersecting &&
-            thresholds.some(threshold => entry.intersectionRatio >= threshold);
+            thresholds.some((threshold) => entry.intersectionRatio >= threshold);
 
           setState({ isIntersecting, entry });
 
@@ -82,7 +82,7 @@ export function useIntersectionObserver({
           }
         });
       },
-      { threshold, root, rootMargin },
+      { threshold, root, rootMargin }
     );
 
     observer.observe(ref);
@@ -99,7 +99,7 @@ export function useIntersectionObserver({
     root,
     rootMargin,
     frozen,
-    freezeOnceVisible,
+    freezeOnceVisible
   ]);
 
   // ensures that if the observed element changes, the intersection observer is reinitialized
@@ -118,11 +118,7 @@ export function useIntersectionObserver({
     }
   }, [ref, state.entry, freezeOnceVisible, frozen, initialIsIntersecting]);
 
-  const result = [
-    setRef,
-    !!state.isIntersecting,
-    state.entry,
-  ] as IntersectionReturn;
+  const result = [setRef, !!state.isIntersecting, state.entry] as IntersectionReturn;
 
   // Support object destructuring, by adding the specific values.
   result.ref = result[0];

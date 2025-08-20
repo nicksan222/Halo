@@ -23,12 +23,12 @@
       "suspicious": {
         "noExplicitAny": "off"
       },
+      "complexity": {
+        "noUselessTypeConstraint": "error"
+      },
       "style": {
         "noNonNullAssertion": "off",
         "noParameterAssign": "off"
-      },
-      "complexity": {
-        "noThisInStatic": "off"
       },
       "a11y": {
         "noSvgWithoutTitle": "off",

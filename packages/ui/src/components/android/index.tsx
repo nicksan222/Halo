@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { SVGProps } from "react";
+import type { SVGProps } from 'react';
 
 export interface AndroidProps extends SVGProps<SVGSVGElement> {
   width?: number;
@@ -9,13 +9,7 @@ export interface AndroidProps extends SVGProps<SVGSVGElement> {
   videoSrc?: string;
 }
 
-export const Android = ({
-  width = 433,
-  height = 882,
-  src,
-  videoSrc,
-  ...props
-}: AndroidProps) => {
+export const Android = ({ width = 433, height = 882, src, videoSrc, ...props }: AndroidProps) => {
   return (
     <svg
       width={width}
@@ -48,18 +42,8 @@ export const Android = ({
           className="fill-[#E5E5E5] stroke-[#E5E5E5] stroke-[0.5] dark:fill-[#404040] dark:stroke-[#404040]"
         />
       </g>
-      <circle
-        cx="189"
-        cy="28"
-        r="9"
-        className="fill-white dark:fill-[#262626]"
-      />
-      <circle
-        cx="189"
-        cy="28"
-        r="4"
-        className="fill-[#E5E5E5] dark:fill-[#404040]"
-      />
+      <circle cx="189" cy="28" r="9" className="fill-white dark:fill-[#262626]" />
+      <circle cx="189" cy="28" r="4" className="fill-[#E5E5E5] dark:fill-[#404040]" />
       {src && (
         <image
           href={src}
@@ -71,13 +55,7 @@ export const Android = ({
         />
       )}
       {videoSrc && (
-        <foreignObject
-          x="9"
-          y="14"
-          width="360"
-          height="800"
-          clipPath="url(#android-clip)"
-        >
+        <foreignObject x="9" y="14" width="360" height="800" clipPath="url(#android-clip)">
           <video
             className="size-full object-cover"
             src={videoSrc}

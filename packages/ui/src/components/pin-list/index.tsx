@@ -1,16 +1,16 @@
 'use client';
- 
-import * as React from 'react';
+import { cn } from '@acme/ui/lib/utils';
 import { Pin } from 'lucide-react';
 import {
-  motion,
-  LayoutGroup,
   AnimatePresence,
   type HTMLMotionProps,
-  type Transition,
+  LayoutGroup,
+  motion,
+  type Transition
 } from 'motion/react';
-import { cn } from '@acme/ui/lib/utils';
- 
+
+import * as React from 'react';
+
 type PinListItem = {
   id: number;
   name: string;
@@ -18,7 +18,7 @@ type PinListItem = {
   icon: React.ElementType;
   pinned: boolean;
 };
- 
+
 type PinListProps = {
   items: PinListItem[];
   labels?: {
@@ -33,7 +33,7 @@ type PinListProps = {
   unpinnedSectionClassName?: string;
   zIndexResetDelay?: number;
 } & HTMLMotionProps<'div'>;
- 
+
 function PinList({
   items,
   labels = { pinned: 'Pinned Items', unpinned: 'All Items' },
@@ -42,7 +42,7 @@ function PinList({
     initial: { opacity: 0 },
     animate: { opacity: 1 },
     exit: { opacity: 0 },
-    transition: { duration: 0.22, ease: 'easeInOut' },
+    transition: { duration: 0.22, ease: 'easeInOut' }
   },
   className,
   labelClassName,
@@ -52,17 +52,15 @@ function PinList({
   ...props
 }: PinListProps) {
   const [listItems, setListItems] = React.useState(items);
-  const [togglingGroup, setTogglingGroup] = React.useState<
-    'pinned' | 'unpinned' | null
-  >(null);
- 
+  const [togglingGroup, setTogglingGroup] = React.useState<'pinned' | 'unpinned' | null>(null);
+
   const pinned = listItems.filter((u) => u.pinned);
   const unpinned = listItems.filter((u) => !u.pinned);
- 
+
   const toggleStatus = (id: number) => {
     const item = listItems.find((u) => u.id === id);
     if (!item) return;
- 
+
     setTogglingGroup(item.pinned ? 'pinned' : 'unpinned');
     setListItems((prev) => {
       const idx = prev.findIndex((u) => u.id === id);
@@ -78,7 +76,7 @@ function PinList({
     // Reset group z-index after the animation duration (keep in sync with animation timing)
     setTimeout(() => setTogglingGroup(null), zIndexResetDelay);
   };
- 
+
   return (
     <motion.div className={cn('space-y-10', className)} {...props}>
       <LayoutGroup>
@@ -90,7 +88,7 @@ function PinList({
                 key="pinned-label"
                 className={cn(
                   'font-medium px-3 text-neutral-500 dark:text-neutral-300 text-sm mb-2',
-                  labelClassName,
+                  labelClassName
                 )}
                 {...labelMotionProps}
               >
@@ -103,7 +101,7 @@ function PinList({
               className={cn(
                 'space-y-3 relative',
                 togglingGroup === 'pinned' ? 'z-5' : 'z-10',
-                pinnedSectionClassName,
+                pinnedSectionClassName
               )}
             >
               {pinned.map((item) => (
@@ -133,7 +131,7 @@ function PinList({
             </div>
           )}
         </div>
- 
+
         <div>
           <AnimatePresence>
             {unpinned.length > 0 && (
@@ -142,7 +140,7 @@ function PinList({
                 key="all-label"
                 className={cn(
                   'font-medium px-3 text-neutral-500 dark:text-neutral-300 text-sm mb-2',
-                  labelClassName,
+                  labelClassName
                 )}
                 {...labelMotionProps}
               >
@@ -155,7 +153,7 @@ function PinList({
               className={cn(
                 'space-y-3 relative',
                 togglingGroup === 'unpinned' ? 'z-5' : 'z-10',
-                unpinnedSectionClassName,
+                unpinnedSectionClassName
               )}
             >
               {unpinned.map((item) => (
@@ -189,5 +187,5 @@ function PinList({
     </motion.div>
   );
 }
- 
+
 export { PinList, type PinListProps, type PinListItem };

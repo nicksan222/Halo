@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import * as React from "react";
+import * as React from 'react';
 
 type UseCounterReturn = {
   count: number;
@@ -35,6 +35,6 @@ export function useCounter(initialValue?: number): UseCounterReturn {
     increment,
     decrement,
     reset,
-    setCount,
+    setCount
   };
 }

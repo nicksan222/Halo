@@ -11,7 +11,6 @@ import { CodeBlock, CodeBlockCopyButton } from './code-block';
 import 'katex/dist/katex.min.css';
 import hardenReactMarkdown from 'harden-react-markdown';
 
-
 /**
  * Parses markdown text and removes incomplete tokens to prevent partial rendering
  * of links, images, bold, and italic formatting during streaming.
@@ -108,9 +107,9 @@ function parseIncompleteMarkdown(text: string): string {
   const inlineCodeMatch = result.match(inlineCodePattern);
   if (inlineCodeMatch) {
     // Check if we're dealing with a code block (triple backticks)
-    const hasCodeBlockStart = result.includes('```');
+    const _hasCodeBlockStart = result.includes('```');
     const codeBlockPattern = /```[\s\S]*?```/g;
-    const completeCodeBlocks = (result.match(codeBlockPattern) || []).length;
+    const _completeCodeBlocks = (result.match(codeBlockPattern) || []).length;
     const allTripleBackticks = (result.match(/```/g) || []).length;
 
     // If we have an odd number of ``` sequences, we're inside an incomplete code block
@@ -124,8 +123,7 @@ function parseIncompleteMarkdown(text: string): string {
         if (result[i] === '`') {
           // Check if this backtick is part of a triple backtick sequence
           const isTripleStart = result.substring(i, i + 3) === '```';
-          const isTripleMiddle =
-            i > 0 && result.substring(i - 1, i + 2) === '```';
+          const isTripleMiddle = i > 0 && result.substring(i - 1, i + 2) === '```';
           const isTripleEnd = i > 1 && result.substring(i - 2, i + 1) === '```';
 
           if (!(isTripleStart || isTripleMiddle || isTripleEnd)) {
@@ -168,9 +166,7 @@ export type ResponseProps = HTMLAttributes<HTMLDivElement> & {
   allowedLinkPrefixes?: ComponentProps<
     ReturnType<typeof hardenReactMarkdown>
   >['allowedLinkPrefixes'];
-  defaultOrigin?: ComponentProps<
-    ReturnType<typeof hardenReactMarkdown>
-  >['defaultOrigin'];
+  defaultOrigin?: ComponentProps<ReturnType<typeof hardenReactMarkdown>>['defaultOrigin'];
   parseIncompleteMarkdown?: boolean;
 };
 
@@ -209,18 +205,12 @@ const components: Options['components'] = {
     </a>
   ),
   h1: ({ node, children, className, ...props }) => (
-    <h1
-      className={cn('mt-6 mb-2 font-semibold text-3xl', className)}
-      {...props}
-    >
+    <h1 className={cn('mt-6 mb-2 font-semibold text-3xl', className)} {...props}>
       {children}
     </h1>
   ),
   h2: ({ node, children, className, ...props }) => (
-    <h2
-      className={cn('mt-6 mb-2 font-semibold text-2xl', className)}
-      {...props}
-    >
+    <h2 className={cn('mt-6 mb-2 font-semibold text-2xl', className)} {...props}>
       {children}
     </h2>
   ),
@@ -235,10 +225,7 @@ const components: Options['components'] = {
     </h4>
   ),
   h5: ({ node, children, className, ...props }) => (
-    <h5
-      className={cn('mt-6 mb-2 font-semibold text-base', className)}
-      {...props}
-    >
+    <h5 className={cn('mt-6 mb-2 font-semibold text-base', className)} {...props}>
       {children}
     </h5>
   ),
@@ -249,10 +236,7 @@ const components: Options['components'] = {
   ),
   table: ({ node, children, className, ...props }) => (
     <div className="my-4 overflow-x-auto">
-      <table
-        className={cn('w-full border-collapse border border-border', className)}
-        {...props}
-      >
+      <table className={cn('w-full border-collapse border border-border', className)} {...props}>
         {children}
       </table>
     </div>
@@ -273,10 +257,7 @@ const components: Options['components'] = {
     </tr>
   ),
   th: ({ node, children, className, ...props }) => (
-    <th
-      className={cn('px-4 py-2 text-left font-semibold text-sm', className)}
-      {...props}
-    >
+    <th className={cn('px-4 py-2 text-left font-semibold text-sm', className)} {...props}>
       {children}
     </th>
   ),
@@ -305,10 +286,7 @@ const components: Options['components'] = {
 
     return (
       <code
-        className={cn(
-          'rounded bg-muted px-1.5 py-0.5 font-mono text-sm',
-          className
-        )}
+        className={cn('rounded bg-muted px-1.5 py-0.5 font-mono text-sm', className)}
         {...props}
       />
     );
@@ -333,18 +311,14 @@ const components: Options['components'] = {
     }
 
     return (
-      <CodeBlock
-        className={cn('my-4 h-auto', className)}
-        code={code}
-        language={language}
-      >
+      <CodeBlock className={cn('my-4 h-auto', className)} code={code} language={language}>
         <CodeBlockCopyButton
           onCopy={() => console.log('Copied code to clipboard')}
           onError={() => console.error('Failed to copy code to clipboard')}
         />
       </CodeBlock>
     );
-  },
+  }
 };
 
 export const Response = memo(
@@ -366,10 +340,7 @@ export const Response = memo(
 
     return (
       <div
-        className={cn(
-          'size-full [&>*:first-child]:mt-0 [&>*:last-child]:mb-0',
-          className
-        )}
+        className={cn('size-full [&>*:first-child]:mt-0 [&>*:last-child]:mb-0', className)}
         {...props}
       >
         <HardenedMarkdown

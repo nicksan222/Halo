@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@acme/ui/components/button';
+import { cn } from '@acme/ui/lib/utils';
 import { CropIcon, RotateCcwIcon } from 'lucide-react';
 import { Slot } from 'radix-ui';
 import {
@@ -15,16 +16,15 @@ import {
   useContext,
   useEffect,
   useRef,
-  useState,
+  useState
 } from 'react';
 import ReactCrop, {
   centerCrop,
   makeAspectCrop,
   type PercentCrop,
   type PixelCrop,
-  type ReactCropProps,
+  type ReactCropProps
 } from 'react-image-crop';
-import { cn } from '@acme/ui/lib/utils';
 
 import 'react-image-crop/dist/ReactCrop.css';
 
@@ -38,7 +38,7 @@ const centerAspectCrop = (
       ? makeAspectCrop(
           {
             unit: '%',
-            width: 90,
+            width: 90
           },
           aspect,
           mediaWidth,
@@ -86,12 +86,7 @@ const getCroppedPngImage = async (
   const blob = await response.blob();
 
   if (blob.size > maxImageSize) {
-    return await getCroppedPngImage(
-      imageSrc,
-      scaleFactor * 0.9,
-      pixelCrop,
-      maxImageSize
-    );
+    return await getCroppedPngImage(imageSrc, scaleFactor * 0.9, pixelCrop, maxImageSize);
   }
 
   return croppedImageUrl;
@@ -107,10 +102,7 @@ type ImageCropContextType = {
   onCrop?: (croppedImage: string) => void;
   reactCropProps: Omit<ReactCropProps, 'onChange' | 'onComplete' | 'children'>;
   handleChange: (pixelCrop: PixelCrop, percentCrop: PercentCrop) => void;
-  handleComplete: (
-    pixelCrop: PixelCrop,
-    percentCrop: PercentCrop
-  ) => Promise<void>;
+  handleComplete: (pixelCrop: PixelCrop, percentCrop: PercentCrop) => Promise<void>;
   onImageLoad: (e: SyntheticEvent<HTMLImageElement>) => void;
   applyCrop: () => Promise<void>;
   resetCrop: () => void;
@@ -152,9 +144,7 @@ export const ImageCrop = ({
 
   useEffect(() => {
     const reader = new FileReader();
-    reader.addEventListener('load', () =>
-      setImgSrc(reader.result?.toString() || '')
-    );
+    reader.addEventListener('load', () => setImgSrc(reader.result?.toString() || ''));
     reader.readAsDataURL(file);
   }, [file]);
 
@@ -173,11 +163,7 @@ export const ImageCrop = ({
     onChange?.(pixelCrop, percentCrop);
   };
 
-  // biome-ignore lint/suspicious/useAwait: "onComplete is async"
-  const handleComplete = async (
-    pixelCrop: PixelCrop,
-    percentCrop: PercentCrop
-  ) => {
+  const handleComplete = async (pixelCrop: PixelCrop, percentCrop: PercentCrop) => {
     setCompletedCrop(pixelCrop);
     onComplete?.(pixelCrop, percentCrop);
   };
@@ -187,12 +173,7 @@ export const ImageCrop = ({
       return;
     }
 
-    const croppedImage = await getCroppedPngImage(
-      imgRef.current,
-      1,
-      completedCrop,
-      maxImageSize
-    );
+    const croppedImage = await getCroppedPngImage(imgRef.current, 1, completedCrop, maxImageSize);
 
     onCrop?.(croppedImage);
   };
@@ -217,14 +198,10 @@ export const ImageCrop = ({
     handleComplete,
     onImageLoad,
     applyCrop,
-    resetCrop,
+    resetCrop
   };
 
-  return (
-    <ImageCropContext.Provider value={contextValue}>
-      {children}
-    </ImageCropContext.Provider>
-  );
+  return <ImageCropContext.Provider value={contextValue}>{children}</ImageCropContext.Provider>;
 };
 
 export type ImageCropContentProps = {
@@ -232,23 +209,13 @@ export type ImageCropContentProps = {
   className?: string;
 };
 
-export const ImageCropContent = ({
-  style,
-  className,
-}: ImageCropContentProps) => {
-  const {
-    imgSrc,
-    crop,
-    handleChange,
-    handleComplete,
-    onImageLoad,
-    imgRef,
-    reactCropProps,
-  } = useImageCrop();
+export const ImageCropContent = ({ style, className }: ImageCropContentProps) => {
+  const { imgSrc, crop, handleChange, handleComplete, onImageLoad, imgRef, reactCropProps } =
+    useImageCrop();
 
   const shadcnStyle = {
     '--rc-border-color': 'var(--color-border)',
-    '--rc-focus-color': 'var(--color-primary)',
+    '--rc-focus-color': 'var(--color-primary)'
   } as CSSProperties;
 
   return (
@@ -261,13 +228,7 @@ export const ImageCropContent = ({
       {...reactCropProps}
     >
       {imgSrc && (
-        <img
-          alt="crop"
-          className="size-full"
-          onLoad={onImageLoad}
-          ref={imgRef}
-          src={imgSrc}
-        />
+        <img alt="crop" className="size-full" onLoad={onImageLoad} ref={imgRef} src={imgSrc} />
       )}
     </ReactCrop>
   );

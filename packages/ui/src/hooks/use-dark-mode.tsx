@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from 'react';
 
@@ -25,7 +25,7 @@ export function useDarkMode(options: DarkModeOptions = {}): DarkModeReturn {
     defaultValue = false,
     localStorageKey = LOCAL_STORAGE_KEY,
     initializeWithValue = true,
-    applyDarkClass = true,
+    applyDarkClass = true
   } = options;
 
   // Check if user prefers dark mode
@@ -74,7 +74,7 @@ export function useDarkMode(options: DarkModeOptions = {}): DarkModeReturn {
     if (typeof window === 'undefined') return;
 
     const mediaQuery = window.matchMedia(COLOR_SCHEME_QUERY);
-    
+
     const handleChange = (e: MediaQueryListEvent) => {
       const savedValue = window.localStorage.getItem(localStorageKey);
       if (savedValue === null) {
@@ -86,7 +86,7 @@ export function useDarkMode(options: DarkModeOptions = {}): DarkModeReturn {
     if (mediaQuery.addEventListener) {
       mediaQuery.addEventListener('change', handleChange);
       return () => mediaQuery.removeEventListener('change', handleChange);
-    } 
+    }
     // Legacy browsers
     else if (mediaQuery.addListener) {
       mediaQuery.addListener(handleChange);
@@ -108,10 +108,10 @@ export function useDarkMode(options: DarkModeOptions = {}): DarkModeReturn {
 
   return {
     isDarkMode,
-    toggle: () => setIsDarkMode(prev => !prev),
+    toggle: () => setIsDarkMode((prev) => !prev),
     enable: () => setIsDarkMode(true),
     disable: () => setIsDarkMode(false),
-    set: (value: boolean) => setIsDarkMode(value),
+    set: (value: boolean) => setIsDarkMode(value)
   };
 }
 

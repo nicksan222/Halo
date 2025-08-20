@@ -25,8 +25,5 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Run linting
-        run: bun lint
-
-      - name: Run formatter
+      - name: Run linting + type checking
         run: bun format

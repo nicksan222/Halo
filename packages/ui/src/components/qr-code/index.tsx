@@ -1,9 +1,9 @@
 'use client';
 
+import { cn } from '@acme/ui/lib/utils';
 import { formatHex, oklch } from 'culori';
 import QR from 'qrcode';
 import { type HTMLAttributes, useEffect, useState } from 'react';
-import { cn } from '@acme/ui/lib/utils';
 
 export type QRCodeProps = HTMLAttributes<HTMLDivElement> & {
   data: string;
@@ -24,7 +24,7 @@ const getOklch = (color: string, fallback: [number, number, number]) => {
   return {
     l: Number.parseFloat(oklchMatch[1]),
     c: Number.parseFloat(oklchMatch[2]),
-    h: Number.parseFloat(oklchMatch[3]),
+    h: Number.parseFloat(oklchMatch[3])
   };
 };
 
@@ -42,26 +42,21 @@ export const QRCode = ({
     const generateQR = async () => {
       try {
         const styles = getComputedStyle(document.documentElement);
-        const foregroundColor =
-          foreground ?? styles.getPropertyValue('--foreground');
-        const backgroundColor =
-          background ?? styles.getPropertyValue('--background');
+        const foregroundColor = foreground ?? styles.getPropertyValue('--foreground');
+        const backgroundColor = background ?? styles.getPropertyValue('--background');
 
-        const foregroundOklch = getOklch(
-          foregroundColor,
-          [0.21, 0.006, 285.885]
-        );
+        const foregroundOklch = getOklch(foregroundColor, [0.21, 0.006, 285.885]);
         const backgroundOklch = getOklch(backgroundColor, [0.985, 0, 0]);
 
         const newSvg = await QR.toString(data, {
           type: 'svg',
           color: {
             dark: formatHex(oklch({ mode: 'oklch', ...foregroundOklch })),
-            light: formatHex(oklch({ mode: 'oklch', ...backgroundOklch })),
+            light: formatHex(oklch({ mode: 'oklch', ...backgroundOklch }))
           },
           width: 200,
           errorCorrectionLevel: robustness,
-          margin: 0,
+          margin: 0
         });
 
         setSVG(newSvg);

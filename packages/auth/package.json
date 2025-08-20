@@ -11,7 +11,7 @@
   },
   "scripts": {
     "build": "bun build --target node --outdir dist src/index.ts",
-    "typecheck": "bunx tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "bunx biome check .",
     "format": "bunx biome check --write .",
     "auth:generate": "node ../../node_modules/@better-auth/cli/dist/index.mjs generate --output ../../packages/db/src/schema/auth.ts --yes"
