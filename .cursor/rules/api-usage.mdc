@@ -100,6 +100,43 @@ const ctx = await createContext({ headers: request.headers });
 // Then call procedures via caller or adapt to your framework specifics
 ```
 
+8) Testing the API (tRPC caller with auth)
+```ts
+// packages/api/src/procedures/todos/create/success.test.ts
+import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
+import { TestSetupBuilder } from '@acme/testing';
+
+describe('create todo success', () => {
+  let builder: TestSetupBuilder;
+  let client: Awaited<ReturnType<import('@acme/testing').TestUser['getApiClient']>>;
+
+  beforeAll(async () => {
+    builder = new TestSetupBuilder({ registerForCleanup: true }).withFounder();
+    const { founder } = await builder.create();
+    client = await founder!.getApiClient();
+  });
+
+  afterAll(async () => {
+    await builder.cleanup();
+  });
+
+  test('creates a todo with correct defaults and ownership', async () => {
+    const input = { title: 'Write tests', description: 'Cover create mutation' };
+
+    const todo = await client.todos.create.todo(input);
+
+    expect(todo.id).toBeDefined();
+    expect(typeof todo.id).toBe('string');
+    expect(todo.title).toBe(input.title);
+    expect(todo.description).toBe(input.description);
+    expect(todo.completed).toBe(false);
+    expect(todo.userId).toBeDefined();
+    expect(todo.createdAt).toBeInstanceOf(Date);
+    expect(todo.updatedAt).toBeInstanceOf(Date);
+  });
+});
+```
+
 Notes:
 - Public vs Protected: `publicProcedure` adds `db` and `auth` to context. `protectedProcedure` also enforces session and adds `session`.
 - Keep inputs in `input.ts` to enable frontend reuse; handlers in `index.ts` perform work.
@@ -115,6 +152,17 @@ Referenced files:
 @/packages/api/src/routers/app.ts
 @/packages/api/src/procedures/todos/create/input.ts
 @/packages/api/src/procedures/todos/create/index.ts
+
+- If `@/api` alias isn’t configured, use `@acme/api` directly.
+
+Referenced files:
+@/packages/api/package.json
+@/packages/api/src/index.ts
+@/packages/api/src/routers/app.ts
+@/packages/api/src/procedures/todos/create/input.ts
+@/packages/api/src/procedures/todos/create/index.ts
+@/packages/testing/src/builder/test-setup-builder.ts
+@/packages/testing/src/auth/member.ts
 
 - If `@/api` alias isn’t configured, use `@acme/api` directly.
 

@@ -1,0 +1,23 @@
+{
+  "name": "@acme/testing",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "build": "bunx tsc -p tsconfig.json --noEmit",
+    "typecheck": "bunx tsc -p tsconfig.json --noEmit",
+    "lint": "bunx biome check .",
+    "format": "bunx biome check --write .",
+    "check": "bun run typecheck && bun run lint"
+  },
+  "dependencies": {
+    "@acme/auth": "workspace:*",
+    "@acme/api": "workspace:*",
+    "@acme/db": "workspace:*"
+  }
+}

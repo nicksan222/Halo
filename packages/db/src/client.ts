@@ -6,7 +6,7 @@ import ws from 'ws';
 const connectionString = env.DATABASE_URL;
 
 // Configure Neon for local development via Neon Proxy
-if (env.NODE_ENV === 'development') {
+if (env.NODE_ENV === 'development' || env.NODE_ENV === 'test') {
   neonConfig.fetchEndpoint = (host) => {
     const [protocol, port] = host === 'db.localtest.me' ? ['http', 4444] : ['https', 443];
     return `${protocol}://${host}:${port}/sql`;
