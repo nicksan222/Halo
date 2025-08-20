@@ -26,7 +26,8 @@
     "drizzle-orm": "latest",
     "@neondatabase/serverless": "latest",
     "ws": "latest",
-    "@acme/env": "0.0.0"
+    "@acme/env": "0.0.0",
+    "postgres": "latest"
   },
   "devDependencies": {
     "drizzle-kit": "latest",
