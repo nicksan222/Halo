@@ -28,6 +28,7 @@ jobs:
       - name: Start local services via start.sh (includes install + migrations)
         env:
           WORKSPACE_ROOT: ${{ github.workspace }}
+          DATABASE_URL: postgres://postgres:postgres@localhost:4444/acme
         run: |
           bash .devcontainer/start.sh
 
