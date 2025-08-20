@@ -85,6 +85,7 @@
     "input-otp": "^1.4.2",
     "jotai": "^2.13.1",
     "katex": "^0.16.22",
+    "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "lucide-react": "^0.540.0",
     "media-chrome": "^4.13.0",
@@ -118,6 +119,7 @@
   "devDependencies": {
     "@types/color": "^4.2.0",
     "@types/culori": "^4.0.0",
+    "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.throttle": "^4.1.9",
     "@types/qrcode": "^1.5.5",
     "@types/react-syntax-highlighter": "^15.5.13"
