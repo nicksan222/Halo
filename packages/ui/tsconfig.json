@@ -1,4 +1,11 @@
 {
   "extends": "../../tsconfig.base.json",
-  "compilerOptions": { "declaration": true, "emitDeclarationOnly": false, "skipLibCheck": true }
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": false,
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "types": ["react", "react-dom", "vite/client"],
+    "moduleResolution": "bundler"
+  }
 }
