@@ -1,17 +1,30 @@
 import { translate } from '@acme/localization';
+import { useLocale } from '@acme/localization/next-server';
 import { SidebarProvider, SidebarTrigger } from '@acme/ui/components/sidebar';
+import { cookies, headers } from 'next/headers';
 import type React from 'react';
 import { AppHeader } from '@/components/layout/app-header';
 import { AppSidebar } from '@/components/sidebar/app-sidebar';
-import { useLocale } from '@/providers/i18n-provider';
 import { lang } from './lang';
 
-export default function AppLayout({
+export default async function AppLayout({
   children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const locale = useLocale();
+  const headersList = await headers();
+  const cookiesList = await cookies();
+
+  const { locale } = useLocale(
+    {
+      headers: headersList,
+      cookies: {
+        get: (name) => cookiesList.get(name)?.value,
+        set: (name, value) => cookiesList.set(name, value)
+      }
+    },
+    { cookieName: 'locale', defaultLocale: 'en' }
+  );
   const t = translate(lang, locale);
 
   return (

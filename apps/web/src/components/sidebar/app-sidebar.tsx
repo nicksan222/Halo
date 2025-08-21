@@ -127,7 +127,7 @@ export function AppSidebar({ labels }: AppSidebarProps) {
               await authClient.signOut({
                 fetchOptions: {
                   onSuccess: () => {
-                    window.location.assign('/login');
+                    window.location.assign('/auth/sign-in');
                   }
                 }
               });

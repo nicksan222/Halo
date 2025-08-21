@@ -1,14 +1,23 @@
-'use client';
-
 import { translate } from '@acme/localization';
+import { useLocale } from '@acme/localization/next-server';
+import { cookies, headers } from 'next/headers';
 import { PageHeader, TodoList } from '@/components';
-import { useLocale } from '@/providers/i18n-provider';
 import { lang } from './lang';
 
-export const dynamic = 'force-dynamic';
+export default async function HomeTodosPage() {
+  const headersList = await headers();
+  const cookiesList = await cookies();
 
-export default function HomeTodosPage() {
-  const locale = useLocale();
+  const { locale } = useLocale(
+    {
+      headers: headersList,
+      cookies: {
+        get: (name) => cookiesList.get(name)?.value,
+        set: (name, value) => cookiesList.set(name, value)
+      }
+    },
+    { cookieName: 'locale', defaultLocale: 'en' }
+  );
   const t = translate(lang, locale);
   return (
     <div className="space-y-6">
@@ -16,6 +25,7 @@ export default function HomeTodosPage() {
         title={t.home.title}
         description={t.home.description}
         action={{ href: '/todos/new', label: t.home.actionNew }}
+        backLabel={t.common.back}
       />
       <TodoList />
     </div>

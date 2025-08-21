@@ -83,7 +83,7 @@ export default function SignUp() {
       password: values.password,
       name: `${values.firstName} ${values.lastName}`,
       image: image ? await convertImageToBase64(image) : '',
-      callbackURL: '/dashboard',
+      callbackURL: '/',
       fetchOptions: {
         onResponse: () => {
           setLoading(false);
@@ -95,7 +95,7 @@ export default function SignUp() {
           toast.error(ctx.error.message);
         },
         onSuccess: async () => {
-          router.push('/dashboard');
+          router.push('/');
         }
       }
     });

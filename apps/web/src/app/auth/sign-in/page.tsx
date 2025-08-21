@@ -23,6 +23,7 @@ import { Input } from '@acme/ui/components/input';
 import { Separator } from '@acme/ui/components/separator';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -39,6 +40,8 @@ type SignInFormValues = {
 
 export default function SignIn() {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const locale = useLocale();
   const t = translate(lang, locale);
 
@@ -55,7 +58,15 @@ export default function SignIn() {
       },
       {
         onRequest: () => setLoading(true),
-        onResponse: () => setLoading(false)
+        onResponse: () => setLoading(false),
+        onError: (ctx) => {
+          toast.error(ctx.error.message);
+        },
+        onSuccess: async () => {
+          // Get the redirect URL from search params or default to home
+          const redirectTo = searchParams.get('redirectTo') || '/';
+          router.push(redirectTo);
+        }
       }
     );
   }
