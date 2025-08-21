@@ -2,6 +2,7 @@
 
 import { authClient } from '@acme/auth/client';
 import { NavUser } from '@acme/ui/components/nav-user';
+import { OrganizationSwitcher } from '@acme/ui/components/organization-switcher';
 import {
   Sidebar,
   SidebarContent,
@@ -14,7 +15,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from '@acme/ui/components/sidebar';
-import { TeamSwitcher } from '@acme/ui/components/team-switcher';
 import { ListTodo, Plus } from 'lucide-react';
 import { useOfflineFirstSession } from './session-store';
 
@@ -73,7 +73,7 @@ export function AppSidebar({ labels }: AppSidebarProps) {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <TeamSwitcher
+        <OrganizationSwitcher
           teams={teams}
           activeTeam={activeTeam}
           onTeamChange={async (team) => {

@@ -18,7 +18,7 @@ import {
 import { ChevronsUpDown, Plus } from 'lucide-react';
 import type * as React from 'react';
 
-export function TeamSwitcher({
+export function OrganizationSwitcher({
   teams,
   activeTeam,
   onTeamChange,
