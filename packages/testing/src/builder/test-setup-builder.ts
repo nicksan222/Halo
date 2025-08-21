@@ -4,6 +4,7 @@ import type { AccountStrategy } from '../auth/strategy';
 import { CreateFounder } from './commands/create-founder';
 import { CreateMember, type CreateMemberParams } from './commands/create-member';
 import { CreateOrganization, type CreateOrganizationParams } from './commands/create-organization';
+import { SetActiveOrganization } from './commands/set-active-organization';
 import type { BuilderCommand, ExecutionContext } from './types';
 
 export interface BuilderOptions {
@@ -33,6 +34,8 @@ export class TestSetupBuilder {
     const { username, strategy, organization } = params;
     this.commands.push(new CreateFounder({ username, strategy }));
     this.commands.push(new CreateOrganization(organization));
+    // Ensure the newly created organization becomes the active one for the founder session
+    this.commands.push(new SetActiveOrganization());
     return this;
   }
 

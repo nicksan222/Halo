@@ -16,6 +16,8 @@ export class TestUser {
     protected readonly strategy: AccountStrategy
   ) {}
 
+  private sessionCookiePair: string | null = null;
+
   /**
    * Creates a new test account using the provided strategy.
    * The default strategy provisions a regular member.
@@ -49,35 +51,47 @@ export class TestUser {
   }
 
   /**
+   * Gets the user's id.
+   */
+  getId() {
+    return this.user.id;
+  }
+
+  /**
    * Returns headers with a valid session cookie for this user.
    */
   async getSessionHeaders() {
-    const email = this.user.email!;
-
-    const signInResponse = await auth.api.signInEmail({
-      body: {
-        email,
-        password: this.strategy.getPassword(),
-        rememberMe: true
-      },
-      asResponse: true
-    });
-
     const headers = new Headers();
 
-    // Extract the signed session cookie from Set-Cookie
-    const setCookieHeader = signInResponse.headers.get('set-cookie') ?? '';
-    const cookieMatch = setCookieHeader.match(
-      /(?:^|,\s*)(?:(__Secure-)?better-auth\.session_token)=([^;]+)/
-    );
+    // Reuse existing session cookie if present so that org/team selections persist
+    if (!this.sessionCookiePair) {
+      const email = this.user.email!;
+      const signInResponse = await auth.api.signInEmail({
+        body: {
+          email,
+          password: this.strategy.getPassword(),
+          rememberMe: true
+        },
+        asResponse: true
+      });
 
-    if (cookieMatch) {
-      const cookieName = cookieMatch[1]
-        ? `${cookieMatch[1]}better-auth.session_token`
-        : 'better-auth.session_token';
-      const cookieValue = cookieMatch[2];
-      const cookiePair = `${cookieName}=${cookieValue}`;
-      headers.set('cookie', cookiePair);
+      // Extract the signed session cookie from Set-Cookie
+      const setCookieHeader = signInResponse.headers.get('set-cookie') ?? '';
+      const cookieMatch = setCookieHeader.match(
+        /(?:^|,\s*)(?:(__Secure-)?better-auth\.session_token)=([^;]+)/
+      );
+
+      if (cookieMatch) {
+        const cookieName = cookieMatch[1]
+          ? `${cookieMatch[1]}better-auth.session_token`
+          : 'better-auth.session_token';
+        const cookieValue = cookieMatch[2];
+        this.sessionCookiePair = `${cookieName}=${cookieValue}`;
+      }
+    }
+
+    if (this.sessionCookiePair) {
+      headers.set('cookie', this.sessionCookiePair);
     }
 
     return headers;
