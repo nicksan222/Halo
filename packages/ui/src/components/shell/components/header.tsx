@@ -39,12 +39,12 @@ function groupBackTitleDescription(children: React.ReactNode) {
   const grouped: React.ReactNode[] = [];
   if (back || title || description) {
     grouped.push(
-      <div key="back-title-description-group" className="flex items-center gap-2">
-        {back}
-        <div>
+      <div key="back-title-description-group" className="flex flex-col">
+        <div className="flex items-center gap-2">
+          {back}
           {title}
-          {description}
         </div>
+        {description && <div className="mt-1">{description}</div>}
       </div>
     );
   }
@@ -88,7 +88,13 @@ const renderButton = (action: ActionProps, isMobile: boolean, key: number) => {
       )}
     </Button>
   );
-  return href ? <Link href={href}>{button}</Link> : button;
+  return href ? (
+    <Link href={href} key={key}>
+      {button}
+    </Link>
+  ) : (
+    button
+  );
 };
 
 /**
@@ -107,12 +113,12 @@ const Header: React.FC<HeaderProps> = ({ children, className, showSidebarToggle 
   return (
     <div
       className={cn(
-        'sticky top-0 z-10 flex w-full max-w-full flex-col justify-around overflow-hidden bg-background px-2 py-4 sm:px-4 md:flex-row md:items-center md:px-8',
+        'sticky top-0 z-10 flex w-full max-w-full flex-col justify-around overflow-hidden bg-background px-2 py-4 sm:px-4 md:flex-row md:items-start md:px-8',
         className
       )}
     >
-      <div className="flex flex-1 flex-wrap items-center overflow-hidden">
-        {showSidebarToggle && <SidebarTrigger className="mr-2" />}
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {showSidebarToggle && <SidebarTrigger className="mb-2" />}
         {groupedChildren}
       </div>
       {/* Desktop actions */}

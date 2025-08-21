@@ -25,7 +25,8 @@ export function NavUser({
   onBilling,
   onNotifications,
   onLogout,
-  features = {}
+  features = {},
+  isLoading = false
 }: {
   user: {
     name: string;
@@ -43,6 +44,7 @@ export function NavUser({
     showBilling?: boolean;
     showNotifications?: boolean;
   };
+  isLoading?: boolean;
 }) {
   const { isMobile } = useSidebar();
 
@@ -52,6 +54,23 @@ export function NavUser({
     showBilling = true,
     showNotifications = true
   } = features;
+
+  if (isLoading) {
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton size="lg" disabled>
+            <div className="h-8 w-8 rounded-lg bg-sidebar-foreground/20 animate-pulse" />
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <div className="h-4 w-20 rounded bg-sidebar-foreground/20 animate-pulse" />
+              <div className="h-3 w-24 rounded bg-sidebar-foreground/20 animate-pulse mt-1" />
+            </div>
+            <ChevronsUpDown className="ml-auto size-4 opacity-50" />
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    );
+  }
 
   return (
     <SidebarMenu>

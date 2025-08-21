@@ -22,7 +22,8 @@ export function TeamSwitcher({
   teams,
   activeTeam,
   onTeamChange,
-  onAddTeam
+  onAddTeam,
+  isLoading = false
 }: {
   teams: {
     name: string;
@@ -42,8 +43,28 @@ export function TeamSwitcher({
     id: string;
   }) => void;
   onAddTeam: () => void;
+  isLoading?: boolean;
 }) {
   const { isMobile } = useSidebar();
+
+  if (isLoading) {
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton size="lg" disabled>
+            <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg animate-pulse">
+              <div className="size-4 rounded bg-sidebar-primary-foreground/20" />
+            </div>
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <div className="h-4 w-24 rounded bg-sidebar-foreground/20 animate-pulse" />
+              <div className="h-3 w-16 rounded bg-sidebar-foreground/20 animate-pulse mt-1" />
+            </div>
+            <ChevronsUpDown className="ml-auto opacity-50" />
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    );
+  }
 
   if (!activeTeam) {
     return null;

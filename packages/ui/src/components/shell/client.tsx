@@ -1,3 +1,5 @@
+'use client';
+
 import classNames from 'classnames';
 import React from 'react';
 
@@ -13,6 +15,7 @@ import {
   TabContainer,
   Title
 } from './components';
+import { ShellProvider } from './context';
 import type { ShellProps } from './types';
 import { extractChildrenNotOfType, extractChildrenOfType } from './utils/ssr';
 
@@ -36,15 +39,17 @@ type ShellComponent = React.FC<ShellProps> & {
 /* ------------------------------ componente base --------------------------- */
 const ShellBase: React.FC<ShellProps> = ({ children, className, autoLayout = true }) => {
   return (
-    <div className={classNames('relative w-full', className)}>
-      {autoLayout ? (
-        // Auto-detect layout and apply grid if needed
-        <AutoLayoutWrapper>{children}</AutoLayoutWrapper>
-      ) : (
-        // Render children as-is
-        children
-      )}
-    </div>
+    <ShellProvider>
+      <div className={classNames('relative w-full', className)}>
+        {autoLayout ? (
+          // Auto-detect layout and apply grid if needed
+          <AutoLayoutWrapper>{children}</AutoLayoutWrapper>
+        ) : (
+          // Render children as-is
+          children
+        )}
+      </div>
+    </ShellProvider>
   );
 };
 

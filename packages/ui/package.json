@@ -17,6 +17,14 @@
       "import": "./src/components/*.tsx",
       "types": "./src/components/*.tsx"
     },
+    "./components/shell": {
+      "import": "./src/components/shell/index.tsx",
+      "types": "./src/components/shell/index.tsx"
+    },
+    "./components/shell/client": {
+      "import": "./src/components/shell/client.tsx",
+      "types": "./src/components/shell/client.tsx"
+    },
     "./styles": {
       "import": "./src/styles/globals.css",
       "types": "./src/styles/globals.css"

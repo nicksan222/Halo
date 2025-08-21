@@ -16,16 +16,16 @@ import {
   FormMessage
 } from '@acme/ui/components/form';
 import { Input } from '@acme/ui/components/input';
+import Shell from '@acme/ui/components/shell/client';
 import { Textarea } from '@acme/ui/components/textarea';
 import { Loader2, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { lang } from '@/app/(app)/lang';
-import { PageHeader } from '@/components';
 import { useLocale } from '@/providers/i18n-provider';
 import { api } from '@/trpc/react';
+import { lang } from './lang';
 
 interface EditTodoFormValues {
   title: string;
@@ -74,16 +74,16 @@ export default function TodoDetailPage() {
     }
   }, [query.data, form]);
 
-  if (query.isLoading) return <div>{t.editTodo.loading}</div>;
+  if (query.isLoading) return <div>{t.loading}</div>;
   if (query.error)
     return (
       <div className="space-y-4">
         <Alert variant="destructive">
-          <AlertTitle>{t.editTodo.failedToLoad}</AlertTitle>
+          <AlertTitle>{t.loadError}</AlertTitle>
           <AlertDescription>{query.error.message}</AlertDescription>
         </Alert>
         <Button asChild>
-          <Link href="/todos">{t.editTodo.back}</Link>
+          <Link href="/todos">{t.back}</Link>
         </Button>
       </div>
     );
@@ -98,82 +98,94 @@ export default function TodoDetailPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-4">
-      <PageHeader title={t.editTodo.title} backHref="/todos" />
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>{t.editTodo.details}</CardTitle>
-          <Button
-            variant="destructive"
-            onClick={() => deleteMutation.mutate({ id: params.id })}
-            disabled={deleteMutation.isPending}
-          >
-            {deleteMutation.isPending ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : (
-              <Trash2 size={16} />
-            )}
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-              <FormField
-                control={form.control}
-                name="title"
-                rules={{ required: t.editTodo.titleRequired }}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t.editTodo.titleLabel}</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+    <>
+      <Shell.Header>
+        <Shell.Back href="/todos" />
+        <Shell.Title>{t.title}</Shell.Title>
+        <Shell.Action
+          variant="destructive"
+          text={deleteMutation.isPending ? undefined : undefined}
+          onClick={() => deleteMutation.mutate({ id: params.id })}
+        />
+      </Shell.Header>
+      <Shell.Content>
+        <div className="max-w-2xl mx-auto space-y-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>{t.cardTitle}</CardTitle>
+              <Button
+                variant="destructive"
+                onClick={() => deleteMutation.mutate({ id: params.id })}
+                disabled={deleteMutation.isPending}
+              >
+                {deleteMutation.isPending ? (
+                  <Loader2 size={16} className="animate-spin" />
+                ) : (
+                  <Trash2 size={16} />
                 )}
-              />
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t.editTodo.descriptionLabel}</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} value={field.value ?? ''} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="completed"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex items-center gap-2">
-                      <FormControl>
-                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                      </FormControl>
-                      <FormLabel>{t.editTodo.completedLabel}</FormLabel>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <CardFooter className="px-0">
-                <Button type="submit" disabled={updateMutation.isPending}>
-                  {updateMutation.isPending ? (
-                    <Loader2 size={16} className="animate-spin" />
-                  ) : (
-                    t.editTodo.save
-                  )}
-                </Button>
-                <Button type="button" variant="secondary" asChild className="ml-2">
-                  <Link href="/todos">{t.editTodo.cancel}</Link>
-                </Button>
-              </CardFooter>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    </div>
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    rules={{ required: t.titleRequired }}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t.titleLabel}</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t.descriptionLabel}</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} value={field.value ?? ''} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="completed"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="flex items-center gap-2">
+                          <FormControl>
+                            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                          </FormControl>
+                          <FormLabel>{t.completed}</FormLabel>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <CardFooter className="px-0">
+                    <Button type="submit" disabled={updateMutation.isPending}>
+                      {updateMutation.isPending ? (
+                        <Loader2 size={16} className="animate-spin" />
+                      ) : (
+                        t.save
+                      )}
+                    </Button>
+                    <Button type="button" variant="secondary" asChild className="ml-2">
+                      <Link href="/todos">{t.cancel}</Link>
+                    </Button>
+                  </CardFooter>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+        </div>
+      </Shell.Content>
+    </>
   );
 }

@@ -14,11 +14,11 @@ import {
   FormMessage
 } from '@acme/ui/components/form';
 import { Input } from '@acme/ui/components/input';
+import Shell from '@acme/ui/components/shell/client';
 import { Textarea } from '@acme/ui/components/textarea';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { PageHeader } from '@/components';
 import { useLocale } from '@/providers/i18n-provider';
 import { api } from '@/trpc/react';
 import { lang } from './lang';
@@ -50,50 +50,61 @@ export default function NewTodoPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-4">
-      <PageHeader title={t.title} backHref="/todos" />
-      <Card>
-        <CardHeader>
-          <CardTitle>{t.cardTitle}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-              <FormField
-                control={form.control}
-                name="title"
-                rules={{ required: t.titleRequired }}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t.titleLabel}</FormLabel>
-                    <FormControl>
-                      <Input placeholder={t.titlePlaceholder} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t.descriptionLabel}</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder={t.descriptionPlaceholder} {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <CardFooter className="px-0">
-                <Button type="submit" disabled={mutation.isPending}>
-                  {mutation.isPending ? <Loader2 size={16} className="animate-spin" /> : t.create}
-                </Button>
-              </CardFooter>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    </div>
+    <>
+      <Shell.Header>
+        <Shell.Back href="/todos" />
+        <Shell.Title>{t.title}</Shell.Title>
+      </Shell.Header>
+      <Shell.Content>
+        <div className="grid gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>{t.cardTitle}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    rules={{ required: t.titleRequired }}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t.titleLabel}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t.titlePlaceholder} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t.descriptionLabel}</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder={t.descriptionPlaceholder} {...field} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <CardFooter className="px-0">
+                    <Button type="submit" disabled={mutation.isPending}>
+                      {mutation.isPending ? (
+                        <Loader2 size={16} className="animate-spin" />
+                      ) : (
+                        t.create
+                      )}
+                    </Button>
+                  </CardFooter>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+        </div>
+      </Shell.Content>
+    </>
   );
 }

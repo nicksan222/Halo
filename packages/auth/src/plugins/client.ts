@@ -1,6 +1,6 @@
 import { createAuthClient } from 'better-auth/react';
 import { ac as accessControl, admin as adminRole, user as userRole } from '../access-control';
-import { adminClient, organizationClient, usernameClient } from './index';
+import { adminClient, organizationClient, phoneNumberClient, usernameClient } from './index';
 
 // Auto-detect API base URL: prefer NEXT_PUBLIC_API_URL, fallback to current origin
 const baseURL =
@@ -24,7 +24,8 @@ export const authClient = createAuthClient({
         user: userRole
       }
     }),
-    usernameClient()
+    usernameClient(),
+    phoneNumberClient()
   ]
 });
 

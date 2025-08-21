@@ -46,14 +46,16 @@ const Tab: React.FC<TabItemProps> = ({
           'flex cursor-pointer items-center gap-1 rounded-lg text-sm',
           isTop
             ? 'justify-center px-3 py-2 w-full' // desktop grid gestisce la larghezza
-            : 'min-w-fit px-3 py-1',
+            : 'justify-start min-w-fit px-3 py-1',
           isActive
             ? 'bg-accent text-accent-foreground'
             : 'bg-muted/20 text-foreground/80 hover:bg-muted/30',
           'transition-colors duration-150',
           /* ---------- desktop overrides ---------- */
           'md:flex md:items-center md:rounded-md',
-          isTop ? 'md:w-full md:px-3 md:py-2 md:justify-center' : 'md:w-full md:px-4 md:py-2',
+          isTop
+            ? 'md:w-full md:px-3 md:py-2 md:justify-center'
+            : 'md:w-full md:px-4 md:py-2 md:justify-start',
           isActive
             ? 'md:bg-accent/30 md:text-accent-foreground'
             : 'md:text-foreground md:opacity-70 md:hover:bg-muted/10 md:hover:opacity-90'
@@ -86,10 +88,10 @@ const Tab: React.FC<TabItemProps> = ({
         )}
 
         {/* Text content */}
-        <div className="flex min-w-0 flex-grow flex-col">
+        <div className="flex min-w-0 flex-grow flex-col items-start text-left">
           <span
             className={cn(
-              'font-medium truncate', // <- troncamento testo lungo
+              'font-medium truncate text-left', // <- troncamento testo lungo
               isActive ? 'text-foreground' : 'text-foreground/80'
             )}
           >
@@ -98,7 +100,7 @@ const Tab: React.FC<TabItemProps> = ({
           {description && (
             <span
               className={cn(
-                'mt-0.5 line-clamp-2 hidden break-words pr-2 text-xs md:block',
+                'mt-0.5 line-clamp-2 hidden break-words pr-2 text-xs md:block text-left',
                 isActive ? 'text-muted-foreground' : 'text-muted-foreground/70'
               )}
             >

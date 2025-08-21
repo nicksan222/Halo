@@ -7,6 +7,50 @@ A composable Shell component that provides a layout wrapper with header, content
 - Actions now support a numeric `position` prop for deterministic ordering. Lower numbers render first. Falls back to `order` (deprecated), then insertion order.
 - Internal state refactored to a lightweight Zustand store. No API changes required; `Shell.Provider` remains for compatibility.
 
+## SSR and Client usage
+
+- The default export is SSR-safe and can be imported in Server Components. Interactive subcomponents are loaded client-side automatically.
+
+```tsx
+// Server Component (SSR safe)
+import Shell from "@acme/ui/components/shell";
+
+export default async function Page() {
+  return (
+    <Shell>
+      <Shell.Header>
+        <Shell.Back href="/dashboard" />
+        <Shell.Title>My Page</Shell.Title>
+        <Shell.Description>Server rendered layout</Shell.Description>
+        {/* Prefer href-based navigation on the server. For onClick handlers, see client entry below. */}
+      </Shell.Header>
+      <Shell.TabContainer position="side">
+        <Shell.Tab title="Overview" href="/overview" />
+      </Shell.TabContainer>
+      <Shell.Content>...</Shell.Content>
+    </Shell>
+  );
+}
+```
+
+- For full client-side interactivity (e.g. passing `onClick` handlers), import the client entry.
+
+```tsx
+'use client'
+import Shell from "@acme/ui/components/shell/client";
+
+export default function ClientPage() {
+  return (
+    <Shell>
+      <Shell.Header>
+        <Shell.Action text="Run" onClick={() => console.log('clicked')} />
+      </Shell.Header>
+      <Shell.Content>...</Shell.Content>
+    </Shell>
+  );
+}
+```
+
 ## Usage
 
 ### Automatic Layout (Recommended)

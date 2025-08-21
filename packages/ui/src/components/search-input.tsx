@@ -4,7 +4,7 @@ import { Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
-interface SearchInputProps {
+export interface SearchInputProps {
   value: string;
   onChange: (value: string) => void;
   placeholder: string;

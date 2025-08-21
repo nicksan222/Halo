@@ -1,2 +1,7 @@
-export { adminClient, organizationClient, usernameClient } from 'better-auth/client/plugins';
-export { admin, organization, username } from 'better-auth/plugins';
+export {
+  adminClient,
+  organizationClient,
+  phoneNumberClient,
+  usernameClient
+} from 'better-auth/client/plugins';
+export { admin, organization, phoneNumber, username } from 'better-auth/plugins';

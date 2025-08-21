@@ -14,7 +14,7 @@ interface FilterState {
   value: any;
 }
 
-interface ListFiltersStore<TFormValues extends FieldValues = FieldValues> {
+export interface ListFiltersStore<TFormValues extends FieldValues = FieldValues> {
   // Core state
   filters: Record<string, FilterState>;
   activeFilterCount: number;

@@ -26,8 +26,8 @@ import { useRouter } from 'next/navigation';
 import { useId, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { lang } from '@/app/(app)/lang';
 import { useLocale } from '@/providers/i18n-provider';
+import { lang } from './lang';
 
 const signUp = authClient.signUp;
 
@@ -74,7 +74,7 @@ export default function SignUp() {
 
   async function onSubmit(values: SignUpFormValues) {
     if (values.password !== values.passwordConfirmation) {
-      toast.error(t.signUp.passwordsDoNotMatch);
+      toast.error(t.passwordsDoNotMatch);
       return;
     }
 
@@ -105,8 +105,8 @@ export default function SignUp() {
     <>
       <Card className="z-50 w-full">
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">{t.signUp.title}</CardTitle>
-          <CardDescription>{t.signUp.subtitle}</CardDescription>
+          <CardTitle className="text-xl">{t.title}</CardTitle>
+          <CardDescription>{t.subtitle}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -115,12 +115,12 @@ export default function SignUp() {
                 <FormField
                   control={form.control}
                   name="firstName"
-                  rules={{ required: t.signUp.firstNameRequired }}
+                  rules={{ required: t.firstNameRequired }}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t.signUp.firstName}</FormLabel>
+                      <FormLabel>{t.firstName}</FormLabel>
                       <FormControl>
-                        <Input placeholder={t.signUp.firstNamePlaceholder} {...field} />
+                        <Input placeholder={t.firstNamePlaceholder} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -129,12 +129,12 @@ export default function SignUp() {
                 <FormField
                   control={form.control}
                   name="lastName"
-                  rules={{ required: t.signUp.lastNameRequired }}
+                  rules={{ required: t.lastNameRequired }}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t.signUp.lastName}</FormLabel>
+                      <FormLabel>{t.lastName}</FormLabel>
                       <FormControl>
-                        <Input placeholder={t.signUp.lastNamePlaceholder} {...field} />
+                        <Input placeholder={t.lastNamePlaceholder} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -146,17 +146,17 @@ export default function SignUp() {
                 control={form.control}
                 name="email"
                 rules={{
-                  required: t.signUp.emailRequired,
+                  required: t.emailRequired,
                   pattern: {
                     value: /[^\s@]+@[^\s@]+\.[^\s@]+/,
-                    message: t.signUp.emailInvalid
+                    message: t.emailInvalid
                   }
                 }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t.signUp.email}</FormLabel>
+                    <FormLabel>{t.email}</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder={t.signUp.emailPlaceholder} {...field} />
+                      <Input type="email" placeholder={t.emailPlaceholder} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -167,16 +167,16 @@ export default function SignUp() {
                 control={form.control}
                 name="password"
                 rules={{
-                  required: t.signUp.passwordRequired,
-                  minLength: { value: 6, message: t.signUp.passwordMinLength }
+                  required: t.passwordRequired,
+                  minLength: { value: 6, message: t.passwordMinLength }
                 }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t.signUp.password}</FormLabel>
+                    <FormLabel>{t.password}</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder={t.signUp.passwordPlaceholder}
+                        placeholder={t.passwordPlaceholder}
                         autoComplete="new-password"
                         {...field}
                       />
@@ -190,17 +190,16 @@ export default function SignUp() {
                 control={form.control}
                 name="passwordConfirmation"
                 rules={{
-                  required: t.signUp.confirmPasswordRequired,
-                  validate: (value) =>
-                    value === form.getValues('password') || t.signUp.passwordsDoNotMatch
+                  required: t.confirmPasswordRequired,
+                  validate: (value) => value === form.getValues('password') || t.passwordsDoNotMatch
                 }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t.signUp.confirmPassword}</FormLabel>
+                    <FormLabel>{t.confirmPassword}</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder={t.signUp.confirmPasswordPlaceholder}
+                        placeholder={t.confirmPasswordPlaceholder}
                         autoComplete="new-password"
                         {...field}
                       />
@@ -212,8 +211,8 @@ export default function SignUp() {
 
               <div className="grid gap-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">{t.signUp.profileImage}</span>
-                  <span className="text-muted-foreground text-xs">{t.signUp.optional}</span>
+                  <span className="text-sm font-medium">{t.profileImage}</span>
+                  <span className="text-muted-foreground text-xs">{t.optional}</span>
                 </div>
                 <div className="flex items-end gap-4">
                   {imagePreview && (
@@ -248,12 +247,12 @@ export default function SignUp() {
               </div>
 
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? <Loader2 size={16} className="animate-spin" /> : t.signUp.createAccount}
+                {loading ? <Loader2 size={16} className="animate-spin" /> : t.createAccount}
               </Button>
               <div className="text-center text-sm">
-                {t.signUp.alreadyHaveAccount}{' '}
+                {t.alreadyHaveAccount}{' '}
                 <Link href="/auth/sign-in" className="underline underline-offset-4">
-                  {t.signUp.signIn}
+                  {t.signIn}
                 </Link>
               </div>
             </form>
@@ -261,8 +260,7 @@ export default function SignUp() {
         </CardContent>
       </Card>
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4 mt-4">
-        {t.signUp.termsText} <a href="/terms">{t.signUp.termsLink}</a> and{' '}
-        <a href="/privacy">{t.signUp.privacyLink}</a>.
+        {t.termsText} <a href="/terms">{t.termsLink}</a> and <a href="/privacy">{t.privacyLink}</a>.
       </div>
     </>
   );
