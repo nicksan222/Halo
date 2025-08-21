@@ -1,4 +1,4 @@
-import { default as PulsingDot } from './pulsing-dot';
+import PulsingDot from './pulsing-dot';
 
 export default {
   title: 'Components/PulsingDot',

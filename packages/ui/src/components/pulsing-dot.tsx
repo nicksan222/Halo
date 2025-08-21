@@ -3,7 +3,7 @@
 import { cn } from '@acme/ui/lib/utils';
 import type React from 'react';
 
-interface PulsingDotProps {
+export interface PulsingDotProps {
   className?: string;
   size?: 'sm' | 'md' | 'lg';
   color?: 'primary' | 'success' | 'warning' | 'danger' | 'info';
