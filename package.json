@@ -29,8 +29,11 @@
   "devDependencies": {
     "@better-auth/cli": "latest",
     "@biomejs/biome": "^2.2.0",
+    "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/addon-interactions": "^8.6.14",
+    "@storybook/blocks": "^8.6.14",
     "node-gyp": "latest",
-    "turbo": "latest",
-    "syncpack": "latest"
+    "syncpack": "latest",
+    "turbo": "latest"
   }
 }
