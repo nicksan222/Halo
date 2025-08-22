@@ -101,7 +101,16 @@ const renderButton = (action: ActionProps, isMobile: boolean, key: number) => {
  * Shell Header component
  */
 const Header: React.FC<HeaderProps> = ({ children, className, showSidebarToggle = true }) => {
-  const actions = useShellStore(selectOrderedActions);
+  const rawActions = useShellStore((s) => s.actions);
+
+  const actions = React.useMemo(() => {
+    return selectOrderedActions({
+      actions: rawActions,
+      addAction: () => {},
+      removeAction: () => {},
+      clearActions: () => {}
+    } as any);
+  }, [rawActions]);
 
   const otherChildren = React.Children.toArray(children).filter((child) => {
     return React.isValidElement(child) && child.type !== Action;
