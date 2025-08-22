@@ -2,6 +2,9 @@
 
 set -e
 
+# Determine workspace root if not provided
+WORKSPACE_ROOT="${WORKSPACE_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
+
 echo "🚀 Starting development environment..."
 
 # Verify bun installation
@@ -10,7 +13,14 @@ bun --version
 
 # Install dependencies
 echo "📚 Installing project dependencies..."
+cd "$WORKSPACE_ROOT"
 bun install
+
+# Install Playwright browsers and dependencies for the web app
+echo "🎭 Installing Playwright browsers and dependencies..."
+cd "$WORKSPACE_ROOT/apps/web"
+bunx --yes playwright install --with-deps
+cd "$WORKSPACE_ROOT"
 
 # Start PostgreSQL using Docker Compose
 echo "🐘 Starting services (PostgreSQL, Mailpit, MinIO)..."

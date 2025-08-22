@@ -4,7 +4,7 @@ import { authClient } from '@acme/auth/client';
 import { translate } from '@acme/localization';
 import { Card, CardContent, CardHeader, CardTitle } from '@acme/ui/components/card';
 import List from '@acme/ui/components/list';
-import { Loader2, Monitor, Smartphone, Tablet } from 'lucide-react';
+import { Loader2, LogOut, Monitor, Smartphone, Tablet } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { useLocale } from '@/providers/i18n-provider';
@@ -101,7 +101,7 @@ export function SessionsClient({ user: _user, sessions }: SessionsPageProps) {
                         revokingSessionId === session.id ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
                         ) : (
-                          <span className="text-xs">{t.revoke}</span>
+                          <LogOut className="h-4 w-4" />
                         )
                       }
                       label={t.revoke}

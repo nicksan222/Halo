@@ -85,7 +85,6 @@ export function DataList<T>({
 
   // ListItem global props
   titleClassName,
-  motionProps,
   compact,
 
   // Other derived props we might want to pass through
@@ -171,7 +170,6 @@ export function DataList<T>({
               Badge={renderItemBadge ? <ListBadge>{renderItemBadge(item)}</ListBadge> : undefined}
               // Pass any global ListItem props
               titleClassName={titleClassName}
-              motionProps={motionProps}
               contentClassName={contentClassName}
               compact={compact}
             />

@@ -1,103 +1,147 @@
 'use client';
 
 import { authClient } from '@acme/auth/client';
-import { Button } from '@acme/ui/components/button';
+import { translate } from '@acme/localization';
 import { Card, CardContent, CardHeader, CardTitle } from '@acme/ui/components/card';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import List from '@acme/ui/components/list';
+import { Loader2, Mail, X } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
+import { useLocale } from '@/providers/i18n-provider';
+import { lang } from './lang';
 import type { PendingInvitationsPageProps } from './types';
 
 export function PendingInvitationsClient({
   organizationId,
   invitations
 }: PendingInvitationsPageProps) {
-  const [message, setMessage] = useState<string | null>(null);
-  const [isBusy, setIsBusy] = useState(false);
-  const queryClient = useQueryClient();
-  const invitationsQueryKey = ['organization', organizationId, 'invitations'];
+  const locale = useLocale();
+  const t = translate(lang, locale);
+  const [resendingEmail, setResendingEmail] = useState<string | null>(null);
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
 
-  const invalidateInvitations = () =>
-    queryClient.invalidateQueries({ queryKey: invitationsQueryKey });
-
-  const resendMutation = useMutation({
-    mutationFn: async (vars: { email: string; role: string }) =>
-      authClient.organization.inviteMember({
-        email: vars.email,
+  const handleResend = async (email: string, role?: string) => {
+    setResendingEmail(email);
+    try {
+      const result = await authClient.organization.inviteMember({
+        email,
         organizationId,
         resend: true,
-        role: (vars.role as any) || 'member'
-      }),
-    onSuccess: ({ error }) => {
-      if (error) setMessage(error.message || 'Failed to resend');
-      else setMessage('Invitation resent');
-    }
-  });
-  async function onResend(_invitationId: string, email: string, role?: string) {
-    setIsBusy(true);
-    setMessage(null);
-    await resendMutation.mutateAsync({ email, role: role || 'member' });
-    setIsBusy(false);
-  }
+        role: (role as any) || 'member'
+      });
 
-  const cancelMutation = useMutation({
-    mutationFn: async (invitationId: string) =>
-      authClient.organization.cancelInvitation({ invitationId }),
-    onSuccess: async ({ error }) => {
-      if (error) setMessage(error.message || 'Failed to cancel');
-      else {
-        setMessage('Invitation cancelled');
-        await invalidateInvitations();
+      if ('error' in result && result.error) {
+        throw new Error(result.error.message || t.resendError);
       }
+
+      toast.success(t.resendSuccess);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : t.resendError);
+    } finally {
+      setResendingEmail(null);
     }
-  });
-  async function onCancel(invitationId: string) {
-    setIsBusy(true);
-    setMessage(null);
-    await cancelMutation.mutateAsync(invitationId);
-    setIsBusy(false);
-  }
+  };
+
+  const handleCancel = async (invitationId: string) => {
+    setCancellingId(invitationId);
+    try {
+      const result = await authClient.organization.cancelInvitation({ invitationId });
+
+      if ('error' in result && result.error) {
+        throw new Error(result.error.message || t.cancelError);
+      }
+
+      toast.success(t.cancelSuccess);
+      // Refresh the page to get updated invitations
+      window.location.reload();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : t.cancelError);
+    } finally {
+      setCancellingId(null);
+    }
+  };
+
+  // Calculate when the invitation was sent based on expiration date
+  // Assuming invitations expire after 7 days
+  const getInvitationSentDate = (expiresAt: string | Date) => {
+    const expirationDate = new Date(expiresAt);
+    const sentDate = new Date(expirationDate.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days before expiration
+    return sentDate;
+  };
+
+  const formatSentDate = (date: Date) => {
+    const now = new Date();
+    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+
+    if (diffInHours < 1) return 'Just now';
+    if (diffInHours < 24) return `${diffInHours} hours ago`;
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays === 1) return '1 day ago';
+    return `${diffInDays} days ago`;
+  };
+
+  const formatInvitationSentDate = (expiresAt: string | Date) => {
+    const sentDate = getInvitationSentDate(expiresAt);
+    return formatSentDate(sentDate);
+  };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Pending Invitations</CardTitle>
-      </CardHeader>
-      <CardContent className="grid gap-6">
-        {invitations.length === 0 ? (
-          <div className="text-sm text-muted-foreground">No pending invitations</div>
-        ) : (
-          <div className="grid gap-2">
-            {invitations.map((invitation) => (
-              <div key={invitation.id} className="flex items-center justify-between gap-2 text-sm">
-                <div className="truncate">
-                  <div className="font-medium">{invitation.email}</div>
-                  <div className="text-muted-foreground text-xs">{invitation.role || 'member'}</div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => onResend(invitation.id, invitation.email, invitation.role)}
-                    disabled={isBusy}
-                  >
-                    Resend
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => onCancel(invitation.id)}
-                    disabled={isBusy}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {message ? <div className="text-sm text-muted-foreground">{message}</div> : null}
-      </CardContent>
-    </Card>
+    <div className="grid gap-4">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            {t.cardTitle} ({invitations.length} invitation{invitations.length !== 1 ? 's' : ''})
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {invitations.length === 0 ? (
+            <div className="text-sm text-muted-foreground">{t.noInvitations}</div>
+          ) : (
+            <List.Container hideFilter>
+              {invitations.map((invitation) => (
+                <List.Item key={invitation.id}>
+                  <List.Icon>
+                    <Mail className="h-4 w-4" />
+                  </List.Icon>
+                  <List.Title>{invitation.email}</List.Title>
+                  <List.Description>
+                    {t.role}: {invitation.role || 'member'}
+                  </List.Description>
+                  <List.Badge variant="secondary" className="text-xs">
+                    {t.sent} {formatInvitationSentDate(invitation.expiresAt)}
+                  </List.Badge>
+                  <List.Actions>
+                    <List.Action
+                      icon={
+                        resendingEmail === invitation.email ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Mail className="h-4 w-4" />
+                        )
+                      }
+                      label={t.resend}
+                      onClick={() => handleResend(invitation.email, invitation.role)}
+                      disabled={resendingEmail === invitation.email}
+                    />
+                    <List.Action
+                      icon={
+                        cancellingId === invitation.id ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <X className="h-4 w-4" />
+                        )
+                      }
+                      label={t.cancel}
+                      onClick={() => handleCancel(invitation.id)}
+                      disabled={cancellingId === invitation.id}
+                    />
+                  </List.Actions>
+                </List.Item>
+              ))}
+            </List.Container>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 }

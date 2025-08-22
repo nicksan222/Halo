@@ -153,7 +153,6 @@ export interface ListItemBaseProps {
   titleClassName?: string;
   onClick?: () => void;
   dataTestId?: string;
-  motionProps?: any;
 }
 
 export interface ListItemContentProps {
@@ -200,7 +199,7 @@ export interface ListItemProps {
   dataTestId?: string;
   subItems?: SubListItem[];
   subItemClassName?: string;
-  motionProps?: Record<string, any>;
+
   inlineDescription?: boolean;
   isRead?: boolean;
   Actions?: React.ReactNode;

@@ -34,7 +34,9 @@ export const auth = betterAuth({
 
   plugins: [
     username(),
-    organization(),
+    organization({
+      cancelPendingInvitationsOnReInvite: true
+    }),
     phoneNumber(),
     adminPlugin({
       ac: accessControl,

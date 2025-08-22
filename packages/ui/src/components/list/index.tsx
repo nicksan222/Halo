@@ -13,7 +13,7 @@ import { ListFilters } from './list-filters';
 import { ItemIcon, ListIcon } from './list-icon';
 import ListItem from './list-item';
 import ListLoading from './list-loading';
-import { MotionWrapper } from './list-motion';
+
 import { ItemNotes, ItemSubnotes, ListNotes, ListSubnotes } from './list-notes';
 import { ListPaginationComponent } from './list-pagination';
 import { ListSelectionActions } from './list-selection-actions';
@@ -33,7 +33,7 @@ const List = {
   Icon: ListIcon,
   Notes: ListNotes,
   Subnotes: ListSubnotes,
-  Motion: MotionWrapper,
+
   Actions: ListActions,
   Loading: ListLoading,
   Empty: ListEmpty,
@@ -69,7 +69,7 @@ export { default as ListEmpty } from './list-empty';
 export { ItemIcon, ListIcon } from './list-icon';
 export { default as ListItem } from './list-item';
 export { default as ListLoading } from './list-loading';
-export { Motion, MotionWrapper } from './list-motion';
+
 export { ItemNotes, ItemSubnotes, ListNotes, ListSubnotes } from './list-notes';
 export type { ListPaginationProps } from './list-pagination';
 export {

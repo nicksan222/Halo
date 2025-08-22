@@ -13,7 +13,7 @@ import { isListDescription } from './list-description';
 import { getListDropdownContent, isListDropdown } from './list-dropdown';
 import { isListIcon } from './list-icon';
 import { ListItemContent } from './list-item-content';
-import { MotionWrapper } from './list-motion';
+
 import { isListNotes, isListSubnotes } from './list-notes';
 import { isListTitle } from './list-title';
 import type { ListItemProps } from './list-types';
@@ -45,7 +45,7 @@ const ListItem: React.FC<ItemProps> = ({
   dataTestId,
   subItems,
   subItemClassName,
-  motionProps,
+
   inlineDescription = true,
   isRead = true,
   children,
@@ -266,17 +266,11 @@ const ListItem: React.FC<ItemProps> = ({
 
   // We now ignore any non-list child elements; always render the main content.
   return (
-    <MotionWrapper
-      dataTestId={dataTestId}
-      id={ListItemKey || 'list-item'}
-      motionProps={motionProps}
-    >
-      <div className="w-full">
-        {mainContent}
-        {/* Render dropdown content below the main item */}
-        {dropdownContentElement && <div className="w-full">{dropdownContentElement}</div>}
-      </div>
-    </MotionWrapper>
+    <div data-testid={dataTestId} id={ListItemKey || 'list-item'} className="w-full">
+      {mainContent}
+      {/* Render dropdown content below the main item */}
+      {dropdownContentElement && <div className="w-full">{dropdownContentElement}</div>}
+    </div>
   );
 };
 
