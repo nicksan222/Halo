@@ -3,6 +3,7 @@
 import { authClient } from '@acme/auth/client';
 import { Button } from '@acme/ui/components/button';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface AppHeaderProps {
   appName?: string;
@@ -15,12 +16,14 @@ export function AppHeader({
   newLabel = 'New',
   signOutLabel = 'Sign out'
 }: AppHeaderProps) {
+  const router = useRouter();
+
   async function handleSignOut() {
     try {
       await authClient.signOut();
-      window.location.href = '/auth/sign-in';
+      router.push('/auth/sign-in');
     } catch (_err) {
-      window.location.href = '/auth/sign-in';
+      router.push('/auth/sign-in');
     }
   }
 

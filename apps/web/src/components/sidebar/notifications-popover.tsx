@@ -8,6 +8,7 @@ import { ScrollArea } from '@acme/ui/components/scroll-area';
 import { Separator } from '@acme/ui/components/separator';
 import { cn } from '@acme/ui/lib/utils';
 import { Bell, Check, Loader2, MessageSquare, Settings } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { api } from '@/trpc/react';
@@ -22,6 +23,7 @@ interface NotificationsPopoverProps {
 }
 
 export function NotificationsPopover({ className, trigger }: NotificationsPopoverProps) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
@@ -69,7 +71,7 @@ export function NotificationsPopover({ className, trigger }: NotificationsPopove
 
     // Navigate if specified
     if (notification.navigateTo) {
-      window.location.href = notification.navigateTo;
+      router.push(notification.navigateTo);
     }
 
     setOpen(false);
@@ -217,7 +219,7 @@ export function NotificationsPopover({ className, trigger }: NotificationsPopove
             className="w-full justify-start text-xs"
             onClick={() => {
               setOpen(false);
-              window.location.href = '/settings/notifications';
+              router.push('/settings/notifications');
             }}
           >
             <Settings className="mr-2 h-3 w-3" />

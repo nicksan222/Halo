@@ -7,6 +7,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@acme/ui/c
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@acme/ui/components/form';
 import { Input } from '@acme/ui/components/input';
 import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -18,6 +19,7 @@ interface DangerFormValues {
 }
 
 export default function AccountDangerPage() {
+  const router = useRouter();
   const locale = useLocale();
   const t = translate(lang, locale);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -30,7 +32,7 @@ export default function AccountDangerPage() {
       await authClient.deleteUser({
         fetchOptions: {
           onSuccess: () => {
-            window.location.assign('/goodbye');
+            router.push('/goodbye');
           }
         }
       });

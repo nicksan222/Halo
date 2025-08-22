@@ -13,6 +13,7 @@ import {
   CardTitle
 } from '@acme/ui/components/card';
 import { Input } from '@acme/ui/components/input';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useLocale } from '@/providers/i18n-provider';
 import { lang } from './lang';
@@ -153,6 +154,7 @@ function CreateFirstOrganization({
   onCreated: (orgId: string) => Promise<void>;
   onGoBack: () => void;
 }) {
+  const router = useRouter();
   const [name, setName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const locale = useLocale();
@@ -211,7 +213,7 @@ function CreateFirstOrganization({
               if (createdId) {
                 await onCreated(createdId as string);
               } else {
-                window.location.assign('/');
+                router.push('/');
               }
               setIsSubmitting(false);
             }}

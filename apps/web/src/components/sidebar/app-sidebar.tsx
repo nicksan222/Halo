@@ -16,6 +16,7 @@ import {
   SidebarMenuItem
 } from '@acme/ui/components/sidebar';
 import { Bell, ListTodo, Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { NotificationsPopover } from './notifications-popover';
 import { useOfflineFirstSession } from './session-store';
 
@@ -32,6 +33,7 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ labels }: AppSidebarProps) {
+  const router = useRouter();
   const { data: session, isPending: isLoadingSession } = useOfflineFirstSession();
   const { data: organizations, isPending: isLoadingOrganizations } =
     authClient.useListOrganizations();
@@ -140,17 +142,17 @@ export function AppSidebar({ labels }: AppSidebarProps) {
           onUpgrade={() => {
             if (activeTeam) {
               // navigate to a generic upgrade page; adjust to your routes
-              window.location.assign(`/settings/billing`);
+              router.push(`/settings/billing`);
             }
           }}
-          onAccount={() => window.location.assign('/settings/account')}
-          onBilling={() => window.location.assign('/settings/billing')}
-          onNotifications={() => window.location.assign('/settings/notifications')}
+          onAccount={() => router.push('/settings/account')}
+          onBilling={() => router.push('/settings/billing')}
+          onNotifications={() => router.push('/settings/notifications')}
           onLogout={async () => {
             await authClient.signOut({
               fetchOptions: {
                 onSuccess: () => {
-                  window.location.assign('/auth/sign-in');
+                  router.push('/auth/sign-in');
                 }
               }
             });
