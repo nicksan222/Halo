@@ -61,8 +61,19 @@ export class TestSetupBuilder {
     };
 
     const ordered = [...this.commands].sort((a, b) => a.priority - b.priority);
-    for (const cmd of ordered) {
-      await cmd.execute(ctx);
+
+    // Group commands by priority and execute groups sequentially,
+    // but commands within the same priority in parallel.
+    let i = 0;
+    while (i < ordered.length) {
+      const groupPriority = ordered[i].priority;
+      const group: BuilderCommand[] = [];
+      while (i < ordered.length && ordered[i].priority === groupPriority) {
+        group.push(ordered[i]);
+        i += 1;
+      }
+      // Execute all commands in this priority group concurrently and wait for completion
+      await Promise.all(group.map((cmd) => cmd.execute(ctx)));
     }
 
     this.createdResources = {

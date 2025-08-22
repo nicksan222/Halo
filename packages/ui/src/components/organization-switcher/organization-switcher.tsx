@@ -6,7 +6,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger
 } from '@acme/ui/components/dropdown-menu';
 import {
@@ -16,36 +15,21 @@ import {
   useSidebar
 } from '@acme/ui/components/sidebar';
 import { ChevronsUpDown, Plus } from 'lucide-react';
-import type * as React from 'react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import type { OrganizationSwitcherProps } from './types';
 
 export function OrganizationSwitcher({
   teams,
   activeTeam,
   onTeamChange,
   onAddTeam,
+  onSettings,
   isLoading = false
-}: {
-  teams: {
-    name: string;
-    logo: React.ElementType | string;
-    plan: string;
-    id: string;
-  }[];
-  activeTeam: {
-    name: string;
-    logo: React.ElementType | string;
-    plan: string;
-  };
-  onTeamChange: (team: {
-    name: string;
-    logo: React.ElementType | string;
-    plan: string;
-    id: string;
-  }) => void;
-  onAddTeam: () => void;
-  isLoading?: boolean;
-}) {
+}: OrganizationSwitcherProps) {
   const { isMobile } = useSidebar();
+  const [isOpen, setIsOpen] = useState(false);
+  const _router = useRouter();
 
   if (isLoading) {
     return (
@@ -70,38 +54,31 @@ export function OrganizationSwitcher({
     return null;
   }
 
-  const renderLogo = (logo: React.ElementType | string, className: string) => {
-    if (typeof logo === 'string') {
-      if (logo) {
-        return <img src={logo} alt="" className={className} />;
-      }
-      // Fallback building icon when no logo is provided
-      return (
-        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-          />
-        </svg>
-      );
-    }
-    const LogoComponent = logo;
-    return <LogoComponent className={className} />;
+  const renderLogo = (className: string) => {
+    // Building icon for organizations
+    return (
+      <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+        />
+      </svg>
+    );
   };
 
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
+        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                {renderLogo(activeTeam.logo, 'size-4')}
+                {renderLogo('size-4')}
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{activeTeam.name}</span>
@@ -117,17 +94,21 @@ export function OrganizationSwitcher({
             sideOffset={4}
           >
             <DropdownMenuLabel className="text-muted-foreground text-xs">Teams</DropdownMenuLabel>
-            {teams.map((team, index) => (
+            {teams.map((team, _index) => (
               <DropdownMenuItem
                 key={team.name}
-                onClick={() => onTeamChange(team)}
+                onClick={() => {
+                  onTeamChange(team);
+                  setIsOpen(false);
+                  // Navigate to home page and perform a full page reload
+                  window.location.href = '/';
+                }}
                 className="gap-2 p-2"
               >
                 <div className="flex size-6 items-center justify-center rounded-md border">
-                  {renderLogo(team.logo, 'size-3.5 shrink-0')}
+                  {renderLogo('size-3.5 shrink-0')}
                 </div>
                 {team.name}
-                <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
@@ -137,6 +118,26 @@ export function OrganizationSwitcher({
               </div>
               <div className="text-muted-foreground font-medium">Add team</div>
             </DropdownMenuItem>
+            {onSettings && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="gap-2 p-2 bg-accent text-accent-foreground"
+                  onClick={() => {
+                    const activeTeamWithId = teams.find((team) => team.name === activeTeam.name);
+                    if (activeTeamWithId) {
+                      onSettings(activeTeamWithId);
+                    }
+                    setIsOpen(false);
+                  }}
+                >
+                  <div className="flex size-6 items-center justify-center rounded-md border">
+                    {renderLogo('size-3.5 shrink-0')}
+                  </div>
+                  <div className="font-medium">Settings</div>
+                </DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

@@ -121,6 +121,71 @@ export const DropzoneContent = ({ children, className }: DropzoneContentProps) =
     return children;
   }
 
+  // Check if all files are images
+  const allImages = src.every((file) => file.type.startsWith('image/'));
+
+  if (allImages && src.length === 1) {
+    // Single image - show preview
+    const file = src[0];
+    return (
+      <div className={cn('flex flex-col items-center justify-center', className)}>
+        <div className="relative mb-2">
+          <img
+            src={URL.createObjectURL(file)}
+            alt={file.name}
+            className="h-16 w-16 rounded-md object-cover"
+            onLoad={(e) => {
+              // Clean up the object URL after the image loads
+              URL.revokeObjectURL(e.currentTarget.src);
+            }}
+          />
+        </div>
+        <p className="w-full truncate text-wrap text-muted-foreground text-xs">{file.name}</p>
+        <p className="w-full text-wrap text-muted-foreground text-xs">
+          Drag and drop or click to replace
+        </p>
+      </div>
+    );
+  }
+
+  if (allImages && src.length > 1) {
+    // Multiple images - show grid of previews
+    return (
+      <div className={cn('flex flex-col items-center justify-center', className)}>
+        <div className="grid grid-cols-2 gap-1 mb-2">
+          {src.slice(0, 4).map((file, index) => (
+            <div key={`${file.name}-${index}`} className="relative">
+              <img
+                src={URL.createObjectURL(file)}
+                alt={file.name}
+                className="h-8 w-8 rounded object-cover"
+                onLoad={(e) => {
+                  URL.revokeObjectURL(e.currentTarget.src);
+                }}
+              />
+              {index === 3 && src.length > 4 && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded text-white text-xs">
+                  +{src.length - 4}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+        <p className="w-full truncate text-wrap text-muted-foreground text-xs">
+          {src.length > maxLabelItems
+            ? `${new Intl.ListFormat('en').format(
+                src.slice(0, maxLabelItems).map((file) => file.name)
+              )} and ${src.length - maxLabelItems} more`
+            : new Intl.ListFormat('en').format(src.map((file) => file.name))}
+        </p>
+        <p className="w-full text-wrap text-muted-foreground text-xs">
+          Drag and drop or click to replace
+        </p>
+      </div>
+    );
+  }
+
+  // Non-image files - show original text display
   return (
     <div className={cn('flex flex-col items-center justify-center', className)}>
       <div className="flex size-8 items-center justify-center rounded-md bg-muted text-muted-foreground">

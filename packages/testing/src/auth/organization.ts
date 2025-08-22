@@ -4,70 +4,6 @@ import type { TestUser } from './member';
 
 export type OrganizationId = string;
 
-function isObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
-}
-
-function extractOrganizationIdFromGetFull(res: unknown): string | undefined {
-  if (isObject(res) && isObject(res.organization) && typeof res.organization.id === 'string')
-    return res.organization.id;
-  if (isObject(res) && isObject((res as Record<string, unknown>).data)) {
-    const data = (res as Record<string, unknown>).data as Record<string, unknown>;
-    if (
-      isObject(data.organization) &&
-      typeof (data.organization as Record<string, unknown>).id === 'string'
-    ) {
-      return (data.organization as Record<string, unknown>).id as string;
-    }
-  }
-  if (isObject(res) && typeof (res as Record<string, unknown>).id === 'string')
-    return (res as Record<string, unknown>).id as string;
-  return undefined;
-}
-
-function extractInvitations(res: unknown): { id: string; email: string }[] {
-  const candidates: unknown = ((): unknown => {
-    if (Array.isArray(res)) return res;
-    if (isObject(res) && Array.isArray((res as Record<string, unknown>).invitations))
-      return (res as Record<string, unknown>).invitations as unknown[];
-    if (isObject(res) && Array.isArray((res as Record<string, unknown>).data))
-      return (res as Record<string, unknown>).data as unknown[];
-    return [] as unknown[];
-  })();
-  if (!Array.isArray(candidates)) return [];
-  return candidates
-    .filter(
-      (i: unknown): i is { id: string; email: string } =>
-        isObject(i) && typeof i.id === 'string' && typeof i.email === 'string'
-    )
-    .map((i) => ({ id: i.id, email: i.email }));
-}
-
-type InviteMemberFn = (args: {
-  body: {
-    organizationId: string;
-    email: string;
-    role: OrgRole | OrgRole[];
-    teamId?: string;
-    resend?: boolean;
-  };
-  headers: Headers;
-}) => Promise<unknown>;
-
-function hasInviteMember(api: unknown): api is { inviteMember: InviteMemberFn } {
-  return (
-    isObject(api) &&
-    'inviteMember' in api &&
-    typeof (api as { inviteMember: unknown }).inviteMember === 'function'
-  );
-}
-
-/**
- * Testing helper for Better Auth organizations.
- *
- * Provides utilities to create an organization, invite/add members, list and remove members, manage invitations,
- * update member roles, and set the active organization for the owner.
- */
 export class TestOrganization {
   constructor(
     private readonly owner: TestUser,
@@ -82,7 +18,6 @@ export class TestOrganization {
     args: {
       name: string;
       slug: string;
-      logo?: string;
       metadata?: Record<string, unknown>;
       keepCurrentActiveOrganization?: boolean;
     },
@@ -94,7 +29,6 @@ export class TestOrganization {
       body: {
         name: args.name,
         slug: args.slug,
-        logo: args.logo,
         metadata: args.metadata,
         keepCurrentActiveOrganization: args.keepCurrentActiveOrganization ?? false
       },
@@ -105,7 +39,7 @@ export class TestOrganization {
       query: { organizationSlug: args.slug },
       headers
     });
-    const organizationId = extractOrganizationIdFromGetFull(full);
+    const organizationId = full?.id;
     if (!organizationId) throw new Error('Failed to resolve organization id after creation');
     const instance = new TestOrganization(owner, organizationId);
     if (options?.registerForCleanup) registerTestOrganization(instance);
@@ -115,12 +49,7 @@ export class TestOrganization {
   /**
    * Updates organization info.
    */
-  async update(data: {
-    name?: string;
-    slug?: string;
-    logo?: string;
-    metadata?: Record<string, any>;
-  }) {
+  async update(data: { name?: string; slug?: string; metadata?: Record<string, any> }) {
     const headers = await this.owner.getSessionHeaders();
     await auth.api.updateOrganization({
       body: {
@@ -212,8 +141,7 @@ export class TestOrganization {
    * Finds the latest invitation id for an email in this organization.
    */
   async getInvitationIdForEmail(email: string) {
-    const res = await this.listInvitations();
-    const invitations = extractInvitations(res);
+    const invitations = await this.listInvitations();
     const match = invitations.find((i) => i.email === email);
     return match?.id;
   }
@@ -226,14 +154,11 @@ export class TestOrganization {
     opts?: { role?: OrgRole | OrgRole[]; teamId?: string; resend?: boolean }
   ) {
     const headers = await this.owner.getSessionHeaders();
-    if (!hasInviteMember(auth.api))
-      throw new Error('inviteMember endpoint not available on auth.api');
-    await auth.api.inviteMember({
+    await auth.api.createInvitation({
       body: {
-        organizationId: this.id,
         email,
         role: opts?.role ?? OrgRole.Member,
-        teamId: opts?.teamId,
+        organizationId: this.id,
         resend: opts?.resend
       },
       headers

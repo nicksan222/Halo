@@ -13,7 +13,8 @@
     "typecheck": "echo 'API package typecheck skipped - TypeScript errors need resolution'",
     "lint": "bunx biome check .",
     "format": "bunx biome check --write .",
-    "check": "bun run typecheck && bun run lint"
+    "check": "bun run typecheck && bun run lint",
+    "test": "bun test"
   },
   "dependencies": {
     "@trpc/client": "^11.4.4",
@@ -23,7 +24,8 @@
     "drizzle-orm": "*",
     "zod": "^4.0.17",
     "bun": "latest",
-    "eventemitter3": "^5.0.1"
+    "eventemitter3": "^5.0.1",
+    "superjson": "^2.2.1"
   },
   "devDependencies": {
     "bun-types": "^1.2.20"

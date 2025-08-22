@@ -1,7 +1,7 @@
 import type { BuilderCommand, ExecutionContext } from '../types';
 
 export interface UpdateOrganizationParams {
-  data: { name?: string; slug?: string; logo?: string; metadata?: Record<string, any> };
+  data: { name?: string; slug?: string; metadata?: Record<string, any> };
 }
 
 export class UpdateOrganization implements BuilderCommand {

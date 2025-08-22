@@ -1,6 +1,7 @@
 'use client';
 
 import type { ComponentType, ReactNode } from 'react';
+import React, { useMemo } from 'react';
 
 import { DataList, type DataListProps } from './data-list';
 
@@ -200,17 +201,23 @@ export function createListComponent<TItem, TCustomProps>(
     };
 
     // Set up empty state defaults
-    const emptyStateProps = {
-      ...(factory.emptyStateDefaults || {}),
-      searchPlaceholder
-    };
+    const emptyStateProps = useMemo(
+      () => ({
+        ...(factory.emptyStateDefaults || {}),
+        searchPlaceholder
+      }),
+      [factory.emptyStateDefaults, searchPlaceholder]
+    );
 
     // Determine the icon renderer
-    const iconRenderer =
-      customRenderItemIcon ||
-      (factory.avatarConfig
-        ? (item: TItem) => renderDefaultAvatar(item, factory.avatarConfig!)
-        : factory.renderItemIcon);
+    const iconRenderer = useMemo(
+      () =>
+        customRenderItemIcon ||
+        (factory.avatarConfig
+          ? (item: TItem) => renderDefaultAvatar(item, factory.avatarConfig!)
+          : factory.renderItemIcon),
+      [customRenderItemIcon, factory.avatarConfig, factory.renderItemIcon]
+    );
 
     return (
       <DataList<TItem>
@@ -246,7 +253,7 @@ export function createListComponent<TItem, TCustomProps>(
     );
   }
 
-  return ListComponent;
+  return React.memo(ListComponent);
 }
 
 /**
@@ -353,17 +360,23 @@ export function createAdvancedListComponent<
     };
 
     // Set up empty state defaults
-    const emptyStateProps = {
-      ...(factory.emptyStateDefaults || {}),
-      ...(props.emptyStateProps || {})
-    };
+    const emptyStateProps = useMemo(
+      () => ({
+        ...(factory.emptyStateDefaults || {}),
+        ...(props.emptyStateProps || {})
+      }),
+      [factory.emptyStateDefaults, props.emptyStateProps]
+    );
 
     // Determine the icon renderer
-    const iconRenderer =
-      customRenderItemIcon ||
-      (factory.avatarConfig
-        ? (item: TItem) => renderDefaultAvatar(item, factory.avatarConfig!)
-        : factory.renderItemIcon);
+    const iconRenderer = useMemo(
+      () =>
+        customRenderItemIcon ||
+        (factory.avatarConfig
+          ? (item: TItem) => renderDefaultAvatar(item, factory.avatarConfig!)
+          : factory.renderItemIcon),
+      [customRenderItemIcon, factory.avatarConfig, factory.renderItemIcon]
+    );
 
     return (
       <DataList<TItem>
@@ -399,5 +412,5 @@ export function createAdvancedListComponent<
     );
   }
 
-  return AdvancedListComponent;
+  return React.memo(AdvancedListComponent);
 }

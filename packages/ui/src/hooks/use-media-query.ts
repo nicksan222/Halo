@@ -22,20 +22,21 @@ export function useMediaQuery(
     return window.matchMedia(query).matches;
   };
 
-  const [matches, setMatches] = useState<boolean>(() => {
-    if (initializeWithValue) {
-      return getMatches(query);
-    }
-    return defaultValue;
-  });
-
-  // Handles the change event of the media query.
-  function handleChange() {
-    setMatches(getMatches(query));
-  }
+  // Always use defaultValue for initial state to prevent hydration mismatch
+  const [matches, setMatches] = useState<boolean>(defaultValue);
 
   useIsomorphicLayoutEffect(() => {
+    // Only update the state on the client side after hydration
+    if (initializeWithValue) {
+      setMatches(getMatches(query));
+    }
+
     const matchMedia = window.matchMedia(query);
+
+    // Handles the change event of the media query.
+    function handleChange() {
+      setMatches(getMatches(query));
+    }
 
     // Triggered at the first client-side load and if query changes
     handleChange();
@@ -54,7 +55,7 @@ export function useMediaQuery(
         matchMedia.removeEventListener('change', handleChange);
       }
     };
-  }, [query]);
+  }, [query, initializeWithValue]);
 
   return matches;
 }

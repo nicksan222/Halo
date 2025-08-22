@@ -1,10 +1,16 @@
-import { seedOrganization } from './seeders/organization';
+import { seedAcmeOrganization } from './seeders/organization-acme';
+import { seedBetaOrganization } from './seeders/organization-beta';
 
 async function main() {
-  await seedOrganization();
+  await seedAcmeOrganization();
+  await seedBetaOrganization();
 }
 
-main().catch((err) => {
-  console.error('Seeding failed:', err);
-  process.exit(1);
-});
+main()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch((err) => {
+    console.error('Seeding failed:', err);
+    process.exit(1);
+  });

@@ -22,7 +22,7 @@ import { Input } from '@acme/ui/components/input';
 import { Loader2, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useId, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { useLocale } from '@/providers/i18n-provider';
@@ -45,7 +45,7 @@ export function SignUpCredentialsForm({ onSuccess }: { onSuccess: () => void }) 
   const locale = useLocale();
   const t = translate(lang, locale);
 
-  const imageId = useId();
+  const imageId = 'profile-image';
 
   const form = useForm<SignUpFormValues>({
     mode: 'onTouched',

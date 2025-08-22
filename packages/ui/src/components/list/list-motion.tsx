@@ -2,6 +2,7 @@
 
 import { cn } from '@acme/ui/lib/utils';
 import { motion } from 'framer-motion';
+import React from 'react';
 
 export const MOTION_VARIANTS = {
   initial: { opacity: 0, y: 20 },
@@ -18,7 +19,7 @@ export interface MotionWrapperProps {
   className?: string;
 }
 
-export const MotionWrapper: React.FC<MotionWrapperProps & React.HTMLAttributes<HTMLDivElement>> = ({
+const MotionWrapperInner: React.FC<MotionWrapperProps & React.HTMLAttributes<HTMLDivElement>> = ({
   children,
   id,
   dataTestId,
@@ -38,4 +39,5 @@ export const MotionWrapper: React.FC<MotionWrapperProps & React.HTMLAttributes<H
   </motion.div>
 );
 
+export const MotionWrapper = React.memo(MotionWrapperInner);
 export const Motion = MotionWrapper;

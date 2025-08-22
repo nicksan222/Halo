@@ -1,7 +1,7 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { httpBatchLink, loggerLink } from '@trpc/client';
+import { httpBatchLink, httpLink, httpSubscriptionLink, loggerLink, splitLink } from '@trpc/client';
 import type React from 'react';
 import { useState } from 'react';
 import superjson from 'superjson';
@@ -18,14 +18,38 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
     api.createClient({
       links: [
         loggerLink(),
-        httpBatchLink({
-          transformer: superjson,
-          url: `${getBaseUrl()}/api/trpc`,
-          fetch: (input, init) =>
-            fetch(input, {
-              ...init,
-              credentials: 'include'
+        // Route subscription ops over SSE, others continue to use existing split (FormData vs batch)
+        splitLink({
+          condition: (op) => op.type === 'subscription',
+          true: httpSubscriptionLink({
+            transformer: superjson,
+            url: `${getBaseUrl()}/api/trpc`,
+            // ensure cookies are sent for auth
+            eventSourceOptions() {
+              return { withCredentials: true } as EventSourceInit;
+            }
+          }),
+          false: splitLink({
+            condition: (op) => op.input instanceof FormData,
+            true: httpLink({
+              transformer: superjson,
+              url: `${getBaseUrl()}/api/trpc`,
+              fetch: (input, init) =>
+                fetch(input, {
+                  ...init,
+                  credentials: 'include'
+                })
+            }),
+            false: httpBatchLink({
+              transformer: superjson,
+              url: `${getBaseUrl()}/api/trpc`,
+              fetch: (input, init) =>
+                fetch(input, {
+                  ...init,
+                  credentials: 'include'
+                })
             })
+          })
         })
       ]
     })

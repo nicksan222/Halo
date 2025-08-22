@@ -28,19 +28,67 @@ export class TestUser {
     options?: { registerForCleanup?: boolean }
   ) {
     const password = strategy.getPassword();
+    const email = `${username}@acme.com`;
 
-    const user = await auth.api.createUser({
-      body: {
-        email: `${username}@acme.com`,
-        password,
-        name: username,
-        role: strategy.getRole()
+    try {
+      const user = await auth.api.createUser({
+        body: {
+          email,
+          password,
+          name: username,
+          role: strategy.getRole()
+        }
+      });
+
+      const instance = new TestUser(user.user, strategy);
+      if (options?.registerForCleanup) registerTestUser(instance);
+      return instance;
+    } catch (err: any) {
+      const errorCode = err?.body?.code ?? err?.code;
+      const errorMessage = err?.body?.message ?? err?.message ?? '';
+
+      const isUserExistsError =
+        (err?.status === 'BAD_REQUEST' && errorCode === 'USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL') ||
+        /User already exists/i.test(errorMessage);
+
+      if (!isUserExistsError) {
+        throw err;
       }
-    });
 
-    const instance = new TestUser(user.user, strategy);
-    if (options?.registerForCleanup) registerTestUser(instance);
-    return instance;
+      // If the user already exists, sign in and return a TestUser instance for that user
+      const signInResponse = await auth.api.signInEmail({
+        body: {
+          email,
+          password,
+          rememberMe: true
+        },
+        asResponse: true
+      });
+
+      // Extract the signed session cookie from Set-Cookie
+      const setCookieHeader = signInResponse.headers.get('set-cookie') ?? '';
+      const cookieMatch = setCookieHeader.match(
+        /(?:^|,\s*)(?:(__Secure-)?better-auth\.session_token)=([^;]+)/
+      );
+
+      const headers = new Headers();
+      if (cookieMatch) {
+        const cookieName = cookieMatch[1]
+          ? `${cookieMatch[1]}better-auth.session_token`
+          : 'better-auth.session_token';
+        const cookieValue = cookieMatch[2];
+        headers.set('cookie', `${cookieName}=${cookieValue}`);
+      }
+
+      const session = await auth.api.getSession({ headers });
+      if (!session?.user) {
+        throw err;
+      }
+
+      const instance = new TestUser(session.user as User, strategy);
+      if (options?.registerForCleanup) registerTestUser(instance);
+      return instance;
+    }
   }
 
   /**

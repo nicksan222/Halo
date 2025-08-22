@@ -109,7 +109,7 @@ export default function TodoDetailPage() {
         />
       </Shell.Header>
       <Shell.Content>
-        <div className="max-w-2xl mx-auto space-y-4">
+        <div className="grid gap-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>{t.cardTitle}</CardTitle>

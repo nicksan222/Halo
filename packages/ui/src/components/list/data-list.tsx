@@ -2,7 +2,9 @@
 
 import { EmptyScreen } from '@acme/ui/components/empty-screen';
 import type { ComponentType, ReactNode } from 'react';
-import { ListBadge, ListContainer, ListItem } from './index';
+import { ListBadge } from './list-badge';
+import { ListContainer } from './list-container';
+import { MemoListItem } from './list-item';
 import type { ListContainerProps, ListItemProps } from './list-types';
 
 // Data-specific props that we're adding
@@ -159,7 +161,7 @@ export function DataList<T>({
             onContextMenu={(e) => onItemContextMenu?.(e, id)}
             className="w-full text-left"
           >
-            <ListItem
+            <MemoListItem
               ListItemKey={id}
               Title={title}
               Description={description}

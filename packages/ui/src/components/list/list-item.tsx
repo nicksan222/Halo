@@ -118,9 +118,17 @@ const ListItem: React.FC<ItemProps> = ({
     }
   };
 
-  const mainContent = (
-    <button
-      type="button"
+  const mainContent = actionsElement ? (
+    // biome-ignore lint/a11y/useSemanticElements: To avoid nested buttons
+    <div
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          // @ts-expect-error: KeyboardEvent is compatible for this use
+          handleItemClick(e);
+        }
+      }}
       className={cn(
         'flex w-full max-w-full flex-row',
         compact
@@ -143,7 +151,7 @@ const ListItem: React.FC<ItemProps> = ({
       )}
       style={style}
       onClick={handleItemClick}
-      {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+      {...(props as React.HTMLAttributes<HTMLDivElement>)}
     >
       {/* Avatar/Icon wrapper for compact mode */}
       {iconElement && (
@@ -188,6 +196,71 @@ const ListItem: React.FC<ItemProps> = ({
           }
         />
       </div>
+    </div>
+  ) : (
+    <button
+      type="button"
+      className={cn(
+        'flex w-full max-w-full flex-row',
+        compact ? 'items-center p-1.5 px-3' : 'items-start p-2 px-4 sm:p-3 sm:px-6',
+        'transition-all duration-200 ease-in-out',
+        'cursor-pointer',
+        isSelected
+          ? 'border-l-2 border-primary/40 bg-primary/5'
+          : 'border-primary hover:border-l-4 hover:bg-accent/80 hover:sm:border-l-4',
+        'hover:shadow-sm',
+        'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1',
+        'border-b border-muted',
+        !isRead && 'border-l-0 sm:border-l-primary',
+        subItems?.length && 'pr-10 sm:pr-14',
+        className,
+        contentClassName
+      )}
+      style={style}
+      onClick={handleItemClick}
+      {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+    >
+      {iconElement && (
+        <div
+          className={cn(
+            'flex items-center justify-center',
+            compact ? 'mr-2 max-h-[32px] min-h-[32px] min-w-[32px] max-w-[32px]' : 'mr-3'
+          )}
+          style={compact ? { flex: '0 0 32px' } : undefined}
+        >
+          {React.cloneElement(iconElement as React.ReactElement<any>, {
+            className: cn(
+              (iconElement as React.ReactElement<any>)?.props?.className,
+              compact ? 'h-8 w-8' : 'h-10 w-10'
+            )
+          })}
+        </div>
+      )}
+      <div className="min-w-0 flex-1">
+        <ListItemContent
+          LeftIcon={undefined}
+          Title={titleElement}
+          Description={descriptionElement}
+          Badge={badgeElement}
+          Badges={badgesElement}
+          Notes={notesElement}
+          Subnotes={subnotesElement}
+          hideBadge={hideBadge}
+          actions={actionsElement}
+          LeftIconAlt={LeftIconAlt}
+          isSelected={isSelected}
+          inlineDescription={inlineDescription}
+          compact={compact}
+          onIconClick={
+            selectionContext?.isSelectionMode && ListItemKey
+              ? (e) => {
+                  selectionContext.toggleSelection(ListItemKey);
+                  e.stopPropagation();
+                }
+              : undefined
+          }
+        />
+      </div>
     </button>
   );
 
@@ -206,5 +279,8 @@ const ListItem: React.FC<ItemProps> = ({
     </MotionWrapper>
   );
 };
+
+ListItem.displayName = 'ListItem';
+export const MemoListItem = React.memo(ListItem);
 
 export default ListItem;

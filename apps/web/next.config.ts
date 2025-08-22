@@ -16,6 +16,7 @@ import type { NextConfig } from 'next';
  * - Package transpilation for monorepo workspace dependencies
  * - Optimized for UI components and API client packages
  * - Disabled source maps in development to prevent errors
+ * - Image optimization configuration for external domains
  */
 const nextConfig: NextConfig = {
   /**
@@ -29,7 +30,28 @@ const nextConfig: NextConfig = {
    * Disable source maps in development to prevent source map errors.
    * This fixes the "payload is not an Object" error in development.
    */
-  productionBrowserSourceMaps: false
+  productionBrowserSourceMaps: false,
+
+  /**
+   * Image optimization configuration.
+   * Allows external domains for image optimization.
+   */
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: '127.0.0.1',
+        port: '9000',
+        pathname: '/acme/**'
+      },
+      {
+        protocol: 'https',
+        hostname: '127.0.0.1',
+        port: '9000',
+        pathname: '/acme/**'
+      }
+    ]
+  }
 };
 
 export default nextConfig;

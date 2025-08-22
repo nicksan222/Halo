@@ -18,7 +18,6 @@ import {
 import { Bell, ListTodo, Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { NotificationsPopover } from './notifications-popover';
-import { useOfflineFirstSession } from './session-store';
 
 interface AppSidebarLabels {
   application?: string;
@@ -34,7 +33,7 @@ interface AppSidebarProps {
 
 export function AppSidebar({ labels }: AppSidebarProps) {
   const router = useRouter();
-  const { data: session, isPending: isLoadingSession } = useOfflineFirstSession();
+  const { data: session, isPending: isLoadingSession } = authClient.useSession();
   const { data: organizations, isPending: isLoadingOrganizations } =
     authClient.useListOrganizations();
   const { data: activeOrganization, isPending: isLoadingActiveOrganization } =
@@ -55,7 +54,6 @@ export function AppSidebar({ labels }: AppSidebarProps) {
 
   const teams = (organizations ?? []).map((org) => ({
     name: org.name,
-    logo: org.logo ?? '',
     plan: org.metadata?.plan ?? labels?.freePlan ?? 'Free',
     id: org.id,
     slug: org.slug
@@ -64,7 +62,6 @@ export function AppSidebar({ labels }: AppSidebarProps) {
   const activeTeam = activeOrganization
     ? {
         name: activeOrganization.name,
-        logo: activeOrganization.logo ?? '',
         plan: activeOrganization.metadata?.plan ?? labels?.freePlan ?? 'Free',
         id: activeOrganization.id,
         slug: activeOrganization.slug
@@ -80,7 +77,6 @@ export function AppSidebar({ labels }: AppSidebarProps) {
           teams={teams}
           activeTeam={activeTeam}
           onTeamChange={async (team) => {
-            // set active organization in session
             await authClient.organization.setActive({ organizationId: team.id });
           }}
           onAddTeam={async () => {
@@ -94,6 +90,9 @@ export function AppSidebar({ labels }: AppSidebarProps) {
               .replace(/[^a-z0-9]+/g, '-')
               .replace(/(^-|-$)/g, '');
             await authClient.organization.create({ name, slug });
+          }}
+          onSettings={() => {
+            router.push(`/settings/organization/members`);
           }}
           isLoading={isLoading}
         />
@@ -127,7 +126,7 @@ export function AppSidebar({ labels }: AppSidebarProps) {
                     <Bell className="mr-2 h-4 w-4" />
                     <span>Notifications</span>
                     {unreadCount > 0 && (
-                      <span className="ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1 text-xs text-destructive-foreground">
+                      <span className="ml-auto inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] text-primary-foreground font-bold">
                         {unreadCount > 99 ? '99+' : unreadCount}
                       </span>
                     )}

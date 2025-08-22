@@ -43,22 +43,22 @@ const Tab: React.FC<TabItemProps> = ({
         type="button"
         className={cn(
           /* ---------- mobile first ---------- */
-          'flex cursor-pointer items-center gap-1 rounded-lg text-sm',
+          'flex cursor-pointer items-center gap-1 rounded-xl border text-sm shadow-sm',
           isTop
             ? 'justify-center px-3 py-2 w-full' // desktop grid gestisce la larghezza
             : 'justify-start min-w-fit px-3 py-1',
           isActive
-            ? 'bg-accent text-accent-foreground'
-            : 'bg-muted/20 text-foreground/80 hover:bg-muted/30',
+            ? 'bg-accent text-accent-foreground border-accent'
+            : 'bg-muted/20 text-foreground/80 hover:bg-muted/30 border-border',
           'transition-colors duration-150',
           /* ---------- desktop overrides ---------- */
-          'md:flex md:items-center md:rounded-md',
+          'md:flex md:items-center md:rounded-xl',
           isTop
             ? 'md:w-full md:px-3 md:py-2 md:justify-center'
             : 'md:w-full md:px-4 md:py-2 md:justify-start',
           isActive
-            ? 'md:bg-accent/30 md:text-accent-foreground'
-            : 'md:text-foreground md:opacity-70 md:hover:bg-muted/10 md:hover:opacity-90'
+            ? 'md:bg-accent/30 md:text-accent-foreground md:border-accent'
+            : 'md:text-foreground md:opacity-70 md:hover:bg-muted/10 md:hover:opacity-90 md:border-border'
         )}
         onClick={handleClick}
         onKeyUp={(e) => {

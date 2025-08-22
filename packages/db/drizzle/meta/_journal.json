@@ -15,6 +15,13 @@
       "when": 1755793890298,
       "tag": "0001_furry_doomsday",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1755896916704,
+      "tag": "0002_lovely_jubilee",
+      "breakpoints": true
     }
   ]
 }

@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle
 } from '@acme/ui/components/card';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocale } from '@/providers/i18n-provider';
 import { lang } from './lang';
 
@@ -25,11 +25,21 @@ export function SignInOrgSelection({
 }) {
   const { data: organizations, isPending } = authClient.useListOrganizations();
   const [selected, setSelected] = useState<string | null>(null);
+  const [autoSelected, setAutoSelected] = useState(false);
   const locale = useLocale();
   const t = translate(lang, locale);
 
+  useEffect(() => {
+    if (!isPending && !autoSelected && (organizations?.length ?? 0) === 1) {
+      const autoSelect = async () => {
+        setAutoSelected(true);
+        await onContinue(organizations![0]!.id);
+      };
+      void autoSelect();
+    }
+  }, [isPending, autoSelected, organizations, onContinue]);
+
   if (!isPending && (organizations?.length ?? 0) === 1) {
-    void onContinue(organizations![0]!.id);
     return (
       <div className="flex items-center justify-center py-6 text-sm text-muted-foreground">
         {t.loadingOrganizations}

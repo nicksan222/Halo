@@ -19,7 +19,7 @@ export const env = cleanEnv(process.env, {
   CORS_ORIGIN: url({ default: 'http://localhost:3000', desc: 'Allowed CORS origin for API' }),
 
   // Storage (Provider selector)
-  STORAGE_PROVIDER: str({ choices: ['vercel-blob', 's3'], default: 'vercel-blob' }),
+  STORAGE_PROVIDER: str({ choices: ['vercel-blob', 's3'], default: 's3' }),
 
   // Storage (Vercel Blob)
   BLOB_READ_WRITE_TOKEN: str({
@@ -29,12 +29,12 @@ export const env = cleanEnv(process.env, {
 
   // Storage (S3/MinIO)
   S3_REGION: str({ default: 'us-east-1' }),
-  S3_BUCKET: str({ default: '' }),
-  S3_ACCESS_KEY_ID: str({ default: '' }),
-  S3_SECRET_ACCESS_KEY: str({ default: '' }),
-  S3_ENDPOINT: str({ default: '' }),
-  S3_FORCE_PATH_STYLE: bool({ default: false }),
-  S3_PUBLIC_URL: str({ default: '' }),
+  S3_BUCKET: str({ default: 'acme' }),
+  S3_ACCESS_KEY_ID: str({ default: 'minioadmin' }),
+  S3_SECRET_ACCESS_KEY: str({ default: 'minioadmin' }),
+  S3_ENDPOINT: str({ default: 'http://127.0.0.1:9000' }),
+  S3_FORCE_PATH_STYLE: bool({ default: true }),
+  S3_PUBLIC_URL: str({ default: 'http://127.0.0.1:9000/acme' }),
 
   // Web app public config
   NEXT_PUBLIC_API_URL: url({ default: 'http://localhost:3001', desc: 'Public base URL for API' }),

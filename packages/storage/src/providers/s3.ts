@@ -38,28 +38,59 @@ function objectUrl(config: S3Config, key: string): string {
   return `${base}/${config.bucket}/${key}`;
 }
 
+async function toUploadBody(
+  data: unknown
+): Promise<{ body: any; contentType?: string; contentLength?: number }> {
+  // Prefer Buffer to avoid hashing issues with flowing streams
+  if (typeof Blob !== 'undefined' && data instanceof Blob) {
+    const arrayBuffer = await data.arrayBuffer();
+    const body = Buffer.from(arrayBuffer);
+    const contentLength = body.length;
+    const contentType = (data as any).type || undefined;
+    return { body, contentType, contentLength };
+  }
+  if (data instanceof Uint8Array) {
+    return { body: Buffer.from(data), contentLength: data.byteLength };
+  }
+  if (data instanceof ArrayBuffer) {
+    const body = Buffer.from(data);
+    return { body, contentLength: body.length };
+  }
+  // Node.js Buffer
+  if (typeof Buffer !== 'undefined' && (Buffer as any).isBuffer?.(data)) {
+    return { body: data as any, contentLength: (data as any).length };
+  }
+  // Fallback: pass through (may be a Node stream); S3 client will handle if possible
+  return { body: data as any };
+}
+
 export function createS3Strategy(config: S3Config): StorageStrategy {
   const client = buildClient(config);
 
   return {
     async put(pathname, data, options: ServerPutOptions = {}) {
       const key = pathname;
+      const { body, contentType: inferredType, contentLength } = await toUploadBody(data);
+      const contentType = options.contentType ?? inferredType;
       const put = new PutObjectCommand({
         Bucket: config.bucket,
         Key: key,
-        Body: data as any,
-        ContentType: options.contentType,
+        Body: body as any,
+        ContentType: contentType,
+        // Provide length when known to avoid hashing issues
+        // ContentLength is allowed by the AWS SDK types when using the broader runtime type
+        ContentLength: contentLength as any,
         CacheControl: options.cacheControlMaxAge
           ? `max-age=${options.cacheControlMaxAge}`
           : undefined
-      });
+      } as any);
       await client.send(put);
       const url = objectUrl(config, key);
       return {
         pathname: key as StorageFileMetadata['pathname'],
         url,
         downloadUrl: url,
-        contentType: options.contentType
+        contentType
       };
     },
     async head(pathname) {

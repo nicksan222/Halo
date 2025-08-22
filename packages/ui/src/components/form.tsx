@@ -26,15 +26,39 @@ type FormFieldContextValue<
 
 const FormFieldContext = React.createContext<FormFieldContextValue>({} as FormFieldContextValue);
 
+type FormItemContextValue = {
+  id: string;
+};
+
+const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue);
+
+// Generate a stable ID based on field name to prevent hydration mismatches
+// This replaces React.useId() which generates different IDs on server vs client
+// The hash function ensures consistent IDs across server and client rendering
+const generateStableId = (fieldName: string) => {
+  // Create a hash-like string from the field name
+  let hash = 0;
+  for (let i = 0; i < fieldName.length; i++) {
+    const char = fieldName.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  return `form-${Math.abs(hash).toString(36)}`;
+};
+
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >({
   ...props
 }: ControllerProps<TFieldValues, TName>) => {
+  const stableId = React.useMemo(() => generateStableId(props.name), [props.name]);
+
   return (
     <FormFieldContext.Provider value={{ name: props.name }}>
-      <Controller {...props} />
+      <FormItemContext.Provider value={{ id: stableId }}>
+        <Controller {...props} />
+      </FormItemContext.Provider>
     </FormFieldContext.Provider>
   );
 };
@@ -62,20 +86,10 @@ const useFormField = () => {
   };
 };
 
-type FormItemContextValue = {
-  id: string;
-};
-
-const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue);
-
 function FormItem({ className, ...props }: React.ComponentProps<'div'>) {
-  const id = React.useId();
+  const { id } = React.useContext(FormItemContext);
 
-  return (
-    <FormItemContext.Provider value={{ id }}>
-      <div data-slot="form-item" className={cn('grid gap-2', className)} {...props} />
-    </FormItemContext.Provider>
-  );
+  return <div data-slot="form-item" id={id} className={cn('grid gap-2', className)} {...props} />;
 }
 
 function FormLabel({ className, ...props }: React.ComponentProps<typeof LabelPrimitive.Root>) {

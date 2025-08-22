@@ -34,6 +34,19 @@ function configFromEnv(): StorageClientConfig {
       publicUrlBase: env.S3_PUBLIC_URL || undefined
     };
   }
+  // Fallback to S3 if no Blob token is set to ease local development
+  if (!env.BLOB_READ_WRITE_TOKEN) {
+    return {
+      provider: 's3',
+      region: env.S3_REGION,
+      bucket: env.S3_BUCKET,
+      accessKeyId: env.S3_ACCESS_KEY_ID || undefined,
+      secretAccessKey: env.S3_SECRET_ACCESS_KEY || undefined,
+      endpoint: env.S3_ENDPOINT || undefined,
+      forcePathStyle: env.S3_FORCE_PATH_STYLE,
+      publicUrlBase: env.S3_PUBLIC_URL || undefined
+    };
+  }
   return {
     provider: 'vercel-blob',
     token: env.BLOB_READ_WRITE_TOKEN || undefined

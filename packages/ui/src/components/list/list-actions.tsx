@@ -6,8 +6,6 @@ import { cn } from '@acme/ui/lib/utils';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import React, { useState } from 'react';
 
-import { isListAction, type ListActionProps } from './list-action';
-
 export interface ListActionsProps extends React.HTMLAttributes<HTMLButtonElement> {
   /** Action components */
   children: React.ReactNode;
@@ -25,20 +23,25 @@ export const ListActions: React.FC<ListActionsProps> = ({
   ...props
 }) => {
   const [open, setOpen] = useState(false);
-  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const isDesktop = useMediaQuery('(min-width: 768px)', { defaultValue: false });
 
-  const childArray = React.Children.toArray(children);
-  const actionChildren = childArray.filter(
-    (child) => React.isValidElement(child) && isListAction(child as React.ReactElement)
-  );
+  const hasChildren = React.Children.count(children) > 0;
 
-  if (actionChildren.length === 0) {
+  if (!hasChildren) {
     return null;
   }
 
   return (
-    <button
-      type="button"
+    // biome-ignore lint/a11y/useSemanticElements: To avoid nested buttons
+    <div
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          // @ts-expect-error: KeyboardEvent is compatible for this use
+          handleItemClick(e);
+        }
+      }}
       className={cn(
         'mr-2 flex items-center justify-end overflow-hidden p-0',
         !noBorder && 'rounded-md border border-muted bg-background',
@@ -46,13 +49,14 @@ export const ListActions: React.FC<ListActionsProps> = ({
         className
       )}
       onClick={(e) => e.stopPropagation()}
-      {...props}
+      suppressHydrationWarning
+      {...(props as React.HTMLAttributes<HTMLDivElement>)}
     >
       {isDesktop ? (
-        // Desktop: Horizontal list of icons
-        <div className="flex h-full items-center">{actionChildren}</div>
+        // Desktop: render actions as provided
+        <div className="flex h-full items-center">{children}</div>
       ) : (
-        // Mobile: Three dots menu with popover
+        // Mobile: Three dots menu with popover; render children as provided
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <button className="flex h-full items-center justify-center p-1" type="button">
@@ -60,34 +64,11 @@ export const ListActions: React.FC<ListActionsProps> = ({
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-48 p-1" align="end">
-            <div className="flex flex-col">
-              {React.Children.map(actionChildren, (child, _index) => {
-                if (React.isValidElement(child) && isListAction(child as React.ReactElement)) {
-                  // Cast child.props to ListActionProps to access icon, label, and onClick
-                  const { icon, label, onClick } = child.props as ListActionProps;
-
-                  return (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onClick?.(e);
-                        setOpen(false);
-                      }}
-                      className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-accent transition-colors"
-                    >
-                      {icon}
-                      <span>{label}</span>
-                    </button>
-                  );
-                }
-                return child;
-              })}
-            </div>
+            <div className="flex flex-col gap-1">{children}</div>
           </PopoverContent>
         </Popover>
       )}
-    </button>
+    </div>
   );
 };
 

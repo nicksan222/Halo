@@ -35,7 +35,7 @@ const TabContainer: React.FC<{
   return (
     <div
       className={cn(
-        'w-full gap-2 overflow-x-auto px-2 sm:px-4 md:px-8',
+        'w-full gap-2 overflow-x-auto px-2 sm:px-4 md:px-4',
         {
           'flex md:flex-col md:overflow-y-auto': position === 'side',
           flex: position === 'top'
