@@ -13,13 +13,13 @@
     "typecheck": "bunx tsc -p tsconfig.json --noEmit",
     "lint": "bunx biome check .",
     "format": "bunx biome check --write .",
-    "dev": "bunx drizzle-kit studio",
+    "dev": "bunx drizzle-kit studio --host 0.0.0.0",
     "db:generate": "bunx drizzle-kit generate",
     "db:generate:watch": "bunx drizzle-kit generate --watch",
     "db:migrate": "bun run scripts/migrate.ts",
     "db:migrate:reset": "bunx drizzle-kit migrate --breakpoints:reset",
     "db:introspect": "bunx drizzle-kit introspect",
-    "db:studio": "bunx drizzle-kit studio",
+    "db:studio": "bunx drizzle-kit studio --host 0.0.0.0 --port 4983",
     "db:check": "bunx drizzle-kit check"
   },
   "dependencies": {

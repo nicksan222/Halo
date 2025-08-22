@@ -12,18 +12,19 @@
     "check": "bun run typecheck"
   },
   "dependencies": {
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "next": "15.5.0",
-    "@trpc/client": "^11.4.4",
-    "@trpc/react-query": "^11.4.4",
-    "@tanstack/react-query": "^5.62.6",
-    "react-hook-form": "^7.62.0",
-    "zod": "^4.0.17",
+    "@acme/localization": "0.0.0",
     "@acme/tailwind-config": "0.1.0",
     "@acme/ui": "0.0.0",
-    "@acme/localization": "0.0.0",
-    "lucide-react": "^0.540.0"
+    "@tanstack/react-query": "^5.62.6",
+    "@trpc/client": "^11.4.4",
+    "@trpc/react-query": "^11.4.4",
+    "framer-motion": "^12.23.12",
+    "lucide-react": "^0.540.0",
+    "next": "15.5.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-hook-form": "^7.62.0",
+    "zod": "^4.0.17"
   },
   "devDependencies": {
     "typescript": "^5.8.3",

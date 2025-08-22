@@ -34,5 +34,13 @@ export const lang = defineLang({
     it: 'Creando un account, accetti i nostri'
   },
   termsLink: { en: 'Terms of Service', it: 'Termini di Servizio' },
-  privacyLink: { en: 'Privacy Policy', it: 'Informativa sulla Privacy' }
+  privacyLink: { en: 'Privacy Policy', it: 'Informativa sulla Privacy' },
+  orgSelectTitle: { en: 'Select your organization', it: 'Seleziona la tua organizzazione' },
+  orgSelectSubtitle: {
+    en: 'Choose which organization to use as your active workspace',
+    it: 'Scegli quale organizzazione usare come spazio di lavoro attivo'
+  },
+  organization: { en: 'Organization', it: 'Organizzazione' },
+  continue: { en: 'Continue', it: 'Continua' },
+  loadingOrganizations: { en: 'Loading organizations…', it: 'Caricamento organizzazioni…' }
 });

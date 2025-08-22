@@ -23,7 +23,7 @@ const Content: React.FC<ContentProps> = ({
       className={cn(
         'h-full w-full max-w-full flex-1',
         /* aggiunto lo stesso padding usato nell'header */
-        'sm:px-4',
+        'px-2 md:px-4',
         className
       )}
     >

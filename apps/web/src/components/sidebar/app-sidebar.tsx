@@ -15,7 +15,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from '@acme/ui/components/sidebar';
-import { ListTodo, Plus } from 'lucide-react';
+import { Bell, ListTodo, Plus } from 'lucide-react';
+import { NotificationsPopover } from './notifications-popover';
 import { useOfflineFirstSession } from './session-store';
 
 interface AppSidebarLabels {
@@ -115,6 +116,25 @@ export function AppSidebar({ labels }: AppSidebarProps) {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
+        <div className="px-2 pb-2 w-full">
+          <NotificationsPopover
+            trigger={(unreadCount) => (
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton className="w-full justify-start">
+                    <Bell className="mr-2 h-4 w-4" />
+                    <span>Notifications</span>
+                    {unreadCount > 0 && (
+                      <span className="ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1 text-xs text-destructive-foreground">
+                        {unreadCount > 99 ? '99+' : unreadCount}
+                      </span>
+                    )}
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            )}
+          />
+        </div>
         <NavUser
           user={user ?? { name: '', email: '', avatar: '' }}
           onUpgrade={() => {
@@ -135,6 +155,7 @@ export function AppSidebar({ labels }: AppSidebarProps) {
               }
             });
           }}
+          features={{ showNotifications: false }}
           isLoading={isLoadingSession}
         />
       </SidebarFooter>

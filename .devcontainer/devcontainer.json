@@ -35,7 +35,7 @@
     "S3_FORCE_PATH_STYLE": "true",
     "S3_PUBLIC_URL": "http://localhost:9000/acme"
   },
-  "forwardPorts": [5432, 8025, 1025, 9000, 9001],
+  "forwardPorts": [5432, 8025, 1025, 9000, 9001, 4983],
   "customizations": {
     "vscode": {
       "extensions": [

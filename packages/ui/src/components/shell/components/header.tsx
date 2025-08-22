@@ -100,7 +100,7 @@ const renderButton = (action: ActionProps, isMobile: boolean, key: number) => {
 /**
  * Shell Header component
  */
-const Header: React.FC<HeaderProps> = ({ children, className, showSidebarToggle = false }) => {
+const Header: React.FC<HeaderProps> = ({ children, className, showSidebarToggle = true }) => {
   const actions = useShellStore(selectOrderedActions);
 
   const otherChildren = React.Children.toArray(children).filter((child) => {
@@ -117,14 +117,17 @@ const Header: React.FC<HeaderProps> = ({ children, className, showSidebarToggle 
         className
       )}
     >
-      <div className="flex flex-1 flex-col overflow-hidden">
-        {showSidebarToggle && <SidebarTrigger className="mb-2" />}
-        {groupedChildren}
-      </div>
+      <div className="flex flex-1 flex-col overflow-hidden">{groupedChildren}</div>
       {/* Desktop actions */}
       {orderedActionsForHeader.length > 0 && (
         <div className="hidden md:flex md:items-center md:gap-2">
           {orderedActionsForHeader.map((action, index) => renderButton(action, false, index))}
+        </div>
+      )}
+      {/* Mobile sidebar toggle - top right */}
+      {showSidebarToggle && (
+        <div className="absolute top-4 right-4 md:hidden">
+          <SidebarTrigger />
         </div>
       )}
       {/* Mobile actions */}

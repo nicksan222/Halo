@@ -19,12 +19,10 @@ const Back: React.FC<BackExtendedProps> = ({ onClick, href, goBack = true }) => 
   const router = useTransitionRouter();
 
   const handleClick = (_e: React.MouseEvent<HTMLButtonElement>) => {
-    if (onClick) {
-      onClick();
-    } else if (goBack) {
-      router.back();
-    }
-    // else do nothing (default)
+    if (onClick) return onClick();
+    if (href) return router.push(href);
+    if (goBack) return router.back();
+    return null;
   };
 
   const content = (
