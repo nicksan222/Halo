@@ -22,36 +22,7 @@ import { useLocale } from '@/localization/next';
 import { sidebarLang } from './lang';
 import { NotificationsPopover } from './notifications-popover';
 
-interface AppSidebarLabels {
-  application?: string;
-  todos?: string;
-  newTodo?: string;
-  teamNamePrompt?: string;
-  freePlan?: string;
-  notifications?: string;
-  markAllRead?: string;
-  noNotifications?: string;
-  noNotificationsDescription?: string;
-  notificationSettings?: string;
-  markReadSuccess?: string;
-  markReadError?: string;
-  justNow?: string;
-  minutesAgo?: string;
-  hoursAgo?: string;
-  daysAgo?: string;
-  // NavUser labels
-  upgradeToPro?: string;
-  account?: string;
-  billing?: string;
-  navNotifications?: string;
-  logOut?: string;
-}
-
-interface AppSidebarProps {
-  labels?: AppSidebarLabels;
-}
-
-export function AppSidebar({ labels }: AppSidebarProps) {
+export function AppSidebar() {
   const router = useRouter();
   const { data: session, isPending: isLoadingSession } = authClient.useSession();
   const { data: organizations, isPending: isLoadingOrganizations } =

@@ -96,11 +96,11 @@ export function OrganizationSwitcher({
             <DropdownMenuLabel className="text-muted-foreground text-xs">Teams</DropdownMenuLabel>
             {teams.map((team, _index) => (
               <DropdownMenuItem
-                key={team.name}
-                onClick={() => {
-                  onTeamChange(team);
+                key={team.id}
+                onClick={async () => {
+                  await onTeamChange(team);
                   setIsOpen(false);
-                  // Navigate to home page and perform a full page reload
+                  // Navigate to home page and perform a full page reload after session update
                   window.location.href = '/';
                 }}
                 className="gap-2 p-2"

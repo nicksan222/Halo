@@ -12,8 +12,8 @@ export interface ActiveTeam {
 export interface OrganizationSwitcherProps {
   teams: Team[];
   activeTeam: ActiveTeam;
-  onTeamChange: (team: Team) => void;
-  onAddTeam: () => void;
+  onTeamChange: (team: Team) => void | Promise<void>;
+  onAddTeam: () => void | Promise<void>;
   onSettings?: (team: Team) => void;
   isLoading?: boolean;
 }

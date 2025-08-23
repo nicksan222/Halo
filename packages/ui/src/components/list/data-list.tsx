@@ -49,7 +49,7 @@ export type DataListProps<T> = DataListSpecificProps<T> &
   // Auto-derive ListContainer props (we're excluding children as we manage that internally)
   Omit<ListContainerProps, 'children'> &
   // Derive any ListItem props we want to allow overriding globally
-  Pick<ListItemProps, 'titleClassName' | 'contentClassName' | 'motionProps' | 'compact'>;
+  Pick<ListItemProps, 'titleClassName' | 'contentClassName' | 'compact'>;
 
 export function DataList<T>({
   // Data-specific props
