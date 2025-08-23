@@ -2,6 +2,15 @@
 
 import { authClient } from '@acme/auth/client';
 import { translate } from '@acme/localization';
+import { Button } from '@acme/ui/components/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from '@acme/ui/components/dialog';
+import { Input } from '@acme/ui/components/input';
 import { NavUser } from '@acme/ui/components/nav-user';
 import { OrganizationSwitcher } from '@acme/ui/components/organization-switcher';
 import {
@@ -18,7 +27,9 @@ import {
 } from '@acme/ui/components/sidebar';
 import { Bell, ListTodo, Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useLocale } from '@/localization/next';
+import { CreateOrganization } from './create-organization';
 import { sidebarLang } from './lang';
 import { NotificationsPopover } from './notifications-popover';
 
@@ -64,30 +75,66 @@ export function AppSidebar() {
 
   const isLoading = isLoadingOrganizations || isLoadingActiveOrganization;
 
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [orgName, setOrgName] = useState('');
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <OrganizationSwitcher
-          teams={teams}
-          activeTeam={activeTeam}
-          onTeamChange={async (team) => {
-            await authClient.organization.setActive({ organizationId: team.id });
-          }}
-          onAddTeam={async () => {
-            const name =
-              typeof window !== 'undefined' ? window.prompt(t.sidebar.teamNamePrompt) : undefined;
-            if (!name) return;
-            const slug = name
-              .toLowerCase()
-              .replace(/[^a-z0-9]+/g, '-')
-              .replace(/(^-|-$)/g, '');
-            await authClient.organization.create({ name, slug });
-          }}
-          onSettings={() => {
-            router.push(`/settings/organization/members`);
-          }}
-          isLoading={isLoading}
-        />
+        <CreateOrganization>
+          {({ create, isCreating }) => (
+            <>
+              <OrganizationSwitcher
+                teams={teams}
+                activeTeam={activeTeam}
+                onTeamChange={async (team) => {
+                  await authClient.organization.setActive({ organizationId: team.id });
+                }}
+                onAddTeam={() => setIsCreateOpen(true)}
+                onSettings={() => {
+                  router.push(`/settings/organization/members`);
+                }}
+                isLoading={isLoading}
+              />
+              <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>{t.sidebar.teamNamePrompt}</DialogTitle>
+                  </DialogHeader>
+                  <div className="py-2">
+                    <Input
+                      value={orgName}
+                      onChange={(e) => setOrgName(e.target.value)}
+                      placeholder={t.sidebar.teamNamePrompt}
+                      autoFocus
+                    />
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        setIsCreateOpen(false);
+                        setOrgName('');
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={async () => {
+                        await create(orgName);
+                        setIsCreateOpen(false);
+                        setOrgName('');
+                      }}
+                      disabled={isCreating || orgName.trim().length === 0}
+                    >
+                      {isCreating ? 'Creating…' : 'Create'}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </>
+          )}
+        </CreateOrganization>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
