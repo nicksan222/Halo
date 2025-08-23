@@ -27,10 +27,12 @@ import type { ProfileFormValues, ProfilePageProps } from './types';
 // Custom dropzone content that shows current avatar or uploaded file preview
 const AvatarDropzoneContent = ({
   avatarFiles,
-  currentImageUrl
+  currentImageUrl,
+  labels
 }: {
   avatarFiles?: File[];
   currentImageUrl?: string;
+  labels: { currentAvatar: string; dragAndDrop: string };
 }) => {
   if (avatarFiles && avatarFiles.length > 0) {
     // Show uploaded file preview
@@ -64,14 +66,14 @@ const AvatarDropzoneContent = ({
         <div className="relative mb-2">
           <Image
             src={currentImageUrl}
-            alt={t.currentAvatar}
+            alt={labels.currentAvatar}
             width={64}
             height={64}
             className="h-16 w-16 rounded-md object-cover"
           />
         </div>
-        <p className="w-full text-wrap text-muted-foreground text-xs">{t.currentAvatar}</p>
-        <p className="w-full text-wrap text-muted-foreground text-xs">{t.dragAndDrop}</p>
+        <p className="w-full text-wrap text-muted-foreground text-xs">{labels.currentAvatar}</p>
+        <p className="w-full text-wrap text-muted-foreground text-xs">{labels.dragAndDrop}</p>
       </div>
     );
   }
@@ -174,6 +176,7 @@ export function ProfileClient({ user }: ProfilePageProps) {
                           <AvatarDropzoneContent
                             avatarFiles={avatarFiles}
                             currentImageUrl={profileForm.watch('image')}
+                            labels={{ currentAvatar: t.currentAvatar, dragAndDrop: t.dragAndDrop }}
                           />
                         </Dropzone>
                       </div>

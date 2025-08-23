@@ -6,13 +6,6 @@ export const lang = defineLang({
     new: { en: 'New', it: 'Nuovo' },
     signOut: { en: 'Sign out', it: 'Esci' }
   },
-  sidebar: {
-    application: { en: 'Application', it: 'Applicazione' },
-    todos: { en: 'Todos', it: 'Attività' },
-    newTodo: { en: 'New Todo', it: 'Nuova Attività' },
-    teamNamePrompt: { en: 'Team name', it: 'Nome del team' },
-    freePlan: { en: 'Free', it: 'Gratis' }
-  },
   home: {
     title: { en: 'Your Todos', it: 'Le tue attività' },
     description: { en: 'Stay on top of your tasks.', it: 'Rimani al passo con i tuoi compiti.' },
@@ -91,24 +84,5 @@ export const lang = defineLang({
   },
   common: {
     back: { en: 'Back', it: 'Indietro' }
-  },
-  notifications: {
-    notifications: { en: 'Notifications', it: 'Notifiche' },
-    markAllRead: { en: 'Mark all read', it: 'Segna tutte come lette' },
-    noNotifications: { en: 'No notifications', it: 'Nessuna notifica' },
-    noNotificationsDescription: {
-      en: "You're all caught up. We'll let you know when there's something new.",
-      it: 'Sei aggiornato. Ti avviseremo quando ci sarà qualcosa di nuovo.'
-    },
-    notificationSettings: { en: 'Notification settings', it: 'Impostazioni notifiche' },
-    markReadSuccess: { en: 'Notifications marked as read', it: 'Notifiche segnate come lette' },
-    markReadError: {
-      en: 'Failed to mark notifications as read',
-      it: 'Impossibile segnare le notifiche come lette'
-    },
-    justNow: { en: 'Just now', it: 'Proprio ora' },
-    minutesAgo: { en: 'm ago', it: 'm fa' },
-    hoursAgo: { en: 'h ago', it: 'h fa' },
-    daysAgo: { en: 'd ago', it: 'g fa' }
   }
 });

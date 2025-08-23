@@ -26,7 +26,8 @@ export function NavUser({
   onNotifications,
   onLogout,
   features = {},
-  isLoading = false
+  isLoading = false,
+  labels = {}
 }: {
   user: {
     name: string;
@@ -45,6 +46,13 @@ export function NavUser({
     showNotifications?: boolean;
   };
   isLoading?: boolean;
+  labels?: {
+    upgradeToPro?: string;
+    account?: string;
+    billing?: string;
+    notifications?: string;
+    logOut?: string;
+  };
 }) {
   const { isMobile } = useSidebar();
 
@@ -54,6 +62,14 @@ export function NavUser({
     showBilling = true,
     showNotifications = true
   } = features;
+
+  const {
+    upgradeToPro = 'Upgrade to Pro',
+    account = 'Account',
+    billing = 'Billing',
+    notifications = 'Notifications',
+    logOut = 'Log out'
+  } = labels;
 
   if (isLoading) {
     return (
@@ -128,7 +144,7 @@ export function NavUser({
                 <DropdownMenuGroup>
                   <DropdownMenuItem onClick={onUpgrade}>
                     <Sparkles className="mr-2 h-4 w-4" />
-                    Upgrade to Pro
+                    {upgradeToPro}
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
@@ -139,19 +155,19 @@ export function NavUser({
                 {showAccount && (
                   <DropdownMenuItem onClick={onAccount}>
                     <BadgeCheck className="mr-2 h-4 w-4" />
-                    Account
+                    {account}
                   </DropdownMenuItem>
                 )}
                 {showBilling && (
                   <DropdownMenuItem onClick={onBilling}>
                     <CreditCard className="mr-2 h-4 w-4" />
-                    Billing
+                    {billing}
                   </DropdownMenuItem>
                 )}
                 {showNotifications && (
                   <DropdownMenuItem onClick={onNotifications}>
                     <Bell className="mr-2 h-4 w-4" />
-                    Notifications
+                    {notifications}
                   </DropdownMenuItem>
                 )}
               </DropdownMenuGroup>
@@ -159,7 +175,7 @@ export function NavUser({
             {(showAccount || showBilling || showNotifications) && <DropdownMenuSeparator />}
             <DropdownMenuItem onClick={onLogout}>
               <LogOut className="mr-2 h-4 w-4" />
-              Log out
+              {logOut}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

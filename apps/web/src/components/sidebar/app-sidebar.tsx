@@ -1,6 +1,7 @@
 'use client';
 
 import { authClient } from '@acme/auth/client';
+import { translate } from '@acme/localization';
 import { NavUser } from '@acme/ui/components/nav-user';
 import { OrganizationSwitcher } from '@acme/ui/components/organization-switcher';
 import {
@@ -17,6 +18,8 @@ import {
 } from '@acme/ui/components/sidebar';
 import { Bell, ListTodo, Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useLocale } from '@/localization/next';
+import { sidebarLang } from './lang';
 import { NotificationsPopover } from './notifications-popover';
 
 interface AppSidebarLabels {
@@ -36,6 +39,12 @@ interface AppSidebarLabels {
   minutesAgo?: string;
   hoursAgo?: string;
   daysAgo?: string;
+  // NavUser labels
+  upgradeToPro?: string;
+  account?: string;
+  billing?: string;
+  navNotifications?: string;
+  logOut?: string;
 }
 
 interface AppSidebarProps {
@@ -50,6 +59,9 @@ export function AppSidebar({ labels }: AppSidebarProps) {
   const { data: activeOrganization, isPending: isLoadingActiveOrganization } =
     authClient.useActiveOrganization();
 
+  const locale = useLocale();
+  const t = translate(sidebarLang, locale);
+
   const user = session?.user
     ? {
         name: session.user.name ?? 'User',
@@ -59,13 +71,13 @@ export function AppSidebar({ labels }: AppSidebarProps) {
     : undefined;
 
   const items = [
-    { title: labels?.todos ?? 'Todos', url: '/', icon: ListTodo },
-    { title: labels?.newTodo ?? 'New Todo', url: '/todos/new', icon: Plus }
+    { title: t.sidebar.todos, url: '/', icon: ListTodo },
+    { title: t.sidebar.newTodo, url: '/todos/new', icon: Plus }
   ];
 
   const teams = (organizations ?? []).map((org) => ({
     name: org.name,
-    plan: org.metadata?.plan ?? labels?.freePlan ?? 'Free',
+    plan: org.metadata?.plan ?? t.sidebar.freePlan,
     id: org.id,
     slug: org.slug
   }));
@@ -73,7 +85,7 @@ export function AppSidebar({ labels }: AppSidebarProps) {
   const activeTeam = activeOrganization
     ? {
         name: activeOrganization.name,
-        plan: activeOrganization.metadata?.plan ?? labels?.freePlan ?? 'Free',
+        plan: activeOrganization.metadata?.plan ?? t.sidebar.freePlan,
         id: activeOrganization.id,
         slug: activeOrganization.slug
       }
@@ -92,9 +104,7 @@ export function AppSidebar({ labels }: AppSidebarProps) {
           }}
           onAddTeam={async () => {
             const name =
-              typeof window !== 'undefined'
-                ? window.prompt(labels?.teamNamePrompt ?? 'Team name')
-                : undefined;
+              typeof window !== 'undefined' ? window.prompt(t.sidebar.teamNamePrompt) : undefined;
             if (!name) return;
             const slug = name
               .toLowerCase()
@@ -110,7 +120,7 @@ export function AppSidebar({ labels }: AppSidebarProps) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>{labels?.application ?? 'Application'}</SidebarGroupLabel>
+          <SidebarGroupLabel>{t.sidebar.application}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
@@ -131,23 +141,23 @@ export function AppSidebar({ labels }: AppSidebarProps) {
         <div className="px-2 pb-2 w-full">
           <NotificationsPopover
             labels={{
-              markAllRead: labels?.markAllRead,
-              noNotifications: labels?.noNotifications,
-              noNotificationsDescription: labels?.noNotificationsDescription,
-              notificationSettings: labels?.notificationSettings,
-              markReadSuccess: labels?.markReadSuccess,
-              markReadError: labels?.markReadError,
-              justNow: labels?.justNow,
-              minutesAgo: labels?.minutesAgo,
-              hoursAgo: labels?.hoursAgo,
-              daysAgo: labels?.daysAgo
+              markAllRead: t.notifications.markAllRead,
+              noNotifications: t.notifications.noNotifications,
+              noNotificationsDescription: t.notifications.noNotificationsDescription,
+              notificationSettings: t.notifications.notificationSettings,
+              markReadSuccess: t.notifications.markReadSuccess,
+              markReadError: t.notifications.markReadError,
+              justNow: t.notifications.justNow,
+              minutesAgo: t.notifications.minutesAgo,
+              hoursAgo: t.notifications.hoursAgo,
+              daysAgo: t.notifications.daysAgo
             }}
             trigger={(unreadCount) => (
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton className="w-full justify-start">
                     <Bell className="mr-2 h-4 w-4" />
-                    <span>{labels?.notifications ?? 'Notifications'}</span>
+                    <span>{t.notifications.notifications}</span>
                     {unreadCount > 0 && (
                       <span className="ml-auto inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] text-primary-foreground font-bold">
                         {unreadCount > 99 ? '99+' : unreadCount}
@@ -181,6 +191,13 @@ export function AppSidebar({ labels }: AppSidebarProps) {
           }}
           features={{ showNotifications: false }}
           isLoading={isLoadingSession}
+          labels={{
+            upgradeToPro: t.sidebar.upgradeToPro,
+            account: t.sidebar.account,
+            billing: t.sidebar.billing,
+            notifications: t.sidebar.navNotifications,
+            logOut: t.sidebar.logOut
+          }}
         />
       </SidebarFooter>
     </Sidebar>
