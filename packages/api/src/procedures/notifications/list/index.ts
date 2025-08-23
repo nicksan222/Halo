@@ -34,7 +34,7 @@ export const notificationListRouter = router({
       .select()
       .from(notifications)
       .where(and(...conditions))
-      .orderBy(desc(notifications.createdAt))
+      .orderBy(desc(notifications.createdAt), desc(notifications.title))
       .limit(limit)
       .offset(offset);
 
