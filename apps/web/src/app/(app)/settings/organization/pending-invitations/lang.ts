@@ -118,5 +118,21 @@ export const lang = {
     ja: '送信済み',
     ko: '전송됨',
     zh: '已发送'
+  },
+  justNow: {
+    en: 'Just now',
+    it: 'Proprio ora'
+  },
+  hoursAgo: {
+    en: 'hours ago',
+    it: 'ore fa'
+  },
+  dayAgo: {
+    en: 'day ago',
+    it: 'giorno fa'
+  },
+  daysAgo: {
+    en: 'days ago',
+    it: 'giorni fa'
   }
 } as const;

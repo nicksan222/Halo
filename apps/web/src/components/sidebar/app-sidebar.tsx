@@ -25,6 +25,17 @@ interface AppSidebarLabels {
   newTodo?: string;
   teamNamePrompt?: string;
   freePlan?: string;
+  notifications?: string;
+  markAllRead?: string;
+  noNotifications?: string;
+  noNotificationsDescription?: string;
+  notificationSettings?: string;
+  markReadSuccess?: string;
+  markReadError?: string;
+  justNow?: string;
+  minutesAgo?: string;
+  hoursAgo?: string;
+  daysAgo?: string;
 }
 
 interface AppSidebarProps {
@@ -119,12 +130,24 @@ export function AppSidebar({ labels }: AppSidebarProps) {
       <SidebarFooter>
         <div className="px-2 pb-2 w-full">
           <NotificationsPopover
+            labels={{
+              markAllRead: labels?.markAllRead,
+              noNotifications: labels?.noNotifications,
+              noNotificationsDescription: labels?.noNotificationsDescription,
+              notificationSettings: labels?.notificationSettings,
+              markReadSuccess: labels?.markReadSuccess,
+              markReadError: labels?.markReadError,
+              justNow: labels?.justNow,
+              minutesAgo: labels?.minutesAgo,
+              hoursAgo: labels?.hoursAgo,
+              daysAgo: labels?.daysAgo
+            }}
             trigger={(unreadCount) => (
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton className="w-full justify-start">
                     <Bell className="mr-2 h-4 w-4" />
-                    <span>Notifications</span>
+                    <span>{labels?.notifications ?? 'Notifications'}</span>
                     {unreadCount > 0 && (
                       <span className="ml-auto inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] text-primary-foreground font-bold">
                         {unreadCount > 99 ? '99+' : unreadCount}

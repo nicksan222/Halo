@@ -1,8 +1,11 @@
 'use client';
 
+import { translate } from '@acme/localization';
 import { ShieldIcon, UserIcon } from 'lucide-react';
 import { memo } from 'react';
 import { List } from '@/list';
+import { useLocale } from '@/providers/i18n-provider';
+import { lang } from './lang';
 import { ChangeMemberRole } from './member-role';
 import { RemoveMember } from './remove-member';
 import type { MemberItemProps } from './types';
@@ -13,7 +16,9 @@ export const MemberItem = memo(function MemberItem({
   organizationId,
   onMemberRemoved
 }: MemberItemProps) {
-  const name = member.user.name || 'Unknown User';
+  const locale = useLocale();
+  const t = translate(lang, locale);
+  const name = member.user.name || t.memberItem.unknownUser;
   const email = member.user.email;
   const image = member.user.image || undefined;
 
@@ -26,7 +31,11 @@ export const MemberItem = memo(function MemberItem({
       {email && <List.Description>{email}</List.Description>}
       <List.Badges>
         {isCurrentUser && (
-          <List.Badge variant="default" text="You" icon={<UserIcon className="h-3 w-3" />} />
+          <List.Badge
+            variant="default"
+            text={t.memberItem.you}
+            icon={<UserIcon className="h-3 w-3" />}
+          />
         )}
         <List.Badge
           variant="info"

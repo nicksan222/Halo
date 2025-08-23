@@ -17,6 +17,11 @@ export const lang = defineLang({
       en: 'Change email and password',
       it: 'Cambia email e password'
     },
+    language: { en: 'Language', it: 'Lingua' },
+    languageDescription: {
+      en: 'Choose your preferred language',
+      it: 'Scegli la tua lingua preferita'
+    },
 
     sessions: { en: 'Sessions', it: 'Sessioni' },
     sessionsDescription: {

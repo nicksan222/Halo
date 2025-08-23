@@ -64,16 +64,14 @@ const AvatarDropzoneContent = ({
         <div className="relative mb-2">
           <Image
             src={currentImageUrl}
-            alt="Current avatar"
+            alt={t.currentAvatar}
             width={64}
             height={64}
             className="h-16 w-16 rounded-md object-cover"
           />
         </div>
-        <p className="w-full text-wrap text-muted-foreground text-xs">Current avatar</p>
-        <p className="w-full text-wrap text-muted-foreground text-xs">
-          Drag and drop or click to replace
-        </p>
+        <p className="w-full text-wrap text-muted-foreground text-xs">{t.currentAvatar}</p>
+        <p className="w-full text-wrap text-muted-foreground text-xs">{t.dragAndDrop}</p>
       </div>
     );
   }

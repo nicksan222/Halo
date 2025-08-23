@@ -1,8 +1,13 @@
 'use client';
 
+import { translate } from '@acme/localization';
 import { Card, CardContent, CardHeader, CardTitle } from '@acme/ui/components/card';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { List } from '@/list';
+import { useLocale } from '@/providers/i18n-provider';
+import { InviteMember } from './invite-member';
+import { lang } from './lang';
 import { MemberItem } from './member-item';
 import type { MembersPageProps } from './types';
 
@@ -13,6 +18,8 @@ export function MembersClient({
   organizationId
 }: MembersPageProps) {
   const router = useRouter();
+  const locale = useLocale();
+  const t = translate(lang, locale);
 
   const handleMemberRemoved = () => {
     // Refresh the page using Next.js router
@@ -22,7 +29,9 @@ export function MembersClient({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">Members ({members.length})</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          {t.title} ({members.length})
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <List.Container className="w-full">
@@ -39,6 +48,12 @@ export function MembersClient({
           ))}
         </List.Container>
       </CardContent>
+      <InviteMember
+        organizationId={organizationId}
+        onInvited={() => {
+          toast.success(t.invitationSent);
+        }}
+      />
     </Card>
   );
 }

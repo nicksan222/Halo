@@ -20,6 +20,10 @@
     "./next-server": {
       "import": "./src/next/next-server.ts",
       "types": "./src/next/next-server.ts"
+    },
+    "./next": {
+      "import": "./src/next/index.ts",
+      "types": "./src/next/index.ts"
     }
   },
   "scripts": {

@@ -34,7 +34,18 @@ export default async function AppLayout({
           todos: t.sidebar.todos,
           newTodo: t.sidebar.newTodo,
           teamNamePrompt: t.sidebar.teamNamePrompt,
-          freePlan: t.sidebar.freePlan
+          freePlan: t.sidebar.freePlan,
+          notifications: t.notifications.notifications,
+          markAllRead: t.notifications.markAllRead,
+          noNotifications: t.notifications.noNotifications,
+          noNotificationsDescription: t.notifications.noNotificationsDescription,
+          notificationSettings: t.notifications.notificationSettings,
+          markReadSuccess: t.notifications.markReadSuccess,
+          markReadError: t.notifications.markReadError,
+          justNow: t.notifications.justNow,
+          minutesAgo: t.notifications.minutesAgo,
+          hoursAgo: t.notifications.hoursAgo,
+          daysAgo: t.notifications.daysAgo
         }}
       />
       <div className="flex-1 flex min-h-svh flex-col">{children}</div>

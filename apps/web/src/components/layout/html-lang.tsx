@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useLocale } from '@/providers/i18n-provider';
+import { useLocale } from '@/localization/next';
 
 export function HtmlLang() {
   const locale = useLocale();

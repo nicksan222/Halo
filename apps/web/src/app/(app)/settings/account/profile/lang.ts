@@ -8,5 +8,10 @@ export const lang = defineLang({
   imagePlaceholder: { en: 'https://…', it: 'https://…' },
   save: { en: 'Save', it: 'Salva' },
   success: { en: 'Profile updated', it: 'Profilo aggiornato' },
-  genericError: { en: 'Something went wrong', it: 'Qualcosa è andato storto' }
+  genericError: { en: 'Something went wrong', it: 'Qualcosa è andato storto' },
+  currentAvatar: { en: 'Current avatar', it: 'Avatar attuale' },
+  dragAndDrop: {
+    en: 'Drag and drop or click to replace',
+    it: 'Trascina e rilascia o clicca per sostituire'
+  }
 });

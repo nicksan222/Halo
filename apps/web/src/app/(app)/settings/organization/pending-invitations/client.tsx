@@ -73,11 +73,11 @@ export function PendingInvitationsClient({
     const now = new Date();
     const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
 
-    if (diffInHours < 1) return 'Just now';
-    if (diffInHours < 24) return `${diffInHours} hours ago`;
+    if (diffInHours < 1) return t.justNow;
+    if (diffInHours < 24) return `${diffInHours} ${t.hoursAgo}`;
     const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays === 1) return '1 day ago';
-    return `${diffInDays} days ago`;
+    if (diffInDays === 1) return `1 ${t.dayAgo}`;
+    return `${diffInDays} ${t.daysAgo}`;
   };
 
   const formatInvitationSentDate = (expiresAt: string | Date) => {

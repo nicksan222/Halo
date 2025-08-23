@@ -217,7 +217,7 @@ export function SignUpCredentialsForm({ onSuccess }: { onSuccess: () => void }) 
                     <div className="relative w-16 h-16 rounded-sm overflow-hidden">
                       <Image
                         src={imagePreview}
-                        alt="Profile preview"
+                        alt={t.profilePreview}
                         layout="fill"
                         objectFit="cover"
                       />

@@ -189,7 +189,7 @@ function CreateFirstOrganization({
           </label>
           <Input
             id={`org-name-input-${Math.random()}`}
-            placeholder="Acme Inc"
+            placeholder={t.organizationPlaceholder}
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="h-11"

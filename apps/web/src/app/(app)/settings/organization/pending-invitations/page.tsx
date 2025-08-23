@@ -37,7 +37,7 @@ export default async function PendingInvitationsPage() {
 
   const props: PendingInvitationsPageProps = {
     organizationId,
-    invitations
+    invitations: invitations.filter((invitation) => invitation.status === 'pending')
   };
 
   return <PendingInvitationsClient {...props} />;

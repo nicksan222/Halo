@@ -3,7 +3,7 @@
 import { translate } from '@acme/localization';
 import { usePathname } from 'next/navigation';
 import type React from 'react';
-import { useLocale } from '@/providers/i18n-provider';
+import { useLocale } from '@/localization/next';
 import Shell from '@/shell';
 import { lang } from './lang';
 
@@ -19,6 +19,7 @@ export default function AccountSettingsLayout({ children }: { children: React.Re
   const isSessions = pathname?.startsWith(`${base}/sessions`);
   const isVerification = pathname?.startsWith(`${base}/verification`);
   const isDanger = pathname?.startsWith(`${base}/danger`);
+  const isLanguage = pathname?.startsWith(`${base}/language`);
 
   return (
     <Shell>
@@ -39,6 +40,12 @@ export default function AccountSettingsLayout({ children }: { children: React.Re
           description={t.tabs.securityDescription}
           href="/settings/account/security"
           isActive={Boolean(isSecurity)}
+        />
+        <Shell.Tab
+          title={t.tabs.language}
+          description={t.tabs.languageDescription}
+          href="/settings/account/language"
+          isActive={Boolean(isLanguage)}
         />
 
         <Shell.Tab

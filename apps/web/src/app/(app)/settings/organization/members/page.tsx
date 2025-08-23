@@ -1,11 +1,28 @@
 import { auth } from '@acme/auth';
-import { headers } from 'next/headers';
+import { translate } from '@acme/localization';
+import { useLocale } from '@acme/localization/next-server';
+import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { MembersClient } from './client';
+import { lang } from './lang';
 import type { MembersPageProps } from './types';
 
 export default async function OrganizationMembersPage() {
   const headersList = await headers();
+  const cookiesList = await cookies();
+
+  const { locale } = useLocale(
+    {
+      headers: headersList,
+      cookies: {
+        get: (name) => cookiesList.get(name)?.value,
+        set: (name, value) => cookiesList.set(name, value)
+      }
+    },
+    { cookieName: 'locale', defaultLocale: 'en' }
+  );
+  const t = translate(lang, locale);
+
   const session = await auth.api.getSession({ headers: headersList });
 
   if (!session) {
@@ -24,7 +41,7 @@ export default async function OrganizationMembersPage() {
     });
 
     if (!membersResponse.members) {
-      throw new Error('Failed to fetch members');
+      throw new Error(t.failedToFetchMembers);
     }
 
     const members = membersResponse.members as (typeof auth.$Infer.Member)[];
@@ -35,7 +52,7 @@ export default async function OrganizationMembersPage() {
         sessionUserId: session.session.userId,
         memberUserIds: members.map((m) => ({ id: m.id, userId: m.userId, name: m.user.name }))
       });
-      throw new Error('Current user not found in organization members');
+      throw new Error(t.currentUserNotFound);
     }
 
     console.log('Current user found:', {
@@ -55,6 +72,6 @@ export default async function OrganizationMembersPage() {
   } catch (error) {
     console.error('Error fetching members:', error);
     // In a real app, you might want to show an error page or redirect
-    throw new Error('Failed to load organization members');
+    throw new Error(t.failedToLoadMembers);
   }
 }

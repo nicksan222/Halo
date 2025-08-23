@@ -1,6 +1,7 @@
 'use client';
 
 import { authClient } from '@acme/auth/client';
+import { translate } from '@acme/localization';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,6 +16,8 @@ import {
 import List from '@acme/ui/components/list';
 import { TrashIcon } from 'lucide-react';
 import { useCallback, useState } from 'react';
+import { useLocale } from '@/providers/i18n-provider';
+import { lang } from './lang';
 import type { RemoveMemberProps } from './types';
 
 export function RemoveMember({
@@ -23,6 +26,8 @@ export function RemoveMember({
   organizationId,
   onSuccess
 }: RemoveMemberProps) {
+  const locale = useLocale();
+  const t = translate(lang, locale);
   const [isRemoving, setIsRemoving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -38,18 +43,24 @@ export function RemoveMember({
       });
 
       if (error) {
-        setError(error.message || 'Failed to remove member');
+        setError(error.message || t.removeMember.failedToRemove);
       } else {
         setIsOpen(false);
         onSuccess?.();
       }
     } catch (err) {
       console.error('Error removing member:', err);
-      setError('An unexpected error occurred. Please try again.');
+      setError(t.removeMember.unexpectedError);
     } finally {
       setIsRemoving(false);
     }
-  }, [memberId, organizationId, onSuccess]);
+  }, [
+    memberId,
+    organizationId,
+    onSuccess,
+    t.removeMember.failedToRemove,
+    t.removeMember.unexpectedError
+  ]);
 
   const handleOpenChange = useCallback((open: boolean) => {
     setIsOpen(open);
@@ -62,17 +73,17 @@ export function RemoveMember({
     <AlertDialog open={isOpen} onOpenChange={handleOpenChange}>
       <AlertDialogTrigger asChild>
         <List.Action
-          label="Remove Member"
+          label={t.removeMember.removeMember}
           icon={<TrashIcon className="h-4 w-4" />}
           disabled={isRemoving}
         />
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Remove Member</AlertDialogTitle>
+          <AlertDialogTitle>{t.removeMember.title}</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to remove <strong>{memberName}</strong> from the organization?
-            This action cannot be undone.
+            {t.removeMember.description} <strong>{memberName}</strong>{' '}
+            {t.removeMember.descriptionEnd}
           </AlertDialogDescription>
         </AlertDialogHeader>
 
@@ -83,13 +94,13 @@ export function RemoveMember({
         )}
 
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isRemoving}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isRemoving}>{t.removeMember.cancel}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleRemoveMember}
             disabled={isRemoving}
             className="bg-red-700 text-white"
           >
-            {isRemoving ? 'Removing...' : 'Remove Member'}
+            {isRemoving ? t.removeMember.removing : t.removeMember.remove}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

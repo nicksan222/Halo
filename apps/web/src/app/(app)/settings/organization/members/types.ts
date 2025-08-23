@@ -51,3 +51,10 @@ export interface ChangeMemberRoleProps {
   /** Success callback */
   onSuccess?: () => void;
 }
+
+export interface InviteMemberProps {
+  /** Organization ID */
+  organizationId: string;
+  /** Callback after successful invitation */
+  onInvited?: () => void;
+}

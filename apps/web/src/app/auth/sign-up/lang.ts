@@ -25,6 +25,7 @@ export const lang = defineLang({
   confirmPasswordPlaceholder: { en: 'Confirm Password', it: 'Conferma Password' },
   passwordsDoNotMatch: { en: 'Passwords do not match', it: 'Le password non corrispondono' },
   profileImage: { en: 'Profile Image', it: 'Immagine Profilo' },
+  profilePreview: { en: 'Profile preview', it: 'Anteprima profilo' },
   optional: { en: 'Optional', it: 'Opzionale' },
   createAccount: { en: 'Create an account', it: 'Crea un account' },
   alreadyHaveAccount: { en: 'Already have an account?', it: 'Hai già un account?' },
@@ -41,6 +42,7 @@ export const lang = defineLang({
     it: 'Scegli quale organizzazione usare come spazio di lavoro attivo'
   },
   organization: { en: 'Organization', it: 'Organizzazione' },
+  organizationPlaceholder: { en: 'Acme Inc', it: 'Acme Inc' },
   continue: { en: 'Continue', it: 'Continua' },
   loadingOrganizations: { en: 'Loading organizations…', it: 'Caricamento organizzazioni…' }
 });

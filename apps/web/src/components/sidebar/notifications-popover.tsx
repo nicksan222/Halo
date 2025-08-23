@@ -19,12 +19,26 @@ type Notification = typeof notifications.$inferSelect & {
   metadata: Record<string, unknown> | null;
 };
 
+interface NotificationsPopoverLabels {
+  markAllRead?: string;
+  noNotifications?: string;
+  noNotificationsDescription?: string;
+  notificationSettings?: string;
+  markReadSuccess?: string;
+  markReadError?: string;
+  justNow?: string;
+  minutesAgo?: string;
+  hoursAgo?: string;
+  daysAgo?: string;
+}
+
 interface NotificationsPopoverProps {
   className?: string;
   trigger?: (unreadCount: number) => React.ReactNode;
+  labels?: NotificationsPopoverLabels;
 }
 
-export function NotificationsPopover({ className, trigger }: NotificationsPopoverProps) {
+export function NotificationsPopover({ className, trigger, labels }: NotificationsPopoverProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -60,10 +74,12 @@ export function NotificationsPopover({ className, trigger }: NotificationsPopove
   const markReadMutation = api.notifications.markRead.batch.useMutation({
     onSuccess: () => {
       refetch();
-      toast.success('Notifications marked as read');
+      toast.success(labels?.markReadSuccess ?? 'Notifications marked as read');
     },
     onError: (error) => {
-      toast.error(`Failed to mark notifications as read: ${error.message}`);
+      toast.error(
+        labels?.markReadError ?? `Failed to mark notifications as read: ${error.message}`
+      );
     }
   });
 
@@ -121,10 +137,12 @@ export function NotificationsPopover({ className, trigger }: NotificationsPopove
     const now = new Date();
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-    if (diffInSeconds < 60) return 'Just now';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    return `${Math.floor(diffInSeconds / 86400)}d ago`;
+    if (diffInSeconds < 60) return labels?.justNow ?? 'Just now';
+    if (diffInSeconds < 3600)
+      return `${Math.floor(diffInSeconds / 60)}${labels?.minutesAgo ?? 'm ago'}`;
+    if (diffInSeconds < 86400)
+      return `${Math.floor(diffInSeconds / 3600)}${labels?.hoursAgo ?? 'h ago'}`;
+    return `${Math.floor(diffInSeconds / 86400)}${labels?.daysAgo ?? 'd ago'}`;
   };
 
   return (
@@ -171,7 +189,7 @@ export function NotificationsPopover({ className, trigger }: NotificationsPopove
               ) : (
                 <Check className="h-3 w-3" />
               )}
-              Mark all read
+              {labels?.markAllRead ?? 'Mark all read'}
             </Button>
           )}
         </div>
@@ -244,9 +262,12 @@ export function NotificationsPopover({ className, trigger }: NotificationsPopove
           ) : (
             <div className="flex flex-col items-center justify-center p-8 text-center">
               <Bell className="h-8 w-8 text-muted-foreground mb-2" />
-              <p className="text-sm text-muted-foreground">No notifications</p>
+              <p className="text-sm text-muted-foreground">
+                {labels?.noNotifications ?? 'No notifications'}
+              </p>
               <p className="text-xs text-muted-foreground mt-1">
-                You're all caught up. We'll let you know when there's something new.
+                {labels?.noNotificationsDescription ??
+                  "You're all caught up. We'll let you know when there's something new."}
               </p>
             </div>
           )}
@@ -263,7 +284,7 @@ export function NotificationsPopover({ className, trigger }: NotificationsPopove
             }}
           >
             <Settings className="mr-2 h-3 w-3" />
-            Notification settings
+            {labels?.notificationSettings ?? 'Notification settings'}
           </Button>
         </div>
       </PopoverContent>
