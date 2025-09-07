@@ -20,7 +20,7 @@
     "zod": "^4.0.17"
   },
   "optionalDependencies": {
-    "nodemailer": "^6.9.13",
+    "nodemailer": "^7.0.5",
     "@aws-sdk/client-ses": "^3.680.0"
   }
 }
