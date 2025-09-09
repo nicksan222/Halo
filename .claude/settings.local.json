@@ -1,0 +1,55 @@
+{
+  "permissions": {
+    "allow": [
+      "*",
+      "Bash(bun run:*)",
+      "Bash(ls:*)",
+      "Bash(npx tsc:*)",
+      "Bash(bun test:*)",
+      "Bash(curl:*)",
+      "Bash(bash:*)",
+      "Bash(bunx tsc:*)",
+      "Bash(cd:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(find:*)",
+      "Bash(bun install:*)",
+      "Bash(for dir in src/procedures/events/waitlist/*/)",
+      "Bash(done)",
+      "Read(//tmp/**)",
+      "Bash(for file in src/procedures/events/waitlist/*/index.ts)",
+      "Bash(grep:*)",
+      "Bash(bun:*)",
+      "Bash(psql:*)",
+      "Bash(pkill:*)",
+      "mcp__shadcn__search_items_in_registries",
+      "Bash(timeout 60 bun test:*)",
+      "Bash(for:*)",
+      "Bash(do)",
+      "Bash(if [ ! -f \"/workspaces/OwnFit-v2/apps/web-trainer/src/app/(app)/(scheduling)/event-types/[id]/$dir/lang.ts\" ])",
+      "Bash(then)",
+      "Bash(echo:*)",
+      "Bash(else)",
+      "Bash(fi)",
+      "Bash(if [ ! -f \"$dir/lang.ts\" ])",
+      "Bash(tree:*)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": ["shadcn"],
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit:*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun run typecheck && bun run lint"
+          }
+        ]
+      }
+    ]
+  }
+}
