@@ -1,19 +1,26 @@
-export interface Team {
+export interface Organization {
   name: string;
   plan: string;
   id: string;
 }
 
-export interface ActiveTeam {
+export interface ActiveOrganization {
   name: string;
   plan: string;
 }
 
+export interface OrganizationSwitcherLabels {
+  organizations: string;
+  addOrganization: string;
+  settings: string;
+}
+
 export interface OrganizationSwitcherProps {
-  teams: Team[];
-  activeTeam: ActiveTeam;
-  onTeamChange: (team: Team) => void | Promise<void>;
-  onAddTeam: () => void | Promise<void>;
-  onSettings?: (team: Team) => void;
+  organizations: Organization[];
+  activeOrganization: ActiveOrganization;
+  onOrganizationChange: (organization: Organization) => void | Promise<void>;
+  onAddOrganization: () => void | Promise<void>;
+  onSettings?: (organization: Organization) => void;
   isLoading?: boolean;
+  labels?: OrganizationSwitcherLabels;
 }

@@ -15,21 +15,24 @@ import {
   useSidebar
 } from '@acme/ui/components/sidebar';
 import { ChevronsUpDown, Plus } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import type { OrganizationSwitcherProps } from './types';
 
 export function OrganizationSwitcher({
-  teams,
-  activeTeam,
-  onTeamChange,
-  onAddTeam,
+  organizations,
+  activeOrganization,
+  onOrganizationChange,
+  onAddOrganization,
   onSettings,
-  isLoading = false
+  isLoading = false,
+  labels = {
+    organizations: 'Organizations',
+    addOrganization: 'Add organization',
+    settings: 'Settings'
+  }
 }: OrganizationSwitcherProps) {
   const { isMobile } = useSidebar();
   const [isOpen, setIsOpen] = useState(false);
-  const _router = useRouter();
 
   if (isLoading) {
     return (
@@ -50,7 +53,7 @@ export function OrganizationSwitcher({
     );
   }
 
-  if (!activeTeam) {
+  if (!activeOrganization) {
     return null;
   }
 
@@ -81,8 +84,8 @@ export function OrganizationSwitcher({
                 {renderLogo('size-4')}
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{activeTeam.name}</span>
-                <span className="truncate text-xs">{activeTeam.plan}</span>
+                <span className="truncate font-medium">{activeOrganization.name}</span>
+                <span className="truncate text-xs">{activeOrganization.plan}</span>
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
@@ -93,12 +96,14 @@ export function OrganizationSwitcher({
             side={isMobile ? 'bottom' : 'right'}
             sideOffset={4}
           >
-            <DropdownMenuLabel className="text-muted-foreground text-xs">Teams</DropdownMenuLabel>
-            {teams.map((team, _index) => (
+            <DropdownMenuLabel className="text-muted-foreground text-xs">
+              {labels.organizations}
+            </DropdownMenuLabel>
+            {organizations.map((organization, _index) => (
               <DropdownMenuItem
-                key={team.id}
+                key={organization.id}
                 onClick={async () => {
-                  await onTeamChange(team);
+                  await onOrganizationChange(organization);
                   setIsOpen(false);
                   // Navigate to home page and perform a full page reload after session update
                   window.location.href = '/';
@@ -108,15 +113,15 @@ export function OrganizationSwitcher({
                 <div className="flex size-6 items-center justify-center rounded-md border">
                   {renderLogo('size-3.5 shrink-0')}
                 </div>
-                {team.name}
+                {organization.name}
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2" onClick={onAddTeam}>
+            <DropdownMenuItem className="gap-2 p-2" onClick={onAddOrganization}>
               <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                 <Plus className="size-4" />
               </div>
-              <div className="text-muted-foreground font-medium">Add team</div>
+              <div className="text-muted-foreground font-medium">{labels.addOrganization}</div>
             </DropdownMenuItem>
             {onSettings && (
               <>
@@ -124,9 +129,11 @@ export function OrganizationSwitcher({
                 <DropdownMenuItem
                   className="gap-2 p-2 bg-accent text-accent-foreground"
                   onClick={() => {
-                    const activeTeamWithId = teams.find((team) => team.name === activeTeam.name);
-                    if (activeTeamWithId) {
-                      onSettings(activeTeamWithId);
+                    const activeOrganizationWithId = organizations.find(
+                      (org) => org.name === activeOrganization.name
+                    );
+                    if (activeOrganizationWithId) {
+                      onSettings(activeOrganizationWithId);
                     }
                     setIsOpen(false);
                   }}
@@ -134,7 +141,7 @@ export function OrganizationSwitcher({
                   <div className="flex size-6 items-center justify-center rounded-md border">
                     {renderLogo('size-3.5 shrink-0')}
                   </div>
-                  <div className="font-medium">Settings</div>
+                  <div className="font-medium">{labels.settings}</div>
                 </DropdownMenuItem>
               </>
             )}

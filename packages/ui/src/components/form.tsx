@@ -11,8 +11,7 @@ import {
   type FieldPath,
   type FieldValues,
   FormProvider,
-  useFormContext,
-  useFormState
+  useFormContext
 } from 'react-hook-form';
 
 const Form = FormProvider;
@@ -66,14 +65,13 @@ const FormField = <
 const useFormField = () => {
   const fieldContext = React.useContext(FormFieldContext);
   const itemContext = React.useContext(FormItemContext);
-  const { getFieldState } = useFormContext();
-  const formState = useFormState({ name: fieldContext.name });
-  const fieldState = getFieldState(fieldContext.name, formState);
+  const { getFieldState, formState } = useFormContext();
 
   if (!fieldContext) {
     throw new Error('useFormField should be used within <FormField>');
   }
 
+  const fieldState = getFieldState(fieldContext.name, formState);
   const { id } = itemContext;
 
   return {

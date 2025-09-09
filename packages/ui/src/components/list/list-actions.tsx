@@ -38,8 +38,8 @@ export const ListActions: React.FC<ListActionsProps> = ({
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
-          // @ts-expect-error: KeyboardEvent is compatible for this use
-          handleItemClick(e);
+          e.preventDefault();
+          setOpen(true);
         }
       }}
       className={cn(
@@ -59,7 +59,11 @@ export const ListActions: React.FC<ListActionsProps> = ({
         // Mobile: Three dots menu with popover; render children as provided
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            <button className="flex h-full items-center justify-center p-1" type="button">
+            <button
+              className="flex h-full items-center justify-center p-1"
+              type="button"
+              suppressHydrationWarning
+            >
               <DotsHorizontalIcon className="h-3 w-3" />
             </button>
           </PopoverTrigger>

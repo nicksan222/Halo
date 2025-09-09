@@ -17,6 +17,14 @@ export interface TabItemProps {
   onClick?: () => void;
   position?: TabPosition; // Posizione desiderata (side o top)
   order?: number; // Ordine opzionale
+  /** Optional visual indicator (e.g., for unread) */
+  showIndicator?: boolean;
+  /** Optional indicator text, e.g., "New messages!" */
+  indicatorText?: string;
+  /** Indicator color */
+  indicatorColor?: 'primary' | 'success' | 'warning' | 'danger' | 'info';
+  /** Indicator size */
+  indicatorSize?: 'sm' | 'md' | 'lg';
 }
 
 // Shell Action types

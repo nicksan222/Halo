@@ -52,6 +52,7 @@ export function AddFilterDropdown<TFormValues extends FieldValues>({
             size="sm"
             variant="default"
             className="shrink-0 rounded-md bg-background/10 px-3 text-foreground/90 hover:bg-background/20"
+            suppressHydrationWarning
           >
             <SlidersHorizontal className="mr-1.5 h-3.5 w-3.5" />
             <span className="whitespace-nowrap">Filtra</span>
@@ -61,6 +62,7 @@ export function AddFilterDropdown<TFormValues extends FieldValues>({
             size="sm"
             variant="ghost"
             className="h-7 w-7 shrink-0 rounded-md p-0 hover:*:bg-accent/20"
+            suppressHydrationWarning
           >
             <PlusIcon className="h-3.5 w-3.5" />
           </Button>

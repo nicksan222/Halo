@@ -18,6 +18,7 @@ import { ItemNotes, ItemSubnotes, ListNotes, ListSubnotes } from './list-notes';
 import { ListPaginationComponent } from './list-pagination';
 import { ListSelectionActions } from './list-selection-actions';
 import { ItemTitle, ListTitle } from './list-title';
+import { usePagination as useListPagination } from './use-pagination';
 
 // Create a compound component pattern
 const List = {
@@ -90,6 +91,8 @@ export type {
   ListTitleProps
 } from './list-types';
 export type { PaginationOptions, PaginationParams } from './use-pagination';
+export { useListPagination };
+export type { UsePaginationResult } from './use-pagination';
 // Export types
 export type { SelectionKey, SelectionOptions } from './use-row-selection';
 export { useRowSelection } from './use-row-selection';

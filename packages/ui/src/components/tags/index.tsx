@@ -111,6 +111,7 @@ export const TagsTrigger = ({ className, children, ...props }: TagsTriggerProps)
       className={cn('h-auto w-full justify-between p-2', className)}
       role="combobox"
       variant="outline"
+      suppressHydrationWarning
       {...props}
     >
       <div className="flex flex-wrap items-center gap-1">

@@ -1,4 +1,4 @@
-# @ownfit/tailwind-config
+# @acme/tailwind-config
 
 Centralized Tailwind CSS configuration package for OwnFit applications. This package provides a unified design system configuration that can be shared across all apps and extended as needed.
 
@@ -14,7 +14,7 @@ Centralized Tailwind CSS configuration package for OwnFit applications. This pac
 
 ```bash
 # Install the package (workspace-aware)
-npm install @ownfit/tailwind-config
+npm install @acme/tailwind-config
 
 # Peer dependencies
 npm install tailwindcss tailwindcss-animate
@@ -28,7 +28,7 @@ For most web applications (React, Next.js), use the web configuration:
 
 ```typescript
 // tailwind.config.ts
-import { webTailwindConfig } from '@ownfit/tailwind-config/web';
+import { webTailwindConfig } from "@acme/tailwind-config/web";
 
 export default webTailwindConfig;
 ```
@@ -39,18 +39,18 @@ If you need custom content paths while keeping the design system:
 
 ```typescript
 // tailwind.config.ts
-import { webTailwindConfig } from '@ownfit/tailwind-config/web';
-import type { Config } from 'tailwindcss';
+import { webTailwindConfig } from "@acme/tailwind-config/web";
+import type { Config } from "tailwindcss";
 
 const config: Config = {
   ...webTailwindConfig,
   content: [
-    './src/**/*.{js,ts,jsx,tsx}',
+    "./src/**/*.{js,ts,jsx,tsx}",
     // Add your custom paths here
-    './custom-components/**/*.{js,ts,jsx,tsx}',
+    "./custom-components/**/*.{js,ts,jsx,tsx}",
     // Keep the UI package paths
-    ...webTailwindConfig.content.filter(path => path.includes('ui-web'))
-  ]
+    ...webTailwindConfig.content.filter((path) => path.includes("ui-web")),
+  ],
 };
 
 export default config;
@@ -62,29 +62,29 @@ To extend the base configuration with additional customizations:
 
 ```typescript
 // tailwind.config.ts
-import { baseTailwindConfig } from '@ownfit/tailwind-config/base';
-import type { Config } from 'tailwindcss';
+import { baseTailwindConfig } from "@acme/tailwind-config/base";
+import type { Config } from "tailwindcss";
 
 const config: Config = {
   ...baseTailwindConfig,
-  content: ['./src/**/*.{js,ts,jsx,tsx}'],
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     ...baseTailwindConfig.theme,
     extend: {
       ...baseTailwindConfig.theme?.extend,
       // Add your custom extensions
       fontSize: {
-        'custom-xl': '1.75rem'
+        "custom-xl": "1.75rem",
       },
       colors: {
         ...baseTailwindConfig.theme?.extend?.colors,
         // Add app-specific colors
         brand: {
-          primary: '#custom-color'
-        }
-      }
-    }
-  }
+          primary: "#custom-color",
+        },
+      },
+    },
+  },
 };
 
 export default config;
@@ -95,7 +95,10 @@ export default config;
 You can also import specific design tokens:
 
 ```typescript
-import { designSystemColors, designSystemAnimations } from '@ownfit/tailwind-config';
+import {
+  designSystemColors,
+  designSystemAnimations,
+} from "@acme/tailwind-config";
 
 // Use in your custom configuration
 const myConfig = {
@@ -104,20 +107,22 @@ const myConfig = {
       colors: {
         ...designSystemColors,
         // Add more colors
-      }
-    }
-  }
+      },
+    },
+  },
 };
 ```
 
 ## Available Exports
 
 ### Configurations
+
 - `webTailwindConfig` - Complete configuration for web applications
 - `baseTailwindConfig` - Base configuration without content paths
 - `webContentPaths` - Standard content paths for web apps
 
 ### Design Tokens
+
 - `designSystemColors` - Complete color palette
 - `designSystemAnimations` - Keyframes and animations
 
@@ -126,20 +131,24 @@ const myConfig = {
 The package includes a comprehensive color system:
 
 ### Base Colors
+
 - `border`, `input`, `ring`, `background`, `foreground`
 - `primary`, `secondary`, `destructive`, `muted`, `accent`
 - `popover`, `card`, `sidebar`
 
 ### Status Colors
+
 - `stred`, `storange`, `stamber`, `styellow`, `stlime`
 - `stgreen`, `stemerald`, `stteal`, `stcyan`, `stsky`
 - `stblue`, `stindigo`, `stviolet`, `stpurple`, `stfuchsia`
 - `stpink`, `strose`
 
 ### Financial Colors
+
 - `debit`, `credit`
 
 ### Component Colors
+
 - `chatitem`, `badge`
 
 Each color includes variants like `DEFAULT`, `foreground`, and `matte` where applicable.
@@ -147,6 +156,7 @@ Each color includes variants like `DEFAULT`, `foreground`, and `matte` where app
 ## Animations
 
 Pre-configured animations for common UI patterns:
+
 - `accordion-down` / `accordion-up`
 - `collapsible-down` / `collapsible-up`
 
@@ -170,12 +180,12 @@ npm run lint
 
 ### From Individual Configurations
 
-1. Install the package: `npm install @ownfit/tailwind-config`
+1. Install the package: `npm install @acme/tailwind-config`
 2. Replace your existing tailwind.config.ts:
 
 ```diff
 - import type { Config } from 'tailwindcss';
-- 
+-
 - const config = {
 -   darkMode: 'class',
 -   content: ['**/*.{ts,tsx}'],
@@ -184,7 +194,7 @@ npm run lint
 -   },
 -   plugins: [require('tailwindcss-animate')]
 - } satisfies Config;
-+ import { webTailwindConfig } from '@ownfit/tailwind-config/web';
++ import { webTailwindConfig } from '@acme/tailwind-config/web';
 
 - export default config;
 + export default webTailwindConfig;

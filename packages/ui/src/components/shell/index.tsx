@@ -36,7 +36,7 @@ type ShellComponent = React.FC<ShellProps> & {
 /* ------------------------------ componente base --------------------------- */
 const ShellBase: React.FC<ShellProps> = ({ children, className, autoLayout = true }) => {
   return (
-    <div className={classNames('relative w-full', className)}>
+    <div className={classNames('relative w-full min-h-[100dvh] flex flex-col', className)}>
       {autoLayout ? (
         // Auto-detect layout and apply grid if needed
         <AutoLayoutWrapper>{children}</AutoLayoutWrapper>
@@ -59,9 +59,11 @@ const AutoLayoutWrapper: React.FC<{ children: React.ReactNode }> = ({ children }
   const headers = extractChildrenOfType(children, Header);
   const tabContainers = extractChildrenOfType(children, TabContainer);
   const contents = extractChildrenOfType(children, Content);
+  const footers = extractChildrenOfType(children, Footer);
   const otherChildren = extractChildrenNotOfType(children, Header);
   const remainingChildren = extractChildrenNotOfType(otherChildren, TabContainer);
-  const finalChildren = extractChildrenNotOfType(remainingChildren, Content);
+  const remainingChildren2 = extractChildrenNotOfType(remainingChildren, Content);
+  const finalChildren = extractChildrenNotOfType(remainingChildren2, Footer);
 
   // Find side positioned TabContainer
   const sideTabContainer = tabContainers.find(
@@ -85,10 +87,11 @@ const AutoLayoutWrapper: React.FC<{ children: React.ReactNode }> = ({ children }
         {topTabContainers}
 
         {/* Grid layout for side tabs and content */}
-        <div className="md:grid md:grid-cols-4">
+        <div className="md:grid md:grid-cols-4 flex-1 min-h-0">
           <div className="md:col-span-1">{sideTabContainer}</div>
           <div className="md:col-span-3">{content}</div>
         </div>
+        {footers}
       </>
     );
   }

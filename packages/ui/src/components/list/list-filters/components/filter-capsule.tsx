@@ -96,6 +96,7 @@ export const FilterCapsule = <TFormValues extends FieldValues = FieldValues>({
                 ? 'border-primary/60 bg-accent shadow-sm'
                 : 'border-border hover:border-primary/30 hover:bg-accent/50'
             )}
+            suppressHydrationWarning
           >
             <span className="font-medium text-foreground/90">{filter.label}:</span>
             <span className="max-w-[100px] truncate font-light text-muted-foreground">

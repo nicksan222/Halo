@@ -308,12 +308,15 @@ export const ColorPickerOutput = ({ className, ...props }: ColorPickerOutputProp
 type PercentageInputProps = ComponentProps<typeof Input>;
 
 const PercentageInput = ({ className, ...props }: PercentageInputProps) => {
+  const { value, ...rest } = props as any;
+  const safeValue = value ?? 0;
   return (
     <div className="relative">
       <Input
         readOnly
         type="text"
-        {...props}
+        {...rest}
+        value={String(safeValue)}
         className={cn(
           'h-8 w-[3.25rem] rounded-l-none bg-secondary px-2 text-xs shadow-none',
           className

@@ -10,16 +10,22 @@ import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/pris
 
 type CodeBlockContextType = {
   code: string;
+  language: string;
+  filename?: string;
 };
 
 const CodeBlockContext = createContext<CodeBlockContextType>({
-  code: ''
+  code: '',
+  language: 'javascript',
+  filename: undefined
 });
 
 export type CodeBlockProps = HTMLAttributes<HTMLDivElement> & {
   code: string;
   language: string;
   showLineNumbers?: boolean;
+  filename?: string;
+  highlightLines?: number[];
   children?: ReactNode;
 };
 
@@ -31,10 +37,12 @@ export const CodeBlock = ({
   children,
   ...props
 }: CodeBlockProps) => (
-  <CodeBlockContext.Provider value={{ code }}>
+  <CodeBlockContext.Provider value={{ code, language, filename: props.filename }}>
     <div
       className={cn(
-        'relative w-full overflow-hidden rounded-md border bg-background text-foreground',
+        'relative w-full overflow-hidden rounded-lg border',
+        'bg-muted/30',
+        'text-foreground',
         className
       )}
       {...props}
@@ -47,9 +55,9 @@ export const CodeBlock = ({
           }}
           customStyle={{
             margin: 0,
-            padding: '1rem',
+            padding: '1.25rem',
             fontSize: '0.875rem',
-            background: 'hsl(var(--background))',
+            background: 'transparent',
             color: 'hsl(var(--foreground))'
           }}
           language={language}
@@ -70,9 +78,9 @@ export const CodeBlock = ({
           }}
           customStyle={{
             margin: 0,
-            padding: '1rem',
+            padding: '1.25rem',
             fontSize: '0.875rem',
-            background: 'hsl(var(--background))',
+            background: 'transparent',
             color: 'hsl(var(--foreground))'
           }}
           language={language}
@@ -131,13 +139,13 @@ export const CodeBlockCopyButton = ({
 
   return (
     <Button
-      className={cn('shrink-0', className)}
+      className={cn('shrink-0', isCopied && 'text-green-500', className)}
       onClick={copyToClipboard}
       size="icon"
       variant="ghost"
       {...props}
     >
-      {children ?? <Icon size={14} />}
+      {children ?? <Icon className="size-4" />}
     </Button>
   );
 };

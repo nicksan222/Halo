@@ -100,6 +100,7 @@ export const Reasoning = memo(
           onOpenChange={handleOpenChange}
           open={isOpen}
           {...props}
+          id={props.id || 'reasoning-collapsible'}
         >
           {children}
         </Collapsible>

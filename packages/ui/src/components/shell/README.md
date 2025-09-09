@@ -36,14 +36,14 @@ export default async function Page() {
 - For full client-side interactivity (e.g. passing `onClick` handlers), import the client entry.
 
 ```tsx
-'use client'
+"use client";
 import Shell from "@acme/ui/components/shell/client";
 
 export default function ClientPage() {
   return (
     <Shell>
       <Shell.Header>
-        <Shell.Action text="Run" onClick={() => console.log('clicked')} />
+        <Shell.Action text="Run" onClick={() => console.log("clicked")} />
       </Shell.Header>
       <Shell.Content>...</Shell.Content>
     </Shell>
@@ -58,7 +58,7 @@ export default function ClientPage() {
 The Shell component automatically detects when you have a side TabContainer and Content, and applies the proper grid layout:
 
 ```tsx
-import Shell from "@ownfit/ui-web/components/base/shell";
+import Shell from "@acme/ui-web/components/base/shell";
 
 export default function MyPage() {
   return (
@@ -66,9 +66,7 @@ export default function MyPage() {
       <Shell.Header>
         <Shell.Back href="/dashboard" />
         <Shell.Title>My Page Title</Shell.Title>
-        <Shell.Description>
-          Some description about this page
-        </Shell.Description>
+        <Shell.Description>Some description about this page</Shell.Description>
         {/* Actions with numeric positions */}
         <Shell.Action
           text="Primary Action"
@@ -113,10 +111,7 @@ export default function MyPage() {
           isActive={true}
           onClick={() => console.log("Overview")}
         />
-        <Shell.Tab
-          title="Details"
-          onClick={() => console.log("Details")}
-        />
+        <Shell.Tab title="Details" onClick={() => console.log("Details")} />
       </Shell.TabContainer>
 
       {/* Content - automatically positioned in grid */}
@@ -134,16 +129,12 @@ If you need more control over the layout, you can disable automatic layout:
 export default function MyPageManual() {
   return (
     <Shell autoLayout={false}>
-      <Shell.Header>
-        {/* header content */}
-      </Shell.Header>
+      <Shell.Header>{/* header content */}</Shell.Header>
 
       <div className="flex flex-col md:flex-row">
         {/* Custom layout structure */}
         <div className="w-full px-4 pt-2 md:w-64 md:pl-8 md:pr-0">
-          <Shell.TabContainer position="side">
-            {/* tabs */}
-          </Shell.TabContainer>
+          <Shell.TabContainer position="side">{/* tabs */}</Shell.TabContainer>
         </div>
 
         <div className="flex flex-1 flex-col">

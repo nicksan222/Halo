@@ -10,7 +10,7 @@ export default {
 
 export const Default = () => (
   <div className="w-[350px] space-y-4">
-    <Collapsible>
+    <Collapsible id="collapsible-default">
       <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-left bg-muted rounded-lg">
         <span className="text-sm font-medium">Click to expand</span>
         <svg
@@ -41,7 +41,7 @@ export const Default = () => (
 
 export const WithButton = () => (
   <div className="w-[350px] space-y-4">
-    <Collapsible>
+    <Collapsible id="collapsible-with-button">
       <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-left bg-muted rounded-lg hover:bg-muted/80">
         <span className="text-sm font-medium">Settings</span>
         <svg
@@ -88,7 +88,7 @@ export const WithButton = () => (
 
 export const MultipleCollapsibles = () => (
   <div className="w-[350px] space-y-4">
-    <Collapsible>
+    <Collapsible id="collapsible-multiple-1">
       <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-left bg-muted rounded-lg">
         <span className="text-sm font-medium">Section 1</span>
         <svg
@@ -112,7 +112,7 @@ export const MultipleCollapsibles = () => (
       </CollapsibleContent>
     </Collapsible>
 
-    <Collapsible>
+    <Collapsible id="collapsible-multiple-2">
       <CollapsibleTrigger className="flex items-center justify-between w-full p-4 text-left bg-muted rounded-lg">
         <span className="text-sm font-medium">Section 2</span>
         <svg

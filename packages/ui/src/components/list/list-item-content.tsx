@@ -120,11 +120,12 @@ export const ListItemContent: React.FC<ListItemContentComponentProps> = ({
           <div className="flex h-full w-full min-w-0 max-w-full flex-col justify-between overflow-hidden">
             <div
               className={cn(
-                'mb-1 flex h-full w-full max-w-full',
+                'flex h-full w-full max-w-full',
                 inlineDescription
                   ? 'flex-row items-baseline gap-2 sm:gap-3'
                   : 'flex-col items-start gap-1',
-                'flex-1 overflow-hidden'
+                'flex-1 overflow-hidden',
+                Description ? 'mb-1' : 'mb-0'
               )}
             >
               <div

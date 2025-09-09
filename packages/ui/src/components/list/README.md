@@ -22,47 +22,47 @@ A comprehensive, flexible, and feature-rich list component system for OwnFit app
 
 ### Core Components
 
-| Component | Purpose | Key Features |
-|-----------|---------|---------------|
-| `List.Container` | Main wrapper | Search, pagination, layouts, state management |
-| `List.Item` | Individual items | Selection, actions, content organization |
-| `List.Loading` | Loading states | Skeleton screens, customizable count |
-| `List.Empty` | Empty states | Custom messages, actions, illustrations |
+| Component        | Purpose          | Key Features                                  |
+| ---------------- | ---------------- | --------------------------------------------- |
+| `List.Container` | Main wrapper     | Search, pagination, layouts, state management |
+| `List.Item`      | Individual items | Selection, actions, content organization      |
+| `List.Loading`   | Loading states   | Skeleton screens, customizable count          |
+| `List.Empty`     | Empty states     | Custom messages, actions, illustrations       |
 
 ### Content Components
 
-| Component | Purpose | Usage |
-|-----------|---------|--------|
-| `List.Title` | Item titles | Primary text content |
+| Component          | Purpose           | Usage                                 |
+| ------------------ | ----------------- | ------------------------------------- |
+| `List.Title`       | Item titles       | Primary text content                  |
 | `List.Description` | Item descriptions | Secondary text, supports rich content |
-| `List.Avatar` | User avatars | Profile images with fallbacks |
-| `List.Icon` | General icons | Visual indicators, status icons |
-| `List.Badge` | Status indicators | Labels, tags, status badges |
-| `List.Badges` | Badge collections | Multiple badges with layout options |
-| `List.Notes` | Additional info | Expandable notes with icons |
+| `List.Avatar`      | User avatars      | Profile images with fallbacks         |
+| `List.Icon`        | General icons     | Visual indicators, status icons       |
+| `List.Badge`       | Status indicators | Labels, tags, status badges           |
+| `List.Badges`      | Badge collections | Multiple badges with layout options   |
+| `List.Notes`       | Additional info   | Expandable notes with icons           |
 
 ### Action Components
 
-| Component | Purpose | Features |
-|-----------|---------|----------|
-| `List.Action` | Individual actions | Icons, labels, click handlers |
-| `List.Actions` | Action groups | Multiple actions with positioning |
-| `List.Dropdown` | Expandable content | Accordion-style with actions |
+| Component       | Purpose            | Features                          |
+| --------------- | ------------------ | --------------------------------- |
+| `List.Action`   | Individual actions | Icons, labels, click handlers     |
+| `List.Actions`  | Action groups      | Multiple actions with positioning |
+| `List.Dropdown` | Expandable content | Accordion-style with actions      |
 
 ### Advanced Components
 
-| Component | Purpose | Capabilities |
-|-----------|---------|--------------|
-| `DataList` | Data-driven lists | Automatic rendering from data arrays |
-| `ListFilters` | Filtering system | Form-based filtering with multiple types |
-| `ListPagination` | Navigation | Page-based and cursor-based pagination |
+| Component        | Purpose           | Capabilities                             |
+| ---------------- | ----------------- | ---------------------------------------- |
+| `DataList`       | Data-driven lists | Automatic rendering from data arrays     |
+| `ListFilters`    | Filtering system  | Form-based filtering with multiple types |
+| `ListPagination` | Navigation        | Page-based and cursor-based pagination   |
 
 ## 🎯 Quick Start
 
 ### Basic List
 
 ```tsx
-import List from '@ownfit/ui-web/base/list';
+import List from "@acme/ui-web/base/list";
 
 function BasicList() {
   return (
@@ -73,16 +73,18 @@ function BasicList() {
         <List.Description>Software Engineer</List.Description>
         <List.Badge text="Active" color="success" />
       </List.Item>
-      
+
       <List.Item>
-        <List.Icon><UserIcon /></List.Icon>
+        <List.Icon>
+          <UserIcon />
+        </List.Icon>
         <List.Title>Jane Smith</List.Title>
         <List.Description>Product Manager</List.Description>
         <List.Actions>
-          <List.Action 
-            icon={<EditIcon />} 
-            label="Edit" 
-            onClick={() => console.log('Edit')} 
+          <List.Action
+            icon={<EditIcon />}
+            label="Edit"
+            onClick={() => console.log("Edit")}
           />
         </List.Actions>
       </List.Item>
@@ -94,7 +96,7 @@ function BasicList() {
 ### Data-Driven List
 
 ```tsx
-import { DataList } from '@ownfit/ui-web/base/list';
+import { DataList } from "@acme/ui-web/base/list";
 
 function UsersList({ users }) {
   return (
@@ -104,16 +106,16 @@ function UsersList({ users }) {
       getItemTitle={(user) => user.name}
       getItemDescription={(user) => user.role}
       renderItemIcon={(user) => (
-        <List.Avatar 
-          src={user.avatar} 
-          firstName={user.firstName} 
-          lastName={user.lastName} 
+        <List.Avatar
+          src={user.avatar}
+          firstName={user.firstName}
+          lastName={user.lastName}
         />
       )}
       renderItemBadge={(user) => (
-        <List.Badge 
-          text={user.status} 
-          color={user.isActive ? 'success' : 'warning'} 
+        <List.Badge
+          text={user.status}
+          color={user.isActive ? "success" : "warning"}
         />
       )}
       onItemClick={(id) => navigate(`/users/${id}`)}
@@ -129,23 +131,23 @@ function UsersList({ users }) {
 ```tsx
 function FilterableList() {
   const { form, FiltersComponent } = useListFilters(filters, {
-    defaultValues: { status: 'active', role: null }
+    defaultValues: { status: "active", role: null },
   });
-  
-  const [searchTerm, setSearchTerm] = useState('');
+
+  const [searchTerm, setSearchTerm] = useState("");
   const filterValues = form.watch();
 
   return (
     <div>
       <FiltersComponent className="mb-4" />
-      
+
       <List.Container
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         hideFilter={false}
         placeholder="Search users..."
       >
-        {filteredUsers.map(user => (
+        {filteredUsers.map((user) => (
           <List.Item key={user.id}>
             <List.Title>{user.name}</List.Title>
             <List.Description>{user.email}</List.Description>
@@ -172,20 +174,20 @@ The main wrapper that provides layout, search, pagination, and state management.
   maxHeight="400px"
   fitContent={false}
   flexFit={false}
-  
+
   // Search
   hideFilter={false}
   searchTerm={searchTerm}
   setSearchTerm={setSearchTerm}
   placeholder="Search..."
   SearchComponent={CustomSearchComponent}
-  
+
   // Selection
   isSelectionMode={false}
   onSelectedElementsChange={handleSelection}
   initialSelectedKeys={[]}
   selectAllByDefault={false}
-  
+
   // State
   isLoading={false}
   isEmpty={false}
@@ -210,7 +212,6 @@ Individual list items with support for selection, actions, and rich content.
   // Identity
   ListItemKey="unique-id"
   selected={false}
-  
   // Content
   Title="Item Title"
   Description="Item description"
@@ -218,16 +219,13 @@ Individual list items with support for selection, actions, and rich content.
   Badge={<List.Badge text="Status" />}
   Notes="Additional notes"
   Subnotes="Secondary notes"
-  
   // Behavior
   onClick={handleClick}
   compact={false}
   inlineDescription={true}
   isRead={true}
-  
   // Actions
   Actions={<List.Actions>...</List.Actions>}
-  
   // Styling
   className="custom-class"
   contentClassName="content-class"
@@ -290,40 +288,38 @@ Individual list items with support for selection, actions, and rich content.
 ### Advanced Filtering
 
 ```tsx
-import { useListFilters } from '@ownfit/ui-web/base/list/list-filters';
+import { useListFilters } from "@acme/ui-web/base/list/list-filters";
 
 function FilteredList() {
   const filters = [
     {
-      key: 'status',
-      label: 'Status',
-      type: 'select',
+      key: "status",
+      label: "Status",
+      type: "select",
       options: [
-        { value: 'active', label: 'Active' },
-        { value: 'inactive', label: 'Inactive' }
-      ]
+        { value: "active", label: "Active" },
+        { value: "inactive", label: "Inactive" },
+      ],
     },
     {
-      key: 'dateRange',
-      label: 'Date Range',
-      type: 'range'
-    }
+      key: "dateRange",
+      label: "Date Range",
+      type: "range",
+    },
   ];
 
   const { form, FiltersComponent, resetFilters } = useListFilters(filters);
-  
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2>Users</h2>
         <Button onClick={resetFilters}>Reset Filters</Button>
       </div>
-      
+
       <FiltersComponent className="mb-4" />
-      
-      <List.Container>
-        {/* Filtered content */}
-      </List.Container>
+
+      <List.Container>{/* Filtered content */}</List.Container>
     </div>
   );
 }
@@ -336,10 +332,10 @@ function FilteredList() {
 ```tsx
 function SingleSelectionList() {
   const [selectedId, setSelectedId] = useState(null);
-  
+
   return (
     <List.Container>
-      {items.map(item => (
+      {items.map((item) => (
         <List.Item
           key={item.id}
           ListItemKey={item.id}
@@ -364,7 +360,7 @@ function MultiSelectionList() {
       onSelectedElementsChange={(selected) => console.log(selected)}
       selectAllByDefault={false}
     >
-      {items.map(item => (
+      {items.map((item) => (
         <List.Item key={item.id} ListItemKey={item.id}>
           <List.Title>{item.title}</List.Title>
         </List.Item>
@@ -379,21 +375,21 @@ function MultiSelectionList() {
 ```tsx
 function SelectionWithActions() {
   const [selectedItems, setSelectedItems] = useState([]);
-  
+
   return (
     <List.Container
       isSelectionMode={true}
       onSelectedElementsChange={setSelectedItems}
       selectionActions={
         <div className="flex gap-2">
-          <Button 
+          <Button
             variant="destructive"
             disabled={selectedItems.length === 0}
             onClick={() => deleteItems(selectedItems)}
           >
             Delete Selected ({selectedItems.length})
           </Button>
-          <Button 
+          <Button
             disabled={selectedItems.length === 0}
             onClick={() => exportItems(selectedItems)}
           >
@@ -413,7 +409,7 @@ function SelectionWithActions() {
 ### Cursor-based Pagination
 
 ```tsx
-import { usePagination } from '@ownfit/ui-web/base/list';
+import { usePagination } from "@acme/ui-web/base/list";
 
 function PaginatedList() {
   const {
@@ -421,24 +417,23 @@ function PaginatedList() {
     paginationParams,
     goToNextPage,
     goToPreviousPage,
-    Pagination
+    Pagination,
   } = usePagination({ limit: 10 });
 
-  const { data, isLoading } = useQuery(
-    ['items', paginationParams],
-    () => fetchItems(paginationParams)
+  const { data, isLoading } = useQuery(["items", paginationParams], () =>
+    fetchItems(paginationParams)
   );
 
   return (
     <div>
       <List.Container isLoading={isLoading}>
-        {data?.items.map(item => (
+        {data?.items.map((item) => (
           <List.Item key={item.id}>
             <List.Title>{item.title}</List.Title>
           </List.Item>
         ))}
       </List.Container>
-      
+
       <Pagination
         hasNextPage={data?.hasNextPage}
         hasPreviousPage={currentPage > 1}
@@ -455,7 +450,7 @@ function PaginatedList() {
 
 ```tsx
 // User Avatar
-<List.Avatar 
+<List.Avatar
   src="/avatar.jpg"
   firstName="John"
   lastName="Doe"
@@ -472,9 +467,9 @@ function PaginatedList() {
 
 ```tsx
 // Single Badge
-<List.Badge 
-  text="Premium" 
-  color="success" 
+<List.Badge
+  text="Premium"
+  color="success"
   size="sm"
   icon={<CrownIcon />}
 />
@@ -527,9 +522,9 @@ function PaginatedList() {
 <List.Actions position="top">
   <List.Action icon={<ViewIcon />} label="View" onClick={handleView} />
   <List.Action icon={<EditIcon />} label="Edit" onClick={handleEdit} />
-  <List.Action 
-    icon={<DeleteIcon />} 
-    label="Delete" 
+  <List.Action
+    icon={<DeleteIcon />}
+    label="Delete"
     onClick={handleDelete}
     className="text-destructive"
   />
@@ -573,9 +568,7 @@ function PaginatedList() {
 ```tsx
 <List.Container
   isLoading={isLoading}
-  loadingComponent={
-    <List.Loading count={5} />
-  }
+  loadingComponent={<List.Loading count={5} />}
 >
   {/* Content */}
 </List.Container>
@@ -591,7 +584,7 @@ function PaginatedList() {
     description: "Create your first project to get started",
     icon: FolderPlusIcon,
     buttonText: "Create Project",
-    buttonOnClick: () => navigate('/projects/new')
+    buttonOnClick: () => navigate("/projects/new"),
   }}
 >
   {/* Content */}
@@ -621,11 +614,8 @@ function PaginatedList() {
 ### CSS Classes
 
 ```tsx
-<List.Container 
-  className="rounded-lg shadow-lg"
-  contentClassName="divide-y-0"
->
-  <List.Item 
+<List.Container className="rounded-lg shadow-lg" contentClassName="divide-y-0">
+  <List.Item
     className="hover:bg-blue-50"
     titleClassName="font-bold text-blue-900"
     contentClassName="p-6"
@@ -651,7 +641,7 @@ const CustomSearch = ({ value, onChange, placeholder }) => (
   </div>
 );
 
-<List.Container SearchComponent={CustomSearch} />
+<List.Container SearchComponent={CustomSearch} />;
 ```
 
 ### Motion and Animations
@@ -662,7 +652,7 @@ const CustomSearch = ({ value, onChange, placeholder }) => (
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: -20 },
-    transition: { duration: 0.2 }
+    transition: { duration: 0.2 },
   }}
 >
   <List.Title>Animated Item</List.Title>
@@ -674,7 +664,7 @@ const CustomSearch = ({ value, onChange, placeholder }) => (
 ### Factory Pattern
 
 ```tsx
-import { createListComponent } from '@ownfit/ui-web/base/list/list-factory';
+import { createListComponent } from "@acme/ui-web/base/list/list-factory";
 
 // Define your data type
 interface User {
@@ -682,7 +672,7 @@ interface User {
   name: string;
   email: string;
   avatar?: string;
-  status: 'active' | 'inactive';
+  status: "active" | "inactive";
 }
 
 // Create specialized component
@@ -690,31 +680,35 @@ const UsersList = createListComponent<User, {}>({
   getItemId: (user) => user.id,
   getItemTitle: (user) => user.name,
   getItemDescription: (user) => user.email,
-  
+
   avatarConfig: {
     getImageUrl: (user) => user.avatar,
-    getInitials: (user) => user.name.split(' ').map(n => n[0]).join(''),
-    size: 'md',
-    shape: 'circle'
+    getInitials: (user) =>
+      user.name
+        .split(" ")
+        .map((n) => n[0])
+        .join(""),
+    size: "md",
+    shape: "circle",
   },
-  
+
   renderItemBadge: (user) => (
-    <List.Badge 
-      text={user.status} 
-      color={user.status === 'active' ? 'success' : 'warning'}
+    <List.Badge
+      text={user.status}
+      color={user.status === "active" ? "success" : "warning"}
     />
   ),
-  
+
   defaultProps: {
     compact: false,
-    hideFilter: false
+    hideFilter: false,
   },
-  
+
   emptyStateDefaults: {
     headline: "No users found",
     description: "Add users to get started",
-    actionLabel: "Add User"
-  }
+    actionLabel: "Add User",
+  },
 });
 
 // Use the specialized component
@@ -736,32 +730,32 @@ function UsersPage() {
 const AdvancedUsersList = createAdvancedListComponent<
   User,
   { showInactive: boolean },
-  'users',
-  'selectedUserIds',
-  'onUserSelect'
+  "users",
+  "selectedUserIds",
+  "onUserSelect"
 >({
   // Custom prop names
-  itemPropName: 'users',
-  selectedPropName: 'selectedUserIds',
-  selectionHandlerName: 'onUserSelect',
-  
+  itemPropName: "users",
+  selectedPropName: "selectedUserIds",
+  selectionHandlerName: "onUserSelect",
+
   // Same configuration as basic factory
   getItemId: (user) => user.id,
   getItemTitle: (user) => user.name,
   // ... other configs
-  
+
   // Custom data mapping
   mapDataToProps: (users, props) => ({
-    filteredUsers: props.showInactive 
-      ? users 
-      : users.filter(u => u.status === 'active')
+    filteredUsers: props.showInactive
+      ? users
+      : users.filter((u) => u.status === "active"),
   }),
-  
+
   mapPropsToCallbacks: (props) => ({
     onBulkAction: (action: string, users: User[]) => {
       // Handle bulk operations
-    }
-  })
+    },
+  }),
 });
 ```
 
@@ -770,7 +764,7 @@ const AdvancedUsersList = createAdvancedListComponent<
 ### useList Hook
 
 ```tsx
-import { useList } from '@ownfit/ui-web/base/list';
+import { useList } from "@acme/ui-web/base/list";
 
 function SearchableList() {
   const {
@@ -781,14 +775,11 @@ function SearchableList() {
     page,
     setPage,
     pageSize,
-    setPageSize
+    setPageSize,
   } = useList();
 
   return (
-    <List.Container
-      searchTerm={filterText}
-      setSearchTerm={setFilterText}
-    >
+    <List.Container searchTerm={filterText} setSearchTerm={setFilterText}>
       {/* Content */}
     </List.Container>
   );
@@ -798,33 +789,28 @@ function SearchableList() {
 ### useFilteredList Hook
 
 ```tsx
-import { useFilteredList } from '@ownfit/ui-web/base/list';
+import { useFilteredList } from "@acme/ui-web/base/list";
 
 function FilteredList({ items }) {
-  const {
-    filteredItems,
-    paginatedItems,
-    totalPages,
-    currentPage,
-    setPage
-  } = useFilteredList(
-    items,
-    (item) => `${item.name} ${item.email}`, // searchable text
-    true, // use debounced search
-    true  // use pagination
-  );
+  const { filteredItems, paginatedItems, totalPages, currentPage, setPage } =
+    useFilteredList(
+      items,
+      (item) => `${item.name} ${item.email}`, // searchable text
+      true, // use debounced search
+      true // use pagination
+    );
 
   return (
     <div>
       <List.Container>
-        {paginatedItems.map(item => (
+        {paginatedItems.map((item) => (
           <List.Item key={item.id}>
             <List.Title>{item.name}</List.Title>
           </List.Item>
         ))}
       </List.Container>
-      
-      <Pagination 
+
+      <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setPage}
@@ -837,7 +823,7 @@ function FilteredList({ items }) {
 ### useRowSelection Hook
 
 ```tsx
-import { useRowSelection } from '@ownfit/ui-web/base/list';
+import { useRowSelection } from "@acme/ui-web/base/list";
 
 function SelectableList({ items }) {
   const {
@@ -846,28 +832,26 @@ function SelectableList({ items }) {
     selectAll,
     clearSelection,
     isSelected,
-    getSelectedItems
+    getSelectedItems,
   } = useRowSelection({
     initialKeys: [],
     getKey: (item) => item.id,
-    onSelectionChange: (keys) => console.log('Selected:', keys),
-    maxSelections: 10
+    onSelectionChange: (keys) => console.log("Selected:", keys),
+    maxSelections: 10,
   });
 
   return (
     <div>
       <div className="flex gap-2 mb-4">
-        <Button onClick={() => selectAll(items.map(i => i.id))}>
+        <Button onClick={() => selectAll(items.map((i) => i.id))}>
           Select All
         </Button>
-        <Button onClick={clearSelection}>
-          Clear Selection
-        </Button>
+        <Button onClick={clearSelection}>Clear Selection</Button>
         <span>Selected: {selectedKeys.length}</span>
       </div>
-      
+
       <List.Container>
-        {items.map(item => (
+        {items.map((item) => (
           <List.Item
             key={item.id}
             selected={isSelected(item.id)}
@@ -887,11 +871,11 @@ function SelectableList({ items }) {
 ### Component Testing
 
 ```tsx
-import { render, screen, fireEvent } from '@testing-library/react';
-import List from '@ownfit/ui-web/base/list';
+import { render, screen, fireEvent } from "@testing-library/react";
+import List from "@acme/ui-web/base/list";
 
-describe('List Component', () => {
-  it('renders items correctly', () => {
+describe("List Component", () => {
+  it("renders items correctly", () => {
     render(
       <List.Container>
         <List.Item>
@@ -899,13 +883,13 @@ describe('List Component', () => {
         </List.Item>
       </List.Container>
     );
-    
-    expect(screen.getByText('Test Item')).toBeInTheDocument();
+
+    expect(screen.getByText("Test Item")).toBeInTheDocument();
   });
 
-  it('handles selection', () => {
+  it("handles selection", () => {
     const handleSelection = jest.fn();
-    
+
     render(
       <List.Container
         isSelectionMode={true}
@@ -916,14 +900,14 @@ describe('List Component', () => {
         </List.Item>
       </List.Container>
     );
-    
-    fireEvent.click(screen.getByText('Selectable Item'));
-    expect(handleSelection).toHaveBeenCalledWith(['item-1']);
+
+    fireEvent.click(screen.getByText("Selectable Item"));
+    expect(handleSelection).toHaveBeenCalledWith(["item-1"]);
   });
 
-  it('filters items', () => {
+  it("filters items", () => {
     const handleSearch = jest.fn();
-    
+
     render(
       <List.Container
         hideFilter={false}
@@ -933,11 +917,11 @@ describe('List Component', () => {
         {/* Items */}
       </List.Container>
     );
-    
-    const searchInput = screen.getByPlaceholderText('Cerca');
-    fireEvent.change(searchInput, { target: { value: 'test' } });
-    
-    expect(handleSearch).toHaveBeenCalledWith('test');
+
+    const searchInput = screen.getByPlaceholderText("Cerca");
+    fireEvent.change(searchInput, { target: { value: "test" } });
+
+    expect(handleSearch).toHaveBeenCalledWith("test");
   });
 });
 ```
@@ -945,13 +929,13 @@ describe('List Component', () => {
 ### DataList Testing
 
 ```tsx
-describe('DataList Component', () => {
+describe("DataList Component", () => {
   const mockData = [
-    { id: '1', name: 'John Doe', role: 'Developer' },
-    { id: '2', name: 'Jane Smith', role: 'Designer' }
+    { id: "1", name: "John Doe", role: "Developer" },
+    { id: "2", name: "Jane Smith", role: "Designer" },
   ];
 
-  it('renders data correctly', () => {
+  it("renders data correctly", () => {
     render(
       <DataList
         data={mockData}
@@ -960,9 +944,9 @@ describe('DataList Component', () => {
         getItemDescription={(item) => item.role}
       />
     );
-    
-    expect(screen.getByText('John Doe')).toBeInTheDocument();
-    expect(screen.getByText('Developer')).toBeInTheDocument();
+
+    expect(screen.getByText("John Doe")).toBeInTheDocument();
+    expect(screen.getByText("Developer")).toBeInTheDocument();
   });
 });
 ```
@@ -972,7 +956,7 @@ describe('DataList Component', () => {
 ### Virtualization
 
 ```tsx
-import { FixedSizeList as VirtualList } from 'react-window';
+import { FixedSizeList as VirtualList } from "react-window";
 
 function VirtualizedList({ items }) {
   const ItemRenderer = ({ index, style }) => (
@@ -1001,19 +985,19 @@ function VirtualizedList({ items }) {
 ### Memoization
 
 ```tsx
-import { memo, useMemo } from 'react';
+import { memo, useMemo } from "react";
 
 const MemoizedListItem = memo(({ item, onEdit, onDelete }) => (
   <List.Item key={item.id}>
     <List.Title>{item.name}</List.Title>
     <List.Actions>
-      <List.Action 
-        icon={<EditIcon />} 
+      <List.Action
+        icon={<EditIcon />}
         label="Edit"
         onClick={() => onEdit(item.id)}
       />
-      <List.Action 
-        icon={<DeleteIcon />} 
+      <List.Action
+        icon={<DeleteIcon />}
         label="Delete"
         onClick={() => onDelete(item.id)}
       />
@@ -1023,22 +1007,19 @@ const MemoizedListItem = memo(({ item, onEdit, onDelete }) => (
 
 function OptimizedList({ items, onEdit, onDelete }) {
   const memoizedItems = useMemo(
-    () => items.map(item => (
-      <MemoizedListItem
-        key={item.id}
-        item={item}
-        onEdit={onEdit}
-        onDelete={onDelete}
-      />
-    )),
+    () =>
+      items.map((item) => (
+        <MemoizedListItem
+          key={item.id}
+          item={item}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
+      )),
     [items, onEdit, onDelete]
   );
 
-  return (
-    <List.Container>
-      {memoizedItems}
-    </List.Container>
-  );
+  return <List.Container>{memoizedItems}</List.Container>;
 }
 ```
 
@@ -1057,33 +1038,33 @@ function ComplexList() {
       </List.Actions>
 
       {/* Items */}
-      {items.map(item => (
+      {items.map((item) => (
         <List.Item key={item.id}>
           {/* Avatar */}
-          <List.Avatar 
+          <List.Avatar
             src={item.avatar}
             firstName={item.firstName}
             lastName={item.lastName}
           />
-          
+
           {/* Content */}
           <List.Title className="font-bold">{item.name}</List.Title>
           <List.Description>{item.bio}</List.Description>
-          
+
           {/* Badges */}
           <List.Badges>
-            {item.skills.map(skill => (
+            {item.skills.map((skill) => (
               <List.Badge key={skill} text={skill} size="sm" />
             ))}
           </List.Badges>
-          
+
           {/* Notes */}
           <List.Notes>
             <div className="text-sm text-muted-foreground">
               Last active: {formatDate(item.lastActive)}
             </div>
           </List.Notes>
-          
+
           {/* Expandable Actions */}
           <List.Dropdown
             actions={
@@ -1098,7 +1079,7 @@ function ComplexList() {
           </List.Dropdown>
         </List.Item>
       ))}
-      
+
       {/* Footer Actions */}
       <List.Actions position="bottom">
         <List.Action icon={<LoadMoreIcon />} label="Load More" />
@@ -1121,7 +1102,7 @@ function RenderPropsList({ children, ...props }) {
         Avatar: List.Avatar,
         Badge: List.Badge,
         Actions: List.Actions,
-        Action: List.Action
+        Action: List.Action,
       })}
     </List.Container>
   );
@@ -1129,46 +1110,40 @@ function RenderPropsList({ children, ...props }) {
 
 // Usage
 <RenderPropsList>
-  {({ Item, Title, Avatar }) => 
-    users.map(user => (
+  {({ Item, Title, Avatar }) =>
+    users.map((user) => (
       <Item key={user.id}>
         <Avatar src={user.avatar} />
         <Title>{user.name}</Title>
       </Item>
     ))
   }
-</RenderPropsList>
+</RenderPropsList>;
 ```
 
 ## 🌍 Internationalization
 
 ```tsx
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 function InternationalizedList() {
-  const { t } = useTranslation('lists');
-  
+  const { t } = useTranslation("lists");
+
   return (
     <List.Container
-      placeholder={t('search.placeholder')}
+      placeholder={t("search.placeholder")}
       InfoScreenProps={{
-        headline: t('empty.headline'),
-        description: t('empty.description'),
-        buttonText: t('empty.action')
+        headline: t("empty.headline"),
+        description: t("empty.description"),
+        buttonText: t("empty.action"),
       }}
     >
-      {items.map(item => (
+      {items.map((item) => (
         <List.Item key={item.id}>
           <List.Title>{item.name}</List.Title>
           <List.Actions>
-            <List.Action 
-              icon={<EditIcon />} 
-              label={t('actions.edit')}
-            />
-            <List.Action 
-              icon={<DeleteIcon />} 
-              label={t('actions.delete')}
-            />
+            <List.Action icon={<EditIcon />} label={t("actions.edit")} />
+            <List.Action icon={<DeleteIcon />} label={t("actions.delete")} />
           </List.Actions>
         </List.Item>
       ))}
@@ -1191,8 +1166,8 @@ function ResponsiveList() {
       "
       compact={false} // Auto-compact on mobile
     >
-      {items.map(item => (
-        <List.Item 
+      {items.map((item) => (
+        <List.Item
           key={item.id}
           className="
             sm:flex-col sm:items-start
@@ -1200,14 +1175,12 @@ function ResponsiveList() {
           "
           inlineDescription={false} // Stack on mobile
         >
-          <List.Avatar 
+          <List.Avatar
             className="
               h-8 w-8 sm:h-12 sm:w-12 md:h-10 md:w-10
             "
           />
-          <List.Title className="text-sm sm:text-base">
-            {item.name}
-          </List.Title>
+          <List.Title className="text-sm sm:text-base">{item.name}</List.Title>
           <List.Description className="hidden sm:block">
             {item.description}
           </List.Description>
@@ -1223,21 +1196,21 @@ function ResponsiveList() {
 ### React Query Integration
 
 ```tsx
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 function QueryIntegratedList() {
   const queryClient = useQueryClient();
-  
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ['users'],
-    queryFn: fetchUsers
+    queryKey: ["users"],
+    queryFn: fetchUsers,
   });
 
   const deleteMutation = useMutation({
     mutationFn: deleteUser,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-    }
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
   });
 
   if (error) {
@@ -1249,7 +1222,8 @@ function QueryIntegratedList() {
           description: error.message,
           icon: AlertCircleIcon,
           buttonText: "Retry",
-          buttonOnClick: () => queryClient.refetchQueries({ queryKey: ['users'] })
+          buttonOnClick: () =>
+            queryClient.refetchQueries({ queryKey: ["users"] }),
         }}
       />
     );
@@ -1275,7 +1249,7 @@ function QueryIntegratedList() {
         headline: "No users found",
         description: "Get started by adding your first user",
         actionLabel: "Add User",
-        onAction: () => navigate('/users/new')
+        onAction: () => navigate("/users/new"),
       }}
     />
   );
@@ -1285,7 +1259,7 @@ function QueryIntegratedList() {
 ### GraphQL Integration
 
 ```tsx
-import { useQuery, gql } from '@apollo/client';
+import { useQuery, gql } from "@apollo/client";
 
 const GET_USERS = gql`
   query GetUsers($filter: UserFilter, $pagination: PaginationInput) {
@@ -1311,37 +1285,40 @@ function GraphQLList() {
   const [pagination, setPagination] = useState({ first: 10 });
 
   const { data, loading, error, fetchMore } = useQuery(GET_USERS, {
-    variables: { filter: filters, pagination }
+    variables: { filter: filters, pagination },
   });
 
   return (
     <div>
       <FilterComponent onFiltersChange={setFilters} />
-      
+
       <DataList
         data={data?.users?.nodes || []}
         isLoading={loading}
         getItemId={(user) => user.id}
         getItemTitle={(user) => user.name}
         getItemDescription={(user) => user.email}
-        renderItemIcon={(user) => (
-          <List.Avatar src={user.avatar} />
-        )}
+        renderItemIcon={(user) => <List.Avatar src={user.avatar} />}
         renderItemBadge={(user) => (
-          <List.Badge 
-            text={user.status} 
-            color={user.status === 'ACTIVE' ? 'success' : 'warning'}
+          <List.Badge
+            text={user.status}
+            color={user.status === "ACTIVE" ? "success" : "warning"}
           />
         )}
       />
-      
+
       {data?.users?.pageInfo?.hasNextPage && (
-        <Button 
-          onClick={() => fetchMore({
-            variables: {
-              pagination: { ...pagination, after: data.users.pageInfo.endCursor }
-            }
-          })}
+        <Button
+          onClick={() =>
+            fetchMore({
+              variables: {
+                pagination: {
+                  ...pagination,
+                  after: data.users.pageInfo.endCursor,
+                },
+              },
+            })
+          }
           className="w-full mt-4"
         >
           Load More
@@ -1364,19 +1341,16 @@ interface ListComponentProps<T> {
   onItemSelect?: (item: T) => void;
 }
 
-function GenericList<T>({ 
-  items, 
-  renderItem, 
-  getItemKey, 
-  onItemSelect 
+function GenericList<T>({
+  items,
+  renderItem,
+  getItemKey,
+  onItemSelect,
 }: ListComponentProps<T>) {
   return (
     <List.Container>
-      {items.map(item => (
-        <List.Item 
-          key={getItemKey(item)}
-          onClick={() => onItemSelect?.(item)}
-        >
+      {items.map((item) => (
+        <List.Item key={getItemKey(item)} onClick={() => onItemSelect?.(item)}>
           {renderItem(item)}
         </List.Item>
       ))}
@@ -1404,7 +1378,7 @@ interface User {
     // user is properly typed as User
     console.log(user.name);
   }}
-/>
+/>;
 ```
 
 ### Type-safe Factories
@@ -1420,35 +1394,38 @@ interface Product {
 }
 
 // Create type-safe component factory
-const ProductsList = createListComponent<Product, {
-  showOutOfStock: boolean;
-  onAddToCart: (productId: string) => void;
-}>({
+const ProductsList = createListComponent<
+  Product,
+  {
+    showOutOfStock: boolean;
+    onAddToCart: (productId: string) => void;
+  }
+>({
   getItemId: (product) => product.id,
   getItemTitle: (product) => product.name,
   getItemDescription: (product) => `$${product.price} • ${product.category}`,
-  
+
   renderItemBadge: (product) => (
-    <List.Badge 
-      text={product.inStock ? 'In Stock' : 'Out of Stock'}
-      color={product.inStock ? 'success' : 'warning'}
+    <List.Badge
+      text={product.inStock ? "In Stock" : "Out of Stock"}
+      color={product.inStock ? "success" : "warning"}
     />
   ),
-  
+
   renderItemActions: (product, onAction) => (
     <List.Actions>
       <List.Action
         icon={<CartIcon />}
         label="Add to Cart"
-        onClick={() => onAction('add-to-cart')}
+        onClick={() => onAction("add-to-cart")}
         disabled={!product.inStock}
       />
     </List.Actions>
   ),
-  
+
   defaultProps: {
-    compact: false
-  }
+    compact: false,
+  },
 });
 
 // Usage with full type safety
@@ -1461,11 +1438,11 @@ const ProductsList = createListComponent<Product, {
   }}
   onActionPerformed={(action, product) => {
     // Both action and product are properly typed
-    if (action === 'add-to-cart') {
+    if (action === "add-to-cart") {
       addToCart(product.id);
     }
   }}
-/>
+/>;
 ```
 
 ## 🛠️ Development Tools
@@ -1473,14 +1450,12 @@ const ProductsList = createListComponent<Product, {
 ### Debug Component
 
 ```tsx
-import { ListDebugger } from '@ownfit/ui-web/base/list/debug';
+import { ListDebugger } from "@acme/ui-web/base/list/debug";
 
 function DebuggableList() {
   return (
-    <ListDebugger enabled={process.env.NODE_ENV === 'development'}>
-      <List.Container>
-        {/* Your list content */}
-      </List.Container>
+    <ListDebugger enabled={process.env.NODE_ENV === "development"}>
+      <List.Container>{/* Your list content */}</List.Container>
     </ListDebugger>
   );
 }
@@ -1490,13 +1465,13 @@ function DebuggableList() {
 
 ```tsx
 // Add to your dev environment
-import { ListDevTools } from '@ownfit/ui-web/base/list/dev-tools';
+import { ListDevTools } from "@acme/ui-web/base/list/dev-tools";
 
 function App() {
   return (
     <div>
       {/* Your app */}
-      {process.env.NODE_ENV === 'development' && <ListDevTools />}
+      {process.env.NODE_ENV === "development" && <ListDevTools />}
     </div>
   );
 }
@@ -1507,9 +1482,10 @@ function App() {
 ### From Simple Lists
 
 **Before:**
+
 ```tsx
 <div className="space-y-2">
-  {items.map(item => (
+  {items.map((item) => (
     <div key={item.id} className="p-4 border rounded">
       <h3>{item.title}</h3>
       <p>{item.description}</p>
@@ -1519,9 +1495,10 @@ function App() {
 ```
 
 **After:**
+
 ```tsx
 <List.Container>
-  {items.map(item => (
+  {items.map((item) => (
     <List.Item key={item.id}>
       <List.Title>{item.title}</List.Title>
       <List.Description>{item.description}</List.Description>
@@ -1533,6 +1510,7 @@ function App() {
 ### From Custom Components
 
 **Before:**
+
 ```tsx
 function UserItem({ user, onEdit, onDelete }) {
   return (
@@ -1554,14 +1532,23 @@ function UserItem({ user, onEdit, onDelete }) {
 ```
 
 **After:**
+
 ```tsx
 <List.Item>
   <List.Avatar src={user.avatar} />
   <List.Title>{user.name}</List.Title>
   <List.Description>{user.email}</List.Description>
   <List.Actions>
-    <List.Action icon={<EditIcon />} label="Edit" onClick={() => onEdit(user.id)} />
-    <List.Action icon={<DeleteIcon />} label="Delete" onClick={() => onDelete(user.id)} />
+    <List.Action
+      icon={<EditIcon />}
+      label="Edit"
+      onClick={() => onEdit(user.id)}
+    />
+    <List.Action
+      icon={<DeleteIcon />}
+      label="Delete"
+      onClick={() => onDelete(user.id)}
+    />
   </List.Actions>
 </List.Item>
 ```
@@ -1571,21 +1558,25 @@ function UserItem({ user, onEdit, onDelete }) {
 ### Common Issues
 
 **Actions not appearing:**
+
 - Ensure actions are direct children of `List.Item`
 - Check that `List.Action` components have required props
 - Verify proper import statements
 
 **Search not working:**
+
 - Confirm `hideFilter={false}` is set
 - Check `searchTerm` and `setSearchTerm` props are provided
 - Ensure search logic is implemented in parent component
 
 **Selection not functioning:**
+
 - Set `isSelectionMode={true}` on `List.Container`
 - Provide `ListItemKey` prop on each `List.Item`
 - Implement `onSelectedElementsChange` callback
 
 **Styling issues:**
+
 - Check Tailwind CSS is properly configured
 - Verify component imports are correct
 - Review custom className props for conflicts
@@ -1603,4 +1594,4 @@ See our [Contributing Guide](../../../CONTRIBUTING.md) for details on how to con
 
 ## 📄 License
 
-MIT License - see [LICENSE](../../../LICENSE) for details. 
+MIT License - see [LICENSE](../../../LICENSE) for details.

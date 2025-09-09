@@ -9,8 +9,8 @@ The list filters functionality is part of the ownfit UI components. No additiona
 ## Basic Usage
 
 ```tsx
-import { FilterDef } from "@ownfit/ui-web/components/base/list/list-filters/types";
-import { useListFilters } from "@ownfit/ui-web/components/base/list/list-filters/use-list-filters";
+import { FilterDef } from "@acme/ui-web/components/base/list/list-filters/types";
+import { useListFilters } from "@acme/ui-web/components/base/list/list-filters/use-list-filters";
 
 // Define your filter schema
 type ClientFilters = {
@@ -220,6 +220,6 @@ const { data, isLoading } = useQuery(
   () => fetchClients(filters),
   {
     keepPreviousData: true,
-  },
+  }
 );
 ```

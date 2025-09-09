@@ -217,6 +217,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
               'hover:bg-background',
               className
             )}
+            suppressHydrationWarning
           >
             <span
               className={cn(

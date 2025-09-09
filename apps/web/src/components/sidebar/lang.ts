@@ -5,7 +5,7 @@ export const sidebarLang = defineLang({
     application: { en: 'Application', it: 'Applicazione' },
     todos: { en: 'Todos', it: 'Attività' },
     newTodo: { en: 'New Todo', it: 'Nuova Attività' },
-    teamNamePrompt: { en: 'Team name', it: 'Nome del team' },
+    organizationNamePrompt: { en: 'Organization name', it: 'Nome organizzazione' },
     freePlan: { en: 'Free', it: 'Gratis' },
     // NavUser labels
     upgradeToPro: { en: 'Upgrade to Pro', it: 'Passa a Pro' },

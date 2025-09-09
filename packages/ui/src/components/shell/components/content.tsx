@@ -23,7 +23,7 @@ const Content: React.FC<ContentProps> = ({
       className={cn(
         'h-full w-full max-w-full flex-1',
         /* aggiunto lo stesso padding usato nell'header */
-        'px-2 md:px-4',
+        'px-2 md:px-4 pb-4',
         className
       )}
     >
@@ -43,8 +43,6 @@ const Content: React.FC<ContentProps> = ({
         <EmptyScreen headline="No Content" {...emptyProps} />
       ) : (
         <div className="h-full max-w-full overflow-auto flex flex-col gap-4 mt-4 md:mt-0">
-          {' '}
-          {/* add h-full and overflow-auto here */}
           {children}
         </div>
       )}

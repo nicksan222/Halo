@@ -16,12 +16,17 @@ export function ListDescription({
     typeof children === 'string' &&
     (children.trim().startsWith('<') || children.trim().startsWith('{'));
 
+  const isEmpty =
+    children === undefined ||
+    children === null ||
+    (typeof children === 'string' && children.trim().length === 0);
+
   const content = useMemo(() => {
     if (!isRichContent) return null;
 
     try {
       // If it's JSON (Tiptap stores as JSON), parse it first
-      if (children.trim().startsWith('{')) {
+      if ((children as string).trim().startsWith('{')) {
         const json = JSON.parse(children as string);
         return generateHTML(json, [StarterKit]);
       }
@@ -32,6 +37,8 @@ export function ListDescription({
       return children as string;
     }
   }, [children, isRichContent]);
+
+  if (isEmpty) return null;
 
   if (isRichContent) {
     return (

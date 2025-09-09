@@ -33,10 +33,13 @@ export const ListBadges: React.FC<ListBadgesProps & React.HTMLAttributes<HTMLDiv
     end: 'justify-end'
   };
 
+  const items = React.Children.toArray(children).filter(Boolean);
+  if (items.length === 0) return null;
+
   return (
     <div
       className={cn(
-        'scrollbar-none no-scrollbar flex overflow-x-auto',
+        'scrollbar-none no-scrollbar flex items-center overflow-x-auto mt-2',
         direction === 'row' ? 'flex-row' : 'flex-col',
         wrap && 'flex-wrap',
         spacingClasses[spacing],
@@ -45,9 +48,14 @@ export const ListBadges: React.FC<ListBadgesProps & React.HTMLAttributes<HTMLDiv
       )}
       {...props}
     >
-      {React.Children.map(children, (child) => (
-        <div className="flex-shrink-0">{child}</div>
-      ))}
+      {items.map((child) => {
+        if (React.isValidElement(child)) {
+          return React.cloneElement(child as React.ReactElement<any>, {
+            className: cn('flex-shrink-0', (child as any)?.props?.className)
+          });
+        }
+        return <span className="flex-shrink-0">{child as React.ReactNode}</span>;
+      })}
     </div>
   );
 };

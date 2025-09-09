@@ -83,7 +83,7 @@ export const PieChartExample = () => (
           cx={200}
           cy={200}
           labelLine={false}
-          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+          label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
           outerRadius={80}
           fill="#8884d8"
           dataKey="value"
@@ -102,7 +102,11 @@ export const WithLegend = () => (
     <ChartContainer config={config}>
       <LineChart data={data}>
         <ChartTooltip content={<ChartTooltipContent />} />
-        <ChartLegend content={<ChartLegendContent />} />
+        <ChartLegend
+          content={({ payload, verticalAlign }) => (
+            <ChartLegendContent payload={payload} verticalAlign={verticalAlign} />
+          )}
+        />
         <Line type="monotone" dataKey="value" stroke="#0088FE" strokeWidth={2} />
       </LineChart>
     </ChartContainer>

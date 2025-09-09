@@ -1,5 +1,6 @@
 'use client';
 
+import type { auth } from '@acme/auth';
 import { authClient } from '@acme/auth/client';
 import { translate } from '@acme/localization';
 import { Button } from '@acme/ui/components/button';
@@ -12,6 +13,7 @@ import {
 } from '@acme/ui/components/dialog';
 import { Input } from '@acme/ui/components/input';
 import { NavUser } from '@acme/ui/components/nav-user';
+import type { Organization } from '@acme/ui/components/organization-switcher';
 import { OrganizationSwitcher } from '@acme/ui/components/organization-switcher';
 import {
   Sidebar,
@@ -33,6 +35,9 @@ import { CreateOrganization } from './create-organization';
 import { sidebarLang } from './lang';
 import { NotificationsPopover } from './notifications-popover';
 
+// Better Auth inferred types for type safety
+type AuthOrganization = typeof auth.$Infer.Organization;
+
 export function AppSidebar() {
   const router = useRouter();
   const { data: session, isPending: isLoadingSession } = authClient.useSession();
@@ -44,6 +49,7 @@ export function AppSidebar() {
   const locale = useLocale();
   const t = translate(sidebarLang, locale);
 
+  // Transform session user data with proper typing
   const user = session?.user
     ? {
         name: session.user.name ?? 'User',
@@ -57,21 +63,24 @@ export function AppSidebar() {
     { title: t.sidebar.newTodo, url: '/todos/new', icon: Plus }
   ];
 
-  const teams = (organizations ?? []).map((org) => ({
-    name: org.name,
-    plan: org.metadata?.plan ?? t.sidebar.freePlan,
-    id: org.id,
-    slug: org.slug
-  }));
+  // Transform organizations with proper typing using Better Auth inferred types
+  const mappedOrganizations: Organization[] = (organizations ?? []).map(
+    (org: AuthOrganization) => ({
+      name: org.name,
+      plan: (org.metadata as { plan?: string } | null)?.plan ?? t.sidebar.freePlan,
+      id: org.id,
+      slug: org.slug
+    })
+  );
 
-  const activeTeam = activeOrganization
+  const activeOrg = activeOrganization
     ? {
         name: activeOrganization.name,
         plan: activeOrganization.metadata?.plan ?? t.sidebar.freePlan,
         id: activeOrganization.id,
         slug: activeOrganization.slug
       }
-    : teams[0];
+    : mappedOrganizations[0];
 
   const isLoading = isLoadingOrganizations || isLoadingActiveOrganization;
 
@@ -85,13 +94,13 @@ export function AppSidebar() {
           {({ create, isCreating }) => (
             <>
               <OrganizationSwitcher
-                teams={teams}
-                activeTeam={activeTeam}
-                onTeamChange={async (team) => {
-                  await authClient.organization.setActive({ organizationId: team.id });
+                organizations={mappedOrganizations}
+                activeOrganization={activeOrg}
+                onOrganizationChange={async (organization) => {
+                  await authClient.organization.setActive({ organizationId: organization.id });
                 }}
-                onAddTeam={() => setIsCreateOpen(true)}
-                onSettings={() => {
+                onAddOrganization={() => setIsCreateOpen(true)}
+                onSettings={(_organization) => {
                   router.push(`/settings/organization/members`);
                 }}
                 isLoading={isLoading}
@@ -99,13 +108,13 @@ export function AppSidebar() {
               <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>{t.sidebar.teamNamePrompt}</DialogTitle>
+                    <DialogTitle>{t.sidebar.organizationNamePrompt}</DialogTitle>
                   </DialogHeader>
                   <div className="py-2">
                     <Input
                       value={orgName}
                       onChange={(e) => setOrgName(e.target.value)}
-                      placeholder={t.sidebar.teamNamePrompt}
+                      placeholder={t.sidebar.organizationNamePrompt}
                       autoFocus
                     />
                   </div>
@@ -190,7 +199,7 @@ export function AppSidebar() {
         <NavUser
           user={user ?? { name: '', email: '', avatar: '' }}
           onUpgrade={() => {
-            if (activeTeam) {
+            if (activeOrg) {
               // navigate to a generic upgrade page; adjust to your routes
               router.push(`/settings/billing`);
             }

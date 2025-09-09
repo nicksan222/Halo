@@ -1,10 +1,10 @@
 'use client';
 
+import PulsingDot from '@acme/ui/components/pulsing-dot';
 import { cn } from '@acme/ui/lib/utils';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import React, { useCallback, useMemo } from 'react';
-
 import type { TabItemProps } from '../types';
 
 /**
@@ -17,7 +17,11 @@ const Tab: React.FC<TabItemProps> = ({
   onClick,
   href,
   isActive = false,
-  position = 'side' // Default position is side
+  position = 'side', // Default position is side
+  showIndicator = false,
+  indicatorText,
+  indicatorColor = 'primary',
+  indicatorSize = 'sm'
 }) => {
   // Wrapper per l'evento onClick che gestisce sia la navigazione che il callback
   // Utilizziamo useCallback per evitare ricreazioni ad ogni render
@@ -71,7 +75,8 @@ const Tab: React.FC<TabItemProps> = ({
             className={cn(
               'flex-shrink-0',
               'mr-2 mt-0 md:mr-3 md:mt-0.5',
-              isActive ? 'text-primary' : 'text-muted-foreground/90'
+              isActive ? 'text-primary' : 'text-muted-foreground/90',
+              showIndicator && 'hidden md:block'
             )}
           >
             {React.isValidElement(icon)
@@ -87,16 +92,33 @@ const Tab: React.FC<TabItemProps> = ({
           </div>
         )}
 
-        {/* Text content */}
-        <div className="flex min-w-0 flex-grow flex-col items-start text-left">
-          <span
-            className={cn(
-              'font-medium truncate text-left', // <- troncamento testo lungo
-              isActive ? 'text-foreground' : 'text-foreground/80'
+        {/* Text content with optional indicator */}
+        <div className={cn('flex min-w-0 flex-grow flex-col items-start text-left')}>
+          <div className="flex w-full items-center gap-2 min-w-0">
+            <span
+              className={cn(
+                'font-medium truncate text-left', // <- troncamento testo lungo
+                isActive ? 'text-foreground' : 'text-foreground/80'
+              )}
+            >
+              {title}
+            </span>
+            {showIndicator && (
+              <div className="flex items-center gap-1 flex-shrink-0">
+                <PulsingDot size={indicatorSize} color={indicatorColor} />
+                {indicatorText && (
+                  <span
+                    className={cn(
+                      'hidden md:inline text-xs',
+                      isActive ? 'text-foreground' : 'text-muted-foreground'
+                    )}
+                  >
+                    {indicatorText}
+                  </span>
+                )}
+              </div>
             )}
-          >
-            {title}
-          </span>
+          </div>
           {description && (
             <span
               className={cn(
@@ -117,7 +139,18 @@ const Tab: React.FC<TabItemProps> = ({
         )}
       </button>
     ),
-    [title, description, icon, isActive, handleClick, isTop]
+    [
+      title,
+      description,
+      icon,
+      isActive,
+      handleClick,
+      isTop,
+      showIndicator,
+      indicatorText,
+      indicatorColor,
+      indicatorSize
+    ]
   );
 
   // Crea il contenuto completo della tab, con il Link se necessario
