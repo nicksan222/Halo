@@ -18,7 +18,7 @@
     "format": "bunx biome check --write ."
   },
   "dependencies": {
-    "@vercel/blob": "^1.1.1",
+    "@vercel/blob": "^2.0.0",
     "zod": "^4.0.17",
     "@acme/env": "0.0.0"
   },
