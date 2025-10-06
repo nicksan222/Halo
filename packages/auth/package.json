@@ -22,7 +22,7 @@
     "@acme/env": "0.0.0",
     "zod": "^4.0.17",
     "@better-auth/stripe": "latest",
-    "stripe": "^18.0.0"
+    "stripe": "^19.1.0"
   },
   "devDependencies": {
     "@types/pg": "latest",
